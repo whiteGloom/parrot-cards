@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
 import {addOne} from '../../../../entity/card';
 import {Field, Form, Formik} from 'formik';
-import {v4 as UUIDGenerator} from 'uuid';
+import {UniqueIdGenerator} from '../../../../shared/lib/generateUniqueId/generateUniqueId';
 
 enum FieldsNames {
   FrontSideTitle = 1,
