@@ -1,15 +1,13 @@
 import React from 'react';
 import './styles/index.scss';
-import {CreateCardForm} from '../features/createCard';
 import {ReduxStoreProvider} from './providers/store';
-import {CardsList} from '../features/listCards';
+import {AppRouterProvider} from './providers/router/router';
 
 function App() {
   return (
     <ReduxStoreProvider>
       <div className="app">
-        <CreateCardForm/>
-        <CardsList/>
+        <AppRouterProvider/>
       </div>
     </ReduxStoreProvider>
   );
