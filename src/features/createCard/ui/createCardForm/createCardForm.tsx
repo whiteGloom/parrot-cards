@@ -6,13 +6,18 @@ import {Field, FieldArray, Form, Formik} from 'formik';
 import {UniqueIdGenerator} from '../../../../shared/lib/generateUniqueId/generateUniqueId';
 import clsx from 'clsx';
 
+enum GroupNames {
+  FrontSide='frontSide',
+  BackSide='backSide',
+}
+
 type ValuesType = {
-  frontSide: {
+  [GroupNames.FrontSide]: {
     title: string;
     description: string;
     hints: string[];
   },
-  backSide: {
+  [GroupNames.BackSide]: {
     title: string;
     description: string;
     hints: string[];
@@ -76,89 +81,55 @@ export const CreateCardForm: FC = () => {
     >
       {({values, setFieldValue, errors}) => (
         <Form className={styles.cardEditor}>
-          <fieldset className={styles.sideEditor}>
-            <legend>Front side</legend>
+          {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {groupName: GroupNames.BackSide, title: 'Back side'}]
+            .map((sideGroupParams) => {
+              const groupName = sideGroupParams.groupName;
 
-            <label>
-              Title:
-              <Field
-                name={'frontSide.title'}
-                validate={titleValidator}
-                className={clsx(errors.frontSide?.title && styles.fieldError)}
-              />
-            </label>
+              return (
+                <fieldset className={styles.sideEditor} key={groupName}>
+                  <legend>{sideGroupParams.title}</legend>
 
-            <label>Description: <Field name={'frontSide.description'} as={'textarea'} /></label>
+                  <label>
+                    {'Title: '}
+                    <Field
+                      name={`${groupName}.title`}
+                      validate={titleValidator}
+                      className={clsx(errors[groupName]?.title && styles.fieldError)}
+                    />
+                  </label>
 
-            <FieldArray
-              name={'frontSide.hints'}
-              render={(helpers) => {
-                return (
-                  <>
-                    {values.frontSide.hints.map((_value, index) => {
+                  <label>Description: <Field name={`${groupName}.description`} as={'textarea'} /></label>
+
+                  <FieldArray
+                    name={`${groupName}.hints`}
+                    render={(helpers) => {
                       return (
-                        <label key={index}>
-                          {`Hint ${index + 1}: `}
-                          <Field
-                            name={`frontSide.hints[${index}]`}
-                            onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
-                              await setFieldValue(`frontSide.hints[${index}]`, event.target.value);
+                        <>
+                          {values[groupName].hints.map((_value, index) => {
+                            return (
+                              <label key={index}>
+                                {`Hint ${index + 1}: `}
+                                <Field
+                                  name={`${groupName}.hints[${index}]`}
+                                  onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
+                                    await setFieldValue(`${groupName}.hints[${index}]`, event.target.value);
 
-                              if (event.target.value && values.frontSide.hints.length - 1 === index) {
-                                helpers.push('');
-                              }
-                            }}
-                          />
-                        </label>
+                                    if (event.target.value && values[groupName].hints.length - 1 === index) {
+                                      helpers.push('');
+                                    }
+                                  }}
+                                />
+                              </label>
+                            );
+                          })}
+                        </>
                       );
-                    })}
-                  </>
-                );
-              }}
-            />
-          </fieldset>
-
-          <fieldset className={styles.sideEditor}>
-            <legend>Back side</legend>
-
-            <label>
-              Title:
-              <Field
-                name={'backSide.title'}
-                validate={titleValidator}
-                className={clsx(errors.backSide?.title && styles.fieldError)}
-              />
-            </label>
-
-            <label>Description: <Field name={'backSide.description'} as={'textarea'} /></label>
-
-            <FieldArray
-              name={'backSide.hints'}
-              render={(helpers) => {
-                return (
-                  <>
-                    {values.backSide.hints.map((_value, index) => {
-                      return (
-                        <label key={index}>
-                          {`Hint ${index + 1}: `}
-                          <Field
-                            name={`backSide.hints[${index}]`}
-                            onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
-                              await setFieldValue(`backSide.hints[${index}]`, event.target.value);
-
-                              if (event.target.value && values.backSide.hints.length - 1 === index) {
-                                helpers.push('');
-                              }
-                            }}
-                          />
-                        </label>
-                      );
-                    })}
-                  </>
-                );
-              }}
-            />
-          </fieldset>
+                    }}
+                  />
+                </fieldset>
+              );
+            })
+          }
 
           <button type={'submit'}>Create card</button>
         </Form>
