@@ -21,10 +21,10 @@ export const Card: FC<CardProps> = (props) => {
         <p className={styles.description}>Description: {currentSideData.description}</p>
       ) : undefined}
 
-      {currentSideData.hints.length ? currentSideData.hints.map((hint) => {
+      {currentSideData.hints.length ? currentSideData.hints.map((hint, index) => {
         return (
           <div style={{display: 'flex'}} key={hint}>
-            {'Hint: '}
+            {`Hint ${index + 1}: `}
             <Hint title={hint}/>
           </div>
         );
