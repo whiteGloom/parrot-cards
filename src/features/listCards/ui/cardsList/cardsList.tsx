@@ -9,13 +9,15 @@ export const CardsList: FC = () => {
 
   return (
     <ul className={styles.listCards}>
-      {cards.map((cards) => {
-        return (
-          <li key={cards.id}>
-            <Card cardModel={cards}/>
-          </li>
-        );
-      })}
+      {!cards.length ? (
+        'No cards available yet'
+      ) : undefined}
+
+      {cards.map((card) => (
+        <li key={card.id}>
+          <Card cardData={card}/>
+        </li>
+      ))}
     </ul>
   );
 };
