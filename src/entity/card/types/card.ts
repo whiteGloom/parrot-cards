@@ -7,6 +7,6 @@ export interface ICardSide {
 export interface ICard {
   id: string;
   createdAt: number;
-  sideOne: ICardSide;
-  sideTwo: ICardSide;
+  frontSide: ICardSide;
+  backSide: ICardSide;
 }
