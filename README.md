@@ -8,3 +8,4 @@ Todo:
 * Pulling from cloud
 * Pushing to cloud
 * Tags for cards
+* Random sort
