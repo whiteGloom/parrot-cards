@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "cards": [
+    {
+      "id": "c2640840-368d-4d5d-868d-1e279ae52803",
+      "createdAt": 1700999545178,
+      "sideOne": {
+        "title": "Aubergine",
+        "description": "Example: I dont like aubergines",
+        "hints": ["Purple vegetable"]
+      },
+      "sideTwo": {
+        "title": "Баклажан",
+        "description": "Пример: Я не люблю баклажаны",
+        "hints": ["Фиолетовый овощ"]
+      },
+      "tags": ["vegetables"]
+    },
+    {
+      "id": "f3a54e46-0bbd-4e25-976c-73d6ba45d0b5",
+      "createdAt": 1700999545178,
+      "sideOne": {
+        "title": "Courgette",
+        "description": "Example: This courgette grew enormous!",
+        "hints": ["Purple vegetable"]
+      },
+      "sideTwo": {
+        "title": "Кабачок",
+        "description": "Пример: Этот кабачок вырос просто огромным!",
+        "hints": ["Зелёный овощ"]
+      },
+      "tags": ["vegetables"]
+    }
+  ],
+  "collections": [
+    {
+      "id": "20980979-c3fc-41d9-abed-defe204b0a9a",
+      "createdAt": 1700999545178,
+      "title": "Collection with card and collection",
+      "content": [
+        "c2640840-368d-4d5d-868d-1e279ae52803",
+        "3c84bb13-d3d6-4ffa-a7cf-df3c82336f63"
+      ]
+    },
+    {
+      "id": "3c84bb13-d3d6-4ffa-a7cf-df3c82336f63",
+      "title": "Collection with card",
+      "createdAt": 1700999545178,
+      "content": [
+        "c2640840-368d-4d5d-868d-1e279ae52803"
+      ]
+    }
+  ]
+}
