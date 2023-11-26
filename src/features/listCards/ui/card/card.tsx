@@ -13,9 +13,16 @@ export const Card: FC<CardProps> = (props) => {
 
   return (
     <div className={styles.card} onClick={() => {setFlip((flip) => !flip);}}>
+      <p>{flip ? 'Back side' : 'Front side'}</p>
       <p>Title: {currentSideData.title}</p>
-      <p>Description: {currentSideData.description}</p>
-      <p>Hint: {currentSideData.hints.join(', ')}</p>
+
+      {currentSideData.description.length ? (
+        <p className={styles.description}>Description: {currentSideData.description}</p>
+      ) : undefined}
+
+      {currentSideData.hints.length ? (
+        <p>Hints: {currentSideData.hints.join(', ')}</p>
+      ) : undefined}
     </div>
   );
 };

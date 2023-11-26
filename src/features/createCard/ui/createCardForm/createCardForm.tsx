@@ -18,11 +18,21 @@ type ValuesType = {
   [key in FieldsNames]: string;
 }
 
+function titleValidator(value: string): string | undefined {
+  if (!value) {
+    return 'Required field';
+  }
+
+  return undefined;
+}
+
 export const CreateCardForm: FC = () => {
   const dispatch = useAppDispatch();
 
   return (
     <Formik
+      validateOnChange={false}
+      validateOnBlur={false}
       initialValues={{
         [FieldsNames.FrontSideTitle]: '',
         [FieldsNames.FrontSideDescription]: '',
@@ -39,12 +49,12 @@ export const CreateCardForm: FC = () => {
           sideOne: {
             title: values[FieldsNames.FrontSideTitle],
             description: values[FieldsNames.FrontSideDescription],
-            hints: [values[FieldsNames.FrontSideHint]],
+            hints: values[FieldsNames.FrontSideHint] ? [values[FieldsNames.FrontSideHint]] : [],
           },
           sideTwo: {
             title: values[FieldsNames.BackSideTitle],
             description: values[FieldsNames.BackSideDescription],
-            hints: [values[FieldsNames.BackSideHint]],
+            hints: values[FieldsNames.BackSideHint] ? [values[FieldsNames.BackSideHint]] : [],
           },
         }));
 
@@ -54,15 +64,15 @@ export const CreateCardForm: FC = () => {
       <Form className={styles.cardEditor}>
         <fieldset className={styles.sideEditor}>
           <legend>Front side</legend>
-          <label>Title: <Field name={FieldsNames.FrontSideTitle} /></label>
-          <label>Description: <Field name={FieldsNames.FrontSideDescription} /></label>
+          <label>Title: <Field name={FieldsNames.FrontSideTitle} validate={titleValidator} /></label>
+          <label>Description: <Field name={FieldsNames.FrontSideDescription} as={'textarea'} /></label>
           <label>Hint: <Field name={FieldsNames.FrontSideHint} /></label>
         </fieldset>
 
         <fieldset className={styles.sideEditor}>
           <legend>Back side</legend>
-          <label>Title: <Field name={FieldsNames.BackSideTitle} /></label>
-          <label>Description: <Field name={FieldsNames.BackSideDescription} /></label>
+          <label>Title: <Field name={FieldsNames.BackSideTitle} validate={titleValidator} /></label>
+          <label>Description: <Field name={FieldsNames.BackSideDescription} as={'textarea'} /></label>
           <label>Hint: <Field name={FieldsNames.BackSideHint} /></label>
         </fieldset>
         <button type={'submit'}>Create card</button>
