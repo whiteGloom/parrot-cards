@@ -44,7 +44,7 @@ export const CreateCardForm: FC = () => {
       onSubmit={(values: ValuesType, control) => {
         console.log('wgl onSubmit', values, control);
         dispatch(addOne({
-          id: UUIDGenerator(),
+          id: UniqueIdGenerator.generateSimpleUniqueId(),
           createdAt: Date.now(),
           sideOne: {
             title: values[FieldsNames.FrontSideTitle],
