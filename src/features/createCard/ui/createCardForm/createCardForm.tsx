@@ -4,6 +4,7 @@ import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
 import {addOne} from '../../../../entity/card';
 import {Field, Form, Formik} from 'formik';
 import {UniqueIdGenerator} from '../../../../shared/lib/generateUniqueId/generateUniqueId';
+import clsx from 'clsx';
 
 enum FieldsNames {
   FrontSideTitle = 1,
@@ -58,25 +59,46 @@ export const CreateCardForm: FC = () => {
           },
         }));
 
+        control.resetForm();
         control.setSubmitting(false);
       }}
     >
-      <Form className={styles.cardEditor}>
-        <fieldset className={styles.sideEditor}>
-          <legend>Front side</legend>
-          <label>Title: <Field name={FieldsNames.FrontSideTitle} validate={titleValidator} /></label>
-          <label>Description: <Field name={FieldsNames.FrontSideDescription} as={'textarea'} /></label>
-          <label>Hint: <Field name={FieldsNames.FrontSideHint} /></label>
-        </fieldset>
+      {({errors}) => (
+        <Form className={styles.cardEditor}>
+          <fieldset className={styles.sideEditor}>
+            <legend>Front side</legend>
 
-        <fieldset className={styles.sideEditor}>
-          <legend>Back side</legend>
-          <label>Title: <Field name={FieldsNames.BackSideTitle} validate={titleValidator} /></label>
-          <label>Description: <Field name={FieldsNames.BackSideDescription} as={'textarea'} /></label>
-          <label>Hint: <Field name={FieldsNames.BackSideHint} /></label>
-        </fieldset>
-        <button type={'submit'}>Create card</button>
-      </Form>
+            <label>
+              Title:
+              <Field
+                name={FieldsNames.FrontSideTitle}
+                validate={titleValidator}
+                className={clsx(errors[FieldsNames.FrontSideTitle] && styles.fieldError)}
+              />
+            </label>
+
+            <label>Description: <Field name={FieldsNames.FrontSideDescription} as={'textarea'} /></label>
+            <label>Hint: <Field name={FieldsNames.FrontSideHint} /></label>
+          </fieldset>
+
+          <fieldset className={styles.sideEditor}>
+            <legend>Back side</legend>
+
+            <label>
+              Title:
+              <Field
+                name={FieldsNames.BackSideTitle}
+                validate={titleValidator}
+                className={clsx(errors[FieldsNames.BackSideTitle] && styles.fieldError)}
+              />
+            </label>
+
+            <label>Description: <Field name={FieldsNames.BackSideDescription} as={'textarea'} /></label>
+            <label>Hint: <Field name={FieldsNames.BackSideHint} /></label>
+          </fieldset>
+          <button type={'submit'}>Create card</button>
+        </Form>
+      )}
     </Formik>
   );
 };
