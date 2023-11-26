@@ -20,11 +20,25 @@ type ValuesType = {
 };
 
 function titleValidator(value: string): string | undefined {
-  if (!value) {
-    return 'Required field';
+  if (!value.trim()) {
+    return 'Title is required field for both sides of Card';
   }
 
   return undefined;
+}
+
+function prepareDataFromSideFields(sideFields: ValuesType['frontSide']) {
+  return {
+    title: sideFields.title.trim(),
+    description: sideFields.description.trim(),
+    hints: sideFields.hints.reduce((acc: string[], hint) => {
+      const valueTrimmed = hint.trim();
+      if (valueTrimmed.length) {
+        acc.push(valueTrimmed);
+      }
+      return acc;
+    }, []),
+  };
 }
 
 export const CreateCardForm: FC = () => {
@@ -47,27 +61,20 @@ export const CreateCardForm: FC = () => {
         },
       }}
       onSubmit={(values: ValuesType, control) => {
-        console.log('wgl onSubmit', values, control);
+        console.log('wgl onSubmit', values, control); // TODO REMOVE
+
         dispatch(addOne({
           id: UniqueIdGenerator.generateSimpleUniqueId(),
           createdAt: Date.now(),
-          frontSide: {
-            title: values.frontSide.title,
-            description: values.frontSide.description,
-            hints: values.frontSide.hints.filter((hint) => hint.length),
-          },
-          backSide: {
-            title: values.backSide.title,
-            description: values.backSide.description,
-            hints: values.backSide.hints.filter((hint) => hint.length),
-          },
+          frontSide: prepareDataFromSideFields(values.frontSide),
+          backSide: prepareDataFromSideFields(values.backSide),
         }));
 
         control.resetForm();
         control.setSubmitting(false);
       }}
     >
-      {({values, errors}) => (
+      {({values, setFieldValue, errors}) => (
         <Form className={styles.cardEditor}>
           <fieldset className={styles.sideEditor}>
             <legend>Front side</legend>
@@ -88,15 +95,23 @@ export const CreateCardForm: FC = () => {
               render={(helpers) => {
                 return (
                   <>
-                    {values.frontSide.hints.length && values.frontSide.hints.map((_value, index) => {
+                    {values.frontSide.hints.map((_value, index) => {
                       return (
-                        <label key={index}>Hint {index + 1}: <Field name={`frontSide.hints[${index}]`}/></label>
+                        <label key={index}>
+                          {`Hint ${index + 1}: `}
+                          <Field
+                            name={`frontSide.hints[${index}]`}
+                            onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
+                              await setFieldValue(`frontSide.hints[${index}]`, event.target.value);
+
+                              if (event.target.value && values.frontSide.hints.length - 1 === index) {
+                                helpers.push('');
+                              }
+                            }}
+                          />
+                        </label>
                       );
                     })}
-
-                    {values.frontSide.hints[values.frontSide.hints.length - 1].length ? (
-                      <button onClick={() => helpers.insert(values.frontSide.hints.length, '')}>Add hint</button>
-                    ) : undefined}
                   </>
                 );
               }}
@@ -122,15 +137,23 @@ export const CreateCardForm: FC = () => {
               render={(helpers) => {
                 return (
                   <>
-                    {values.backSide.hints.length && values.backSide.hints.map((_value, index) => {
+                    {values.backSide.hints.map((_value, index) => {
                       return (
-                        <label key={index}>Hint {index + 1}: <Field name={`backSide.hints[${index}]`}/></label>
+                        <label key={index}>
+                          {`Hint ${index + 1}: `}
+                          <Field
+                            name={`backSide.hints[${index}]`}
+                            onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
+                              await setFieldValue(`backSide.hints[${index}]`, event.target.value);
+
+                              if (event.target.value && values.backSide.hints.length - 1 === index) {
+                                helpers.push('');
+                              }
+                            }}
+                          />
+                        </label>
                       );
                     })}
-
-                    {values.backSide.hints[values.backSide.hints.length - 1].length ? (
-                      <button onClick={() => helpers.insert(values.backSide.hints.length, '')}>Add hint</button>
-                    ) : undefined}
                   </>
                 );
               }}
