@@ -3,7 +3,8 @@ import {AppState} from '../../../../shared/types/appState';
 import {ICard} from '../../types/card';
 
 const cardsEntityAdapter = createEntityAdapter<ICard>({
-  selectId: (model) => model.createdAt,
+  selectId: (model) => model.id,
+  sortComparer: (cardA, cardB) => cardA.createdAt - cardB.createdAt,
 });
 
 export const cardsSlice = createSlice({
