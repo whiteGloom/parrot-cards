@@ -7,9 +7,15 @@
   background: #eef8f9;
 }
 
+.sidesWrapper {
+  display: flex;
+  gap: 10px;
+}
+
 .sideEditor {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 5px;
   padding: 5px;
 }
