@@ -14,6 +14,9 @@ export const cardsSlice = createSlice({
     addOne(state, action: PayloadAction<ICard>) {
       cardsEntityAdapter.addOne(state, action.payload);
     },
+    removeOne(state, action: PayloadAction<ICard['id']>) {
+      cardsEntityAdapter.removeOne(state, action.payload);
+    },
   },
 });
 
@@ -21,4 +24,4 @@ export const cardsSelectors = cardsEntityAdapter.getSelectors<AppState>(state =>
 
 export const cardsSliceReducer = cardsSlice.reducer;
 
-export const {addOne} = cardsSlice.actions;
+export const {addOne, removeOne} = cardsSlice.actions;
