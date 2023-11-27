@@ -1,34 +1,33 @@
 import React, {FC} from 'react';
 import styles from './styles.module.scss';
 import {ICard} from '../../../../entity/card';
-import {Hint} from '../hint/hint';
+import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
+import {removeOne} from '../../../../entity/card/model/slices/cardsSlice';
 
 export interface CardProps {
   cardData: ICard;
 }
 
 export const Card: FC<CardProps> = (props) => {
-  const [flip, setFlip] = React.useState(false);
-
-  const currentSideData = flip ? props.cardData.backSide : props.cardData.frontSide;
+  const dispatch = useAppDispatch();
 
   return (
-    <div className={styles.card} onClick={() => {setFlip((flip) => !flip);}}>
-      <p>{flip ? 'BACK SIDE' : 'FRONT SIDE'}</p>
-      <p>Title: {currentSideData.title}</p>
-
-      {currentSideData.description.length ? (
-        <p className={styles.description}>Description: {currentSideData.description}</p>
-      ) : undefined}
-
-      {currentSideData.hints.length ? currentSideData.hints.map((hint, index) => {
-        return (
-          <div style={{display: 'flex'}} key={hint}>
-            {`Hint ${index + 1}: `}
-            <Hint title={hint}/>
-          </div>
-        );
-      }) : undefined}
+    <div className={styles.card}>
+      <div className={styles.info}>
+        <p>{props.cardData.frontSide.title}</p>
+        <hr/>
+        <p>{props.cardData.backSide.title}</p>
+      </div>
+      <div className={styles.controls}>
+        <button disabled={true}>Edit</button>
+        <button
+          onClick={() => {
+            dispatch(removeOne(props.cardData.id));
+          }}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };
