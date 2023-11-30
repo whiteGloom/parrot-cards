@@ -1,6 +1,7 @@
 # Parrot flash cards
 
 Todo:
+* Localization
 * List of cards
 * Adding cards
 * Saving cards
