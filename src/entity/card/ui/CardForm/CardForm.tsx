@@ -1,9 +1,6 @@
 import React, {FC} from 'react';
 import styles from './styles.module.scss';
-import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
-import {addOne} from '../../../../entity/card';
 import {Field, FieldArray, Form, Formik} from 'formik';
-import {UniqueIdGenerator} from '../../../../shared/lib/generateUniqueId/generateUniqueId';
 import clsx from 'clsx';
 
 enum GroupNames {
@@ -38,48 +35,60 @@ function prepareDataFromSideFields(sideFields: ValuesType['frontSide']) {
     description: sideFields.description.trim(),
     hints: sideFields.hints.reduce((acc: string[], hint) => {
       const valueTrimmed = hint.trim();
+
       if (valueTrimmed.length) {
         acc.push(valueTrimmed);
       }
+
       return acc;
     }, []),
   };
 }
 
-export const CreateCardForm: FC = () => {
+export interface IEditCardFormProps {
+  initialValues?: Partial<ValuesType>,
+  onSubmit?: (values: ValuesType) => void,
+  resetOnSubmit?: boolean,
+  submitTitle: string;
+}
+
+const emptyInitialValues: ValuesType = {
+  frontSide: {
+    title: '',
+    description: '',
+    hints: [''],
+  },
+  backSide: {
+    title: '',
+    description: '',
+    hints: [''],
+  },
+};
+
+export const CardForm: FC<IEditCardFormProps> = (props) => {
   const firstFieldRef = React.createRef<HTMLInputElement>();
-  const dispatch = useAppDispatch();
 
   return (
     <Formik
       validateOnChange={false}
       validateOnBlur={false}
-      initialValues={{
-        frontSide: {
-          title: '',
-          description: '',
-          hints: [''],
-        },
-        backSide: {
-          title: '',
-          description: '',
-          hints: [''],
-        },
-      }}
+      initialValues={{...emptyInitialValues, ...(JSON.parse(JSON.stringify(props.initialValues || {})) as ValuesType)}}
       onSubmit={(values: ValuesType, control) => {
         console.log('CreateCardForm onSubmit', values); // TODO REMOVE
 
-        dispatch(addOne({
-          id: UniqueIdGenerator.generateSimpleUniqueId(),
-          createdAt: Date.now(),
-          frontSide: prepareDataFromSideFields(values.frontSide),
-          backSide: prepareDataFromSideFields(values.backSide),
-        }));
+        if (props.onSubmit) {
+          props.onSubmit({
+            [GroupNames.FrontSide]: prepareDataFromSideFields(values[GroupNames.FrontSide]),
+            [GroupNames.BackSide]: prepareDataFromSideFields(values[GroupNames.BackSide]),
+          });
+        }
 
-        control.resetForm();
+        if (props.resetOnSubmit) {
+          control.resetForm();
+          firstFieldRef.current?.focus();
+        }
+
         control.setSubmitting(false);
-
-        firstFieldRef.current?.focus();
       }}
     >
       {(formState) => (
@@ -138,7 +147,7 @@ export const CreateCardForm: FC = () => {
             }
           </div>
 
-          <button type={'submit'} disabled={formState.isSubmitting || formState.isValidating}>Create card</button>
+          <button type={'submit'} disabled={formState.isSubmitting || formState.isValidating}>{props.submitTitle}</button>
         </Form>
       )}
     </Formik>
