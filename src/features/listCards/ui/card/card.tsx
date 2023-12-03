@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 import {ICard} from '../../../../entity/card';
 import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
 import {removeOne} from '../../../../entity/card';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export interface CardProps {
   cardData: ICard;
