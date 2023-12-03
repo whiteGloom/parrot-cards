@@ -2,7 +2,8 @@ import React, {FC} from 'react';
 import styles from './styles.module.scss';
 import {ICard} from '../../../../entity/card';
 import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
-import {removeOne} from '../../../../entity/card/model/slices/cardsSlice';
+import {removeOne} from '../../../../entity/card';
+import {Link, useNavigate} from 'react-router-dom';
 
 export interface CardProps {
   cardData: ICard;
@@ -19,7 +20,7 @@ export const Card: FC<CardProps> = (props) => {
         <p>{props.cardData.backSide.title}</p>
       </div>
       <div className={styles.controls}>
-        <button disabled={true}>Edit</button>
+        <Link to={`/edit-card/${props.cardData.id}`}>Edit</Link>
         <button
           onClick={() => {
             dispatch(removeOne(props.cardData.id));
