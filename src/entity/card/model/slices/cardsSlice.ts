@@ -27,6 +27,8 @@ export const cardsSelectors = cardsEntityAdapter.getSelectors<AppState>(state =>
 
 export const selectCardById = (id: ICard['id']) => (state: AppState) => cardsSelectors.selectById(state, id);
 
+export const selectAllCards = () => (state: AppState) => cardsSelectors.selectAll(state);
+
 export const cardsSliceReducer = cardsSlice.reducer;
 
 export const {addOne, removeOne, updateOne} = cardsSlice.actions;
