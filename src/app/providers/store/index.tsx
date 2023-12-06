@@ -2,10 +2,12 @@ import React, {FC, PropsWithChildren} from 'react';
 import {Provider} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
 import {cardsSliceReducer} from '../../../entity/card';
+import {collectionsSliceReducer} from '../../../entity/collection';
 
 export const store = configureStore({
   reducer: {
     cards: cardsSliceReducer,
+    collections: collectionsSliceReducer,
   },
 });
 

@@ -3,6 +3,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {CreateCards} from '../../../pages/createCards';
 import {Home} from '../../../pages/home';
 import {EditCard} from '../../../pages/editCard';
+import {CreateCollection} from '../../../pages/createCollection/ui/createCollection/createCollection';
 
 export const appRouter = createBrowserRouter([
   {
@@ -12,6 +13,10 @@ export const appRouter = createBrowserRouter([
   {
     path: '/create-cards',
     element: <CreateCards/>,
+  },
+  {
+    path: '/create-collection',
+    element: <CreateCollection/>,
   },
   {
     path: '/edit-card/:cardId',

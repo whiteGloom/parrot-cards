@@ -1,0 +1,1 @@
+export {removeCard} from './hooks/removeCard';

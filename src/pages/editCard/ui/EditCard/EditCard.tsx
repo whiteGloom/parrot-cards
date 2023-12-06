@@ -1,8 +1,7 @@
 import React, {FC} from 'react';
 import styles from './styles.module.scss';
 import {Link, useLoaderData} from 'react-router-dom';
-import {CardForm, updateOne} from '../../../../entity/card';
-import {selectCardById} from '../../../../entity/card/model/slices/cardsSlice';
+import {CardForm, updateOne, selectCardById} from '../../../../entity/card';
 import {useSelector} from 'react-redux';
 import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
 
