@@ -7,3 +7,29 @@
   align-items: center;
   gap: 10px;
 }
+
+.cardEditor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background: #eef8f9;
+}
+
+.sidesWrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.sideEditor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 5px;
+  padding: 5px;
+}
+
+.fieldError {
+  border: 1px solid red;
+}
