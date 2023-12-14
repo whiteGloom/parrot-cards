@@ -7,18 +7,37 @@ const tagsEntityAdapter = createEntityAdapter<ITag>({
   sortComparer: (tagA, tagB) => tagA.createdAt - tagB.createdAt,
 });
 
-const testTags: Record<string, ITag> = {
-  1: {id: '1', title: 'Tag one', createdAt: Date.now(), connectedCardsIds: []},
-  2: {id: '2', title: 'Tag two', createdAt: Date.now(), connectedCardsIds: []},
+const mockTags: Record<string, ITag> = {
+  'Tag one': {id: 'Tag one', title: 'Tag one', createdAt: Date.now(), connectedCardsIds: ['cardOneId', 'cardThirdId']},
+  'Tag two': {id: 'Tag two', title: 'Tag two', createdAt: Date.now(), connectedCardsIds: ['cardTwoId', 'cardThirdId']},
 };
-
 
 export const tagsSlice = createSlice({
   name: 'tags',
-  initialState: tagsEntityAdapter.getInitialState({ids: Object.keys(testTags), entities: testTags}),
+  initialState: tagsEntityAdapter.getInitialState({ids: Object.keys(mockTags), entities: mockTags}),
   reducers: {
     addOneTag(state, action: PayloadAction<ITag>) {
       tagsEntityAdapter.addOne(state, action.payload);
+    },
+    connectTagsWithCard(state, action: PayloadAction<{tagsIds: ITag['id'][], cardId: string}>) {
+      const {tagsIds, cardId} = action.payload;
+
+      tagsIds.forEach((tagId) => {
+        const tag = state.entities[tagId];
+
+        tag?.connectedCardsIds.push(cardId);
+      });
+    },
+    disconnectTagsFromCard(state, action: PayloadAction<{tagsIds: ITag['id'][], cardId: string}>) {
+      const {tagsIds, cardId} = action.payload;
+
+      tagsIds.forEach((tagId) => {
+        const tag = state.entities[tagId];
+
+        if (tag) {
+          tag.connectedCardsIds = tag?.connectedCardsIds.filter(id => id !== cardId);
+        }
+      });
     },
   },
 });
@@ -28,6 +47,7 @@ const tagsAdaptorSelectors = tagsEntityAdapter.getSelectors<AppState>(state => s
 
 export const selectAllTags = () => (state: AppState) => tagsAdaptorSelectors.selectAll(state);
 
+
 export const tagsSliceReducer = tagsSlice.reducer;
 
-export const {addOneTag} = tagsSlice.actions;
+export const {addOneTag, connectTagsWithCard, disconnectTagsFromCard} = tagsSlice.actions;

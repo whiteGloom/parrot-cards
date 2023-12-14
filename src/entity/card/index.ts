@@ -8,4 +8,6 @@ export {
 } from './model/slices/cardsSlice';
 export {CardForm} from './ui/CardForm/CardForm';
 
+export {selectCardsByTags} from '../../features/listCards/model/selectors/selectCardsByTags';
+
 export type {ICard, ICardSide} from './types/card';

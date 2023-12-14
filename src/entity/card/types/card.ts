@@ -9,4 +9,5 @@ export interface ICard {
   createdAt: number;
   frontSide: ICardSide;
   backSide: ICardSide;
+  tagsIds: string[];
 }

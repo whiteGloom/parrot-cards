@@ -1,14 +1,13 @@
 import React, {FC} from 'react';
-import {addOne} from '../../../../entity/card';
 import {Link} from 'react-router-dom';
 import styles from './styles.module.scss';
 import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
-import {UniqueIdGenerator} from '../../../../shared/lib/generateUniqueId/generateUniqueId';
-import {Field, FieldArray, Form, Formik, FormikHelpers, FormikProvider, useFormik} from 'formik';
+import {Field, FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import clsx from 'clsx';
 import {useSelector} from 'react-redux';
 import {addOneTag, selectAllTags} from '../../../../entity/tag';
-import {create} from 'node:domain';
+import {createCard} from '../../../../features/card/createCard';
+import {createTag} from '../../../../features/tag/createTag';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -38,8 +37,8 @@ function titleValidator(value: string): string | undefined {
   return undefined;
 }
 
-function tagTitleValidator(value: string, touched: boolean): string | undefined {
-  if (!value.trim() && touched) {
+function tagTitleValidator(value: string): string | undefined {
+  if (!value.trim()) {
     return 'Title is required for Tag';
   }
 
@@ -79,25 +78,29 @@ const emptyInitialValues: ValuesType = {
 
 export const CreateCards: FC = () => {
   const dispatch = useAppDispatch();
-  const firstFieldRef = React.createRef<HTMLInputElement>();
-  const tagsTitleFieldRef = React.createRef<HTMLInputElement>();
-  const isTitleFieldFocused = React.useRef<boolean>(false);
+  const firstFieldRef = React.useRef<HTMLInputElement>();
+  const newTagTitleInputRef = React.useRef<HTMLInputElement>();
 
   const tags = useSelector(selectAllTags());
 
-  async function createTag(values: ValuesType, formControl: FormikHelpers<ValuesType>) {
-    const id = UniqueIdGenerator.generateSimpleUniqueId();
+  async function createNewTag(values: ValuesType, formControl: FormikHelpers<ValuesType>) {
+    formControl.setSubmitting(true);
 
-    dispatch(addOneTag({
-      id,
-      createdAt: Date.now(),
+    const title = values.newTagTitle.trim();
+
+    await dispatch(createTag({
       title: values.newTagTitle.trim(),
       connectedCardsIds: [],
     }));
 
-    await formControl.setFieldValue('tags', [...values.tags, id]);
     await formControl.setFieldValue('newTagTitle', '');
-    await formControl.setFieldTouched('newTagTitle', false);
+    if (!values.tags.includes(title)) {
+      await formControl.setFieldValue('tags', [...values.tags, title]);
+    }
+
+    newTagTitleInputRef.current?.focus();
+
+    formControl.setSubmitting(false);
   }
 
   return (
@@ -114,18 +117,10 @@ export const CreateCards: FC = () => {
         onSubmit={async (values: ValuesType, control) => {
           console.log('CreateCardForm onSubmit', values); // TODO REMOVE
 
-          if (isTitleFieldFocused.current) {
-            await createTag(values, control);
-            control.setSubmitting(false);
-
-            return;
-          }
-
-          dispatch(addOne({
-            id: UniqueIdGenerator.generateSimpleUniqueId(),
-            createdAt: Date.now(),
+          await dispatch(createCard({
             frontSide: prepareDataFromSideFields(values[GroupNames.FrontSide]),
             backSide: prepareDataFromSideFields(values[GroupNames.BackSide]),
+            tagsIds: values.tags,
           }));
 
           control.resetForm();
@@ -200,10 +195,10 @@ export const CreateCards: FC = () => {
               <ul style={{listStyle: 'none'}}>
                 {tags.map((tag) => (
                   <li key={tag.id}>
-                    <legend>
+                    <label>
                       <Field type={'checkbox'} name={'tags'} value={tag.id} />
                       {tag.title}
-                    </legend>
+                    </label>
                   </li>
                 ))}
 
@@ -212,15 +207,27 @@ export const CreateCards: FC = () => {
                     {'New tag: '}
                     <Field
                       name={'newTagTitle'}
-                      validate={(value: string) => tagTitleValidator(value, !!formState.touched.newTagTitle)}
-                      innerRef={tagsTitleFieldRef}
+                      onKeyDown={(event: KeyboardEvent) => {
+                        if (event.key === 'Enter') {
+                          event.preventDefault();
+
+                          if (!tagTitleValidator(formState.values.newTagTitle)) {
+                            createNewTag(formState.values, formState).catch(null);
+                          }
+                        }
+                      }}
+                      innerRef={newTagTitleInputRef}
                       placeholder={'Enter title of new tag'}
                     />
                   </label>
-                  <button type={'button'} disabled={!!tagTitleValidator(formState.values.newTagTitle, true) || formState.isSubmitting} onClick={() => {
-                    formState.setSubmitting(true);
-                    createTag(formState.values, formState).then(() => formState.setSubmitting(false), null);
-                  }}>Create new Tag</button>
+
+                  <button
+                    type={'button'}
+                    disabled={!!tagTitleValidator(formState.values.newTagTitle) || formState.isSubmitting}
+                    onClick={() => {createNewTag(formState.values, formState).catch(null);}}
+                  >
+                    Create new Tag
+                  </button>
                 </div>
               </ul>
             </fieldset>

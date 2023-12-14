@@ -2,8 +2,10 @@ import React, {FC} from 'react';
 import styles from './styles.module.scss';
 import {ICard} from '../../../../entity/card';
 import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
-import {removeOne} from '../../../../entity/card';
 import {Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {selectTagsByIds} from '../../../../entity/tag/model/selectors/selectTagsById';
+import {deleteCard} from '../../../card/deleteCard';
 
 export interface CardProps {
   cardData: ICard;
@@ -11,6 +13,7 @@ export interface CardProps {
 
 export const Card: FC<CardProps> = (props) => {
   const dispatch = useAppDispatch();
+  const tags = useSelector(selectTagsByIds(props.cardData.tagsIds));
 
   return (
     <div className={styles.card}>
@@ -19,11 +22,14 @@ export const Card: FC<CardProps> = (props) => {
         <hr/>
         <p>{props.cardData.backSide.title}</p>
       </div>
+      <ul>
+        {tags.map(tag => <li key={tag.id}>{tag.title}</li>)}
+      </ul>
       <div className={styles.controls}>
         <Link to={`/edit-card/${props.cardData.id}`}>Edit</Link>
         <button
           onClick={() => {
-            dispatch(removeOne(props.cardData.id));
+            dispatch(deleteCard({cardId: props.cardData.id})).catch(null);
           }}
         >
           Delete

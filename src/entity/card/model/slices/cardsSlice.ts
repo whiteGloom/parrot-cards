@@ -7,9 +7,33 @@ const cardsEntityAdapter = createEntityAdapter<ICard>({
   sortComparer: (cardA, cardB) => cardA.createdAt - cardB.createdAt,
 });
 
+const mockCards: Record<string, ICard> = {
+  'cardOneId': {
+    id: 'cardOneId',
+    tagsIds: ['Tag one'],
+    createdAt: +new Date('09.12.2023'),
+    frontSide: {title: 'First card', hints: [], description: ''},
+    backSide: {title: 'Первая карточка', hints: [], description: ''},
+  },
+  'cardTwoId': {
+    id: 'cardTwoId',
+    tagsIds: ['Tag two'],
+    createdAt: +new Date('12.11.2023'),
+    frontSide: {title: 'Second card', hints: [], description: ''},
+    backSide: {title: 'Вторая карточка', hints: [], description: ''},
+  },
+  'cardThirdId': {
+    id: 'cardThirdId',
+    tagsIds: ['Tag one', 'Tag two'],
+    createdAt: +new Date('7.8.2022'),
+    frontSide: {title: 'Third card', hints: [], description: ''},
+    backSide: {title: 'Третья карточка', hints: [], description: ''},
+  },
+};
+
 export const cardsSlice = createSlice({
   name: 'cards',
-  initialState: cardsEntityAdapter.getInitialState(),
+  initialState: cardsEntityAdapter.getInitialState({ids: Object.keys(mockCards), entities: mockCards}),
   reducers: {
     addOne(state, action: PayloadAction<ICard>) {
       cardsEntityAdapter.addOne(state, action.payload);

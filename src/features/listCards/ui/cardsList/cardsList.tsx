@@ -1,12 +1,13 @@
 import React, {FC} from 'react';
-import {useSelector} from 'react-redux';
-import {cardsSelectors} from '../../../../entity/card/model/slices/cardsSlice';
 import {Card} from '../card/card';
 import styles from './styles.module.scss';
+import {ICard} from '../../../../entity/card';
 
-export const CardsList: FC = () => {
-  const cards = useSelector(cardsSelectors.selectAll);
+export type CardsListProps = {
+  cards: ICard[];
+}
 
+export const CardsList: FC<CardsListProps> = ({cards}) => {
   return (
     <ul className={styles.listCards}>
       {!cards.length ? (

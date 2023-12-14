@@ -1,0 +1,1 @@
+export {deleteCard} from './model/actions/deleteCard/deleteCard';
