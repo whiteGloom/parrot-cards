@@ -4,7 +4,7 @@ import {Link, useLoaderData} from 'react-router-dom';
 import {CardForm, updateOne} from '../../../../entity/card';
 import {selectCardById} from '../../../../entity/card/model/slices/cardsSlice';
 import {useSelector} from 'react-redux';
-import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
+import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 
 export const EditCard: FC = () => {
   // @ts-expect-error error

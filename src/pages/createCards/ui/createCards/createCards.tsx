@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {Link} from 'react-router-dom';
 import styles from './styles.module.scss';
-import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
+import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {Field, FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import clsx from 'clsx';
 import {useSelector} from 'react-redux';

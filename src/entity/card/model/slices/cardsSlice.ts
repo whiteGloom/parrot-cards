@@ -1,5 +1,5 @@
 import {createEntityAdapter, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {AppState} from '../../../../shared/types/appState';
+import {AppState} from '../../../../shared/lib/store/appState';
 import {ICard} from '../../types/card';
 
 const cardsEntityAdapter = createEntityAdapter<ICard>({
@@ -48,10 +48,6 @@ export const cardsSlice = createSlice({
 });
 
 export const cardsSelectors = cardsEntityAdapter.getSelectors<AppState>(state => state.cards);
-
-export const selectCardById = (id: ICard['id']) => (state: AppState) => cardsSelectors.selectById(state, id);
-
-export const selectAllCards = () => (state: AppState) => cardsSelectors.selectAll(state);
 
 export const cardsSliceReducer = cardsSlice.reducer;
 

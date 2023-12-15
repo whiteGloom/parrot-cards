@@ -1,6 +1,6 @@
 import {createEntityAdapter, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ITag} from '../../types/tag';
-import {AppState} from '../../../../shared/types/appState';
+import {AppState} from '../../../../shared/lib/store/appState';
 
 const tagsEntityAdapter = createEntityAdapter<ITag>({
   selectId: model => model.id,
@@ -42,11 +42,7 @@ export const tagsSlice = createSlice({
   },
 });
 
-const tagsAdaptorSelectors = tagsEntityAdapter.getSelectors<AppState>(state => state.tags);
-
-
-export const selectAllTags = () => (state: AppState) => tagsAdaptorSelectors.selectAll(state);
-
+export const tagsAdaptorSelectors = tagsEntityAdapter.getSelectors<AppState>(state => state.tags);
 
 export const tagsSliceReducer = tagsSlice.reducer;
 

@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {addOne, ICard} from '../../../../../../entity/card/';
-import {UniqueIdGenerator} from '../../../../../../shared/lib/generateUniqueId/generateUniqueId';
+import {UniqueIdGenerator} from '../../../../../../shared/lib/UniqueIdGenerator/UniqueIdGenerator';
 import {connectTagsWithCard} from '../../../../../../entity/tag';
 
 export const createCard = createAsyncThunk(

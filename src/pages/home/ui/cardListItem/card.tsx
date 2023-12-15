@@ -1,10 +1,10 @@
 import React, {FC} from 'react';
 import styles from './styles.module.scss';
 import {ICard} from '../../../../entity/card';
-import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
+import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import {selectTagsByIds} from '../../../../entity/tag/model/selectors/selectTagsById';
+import {selectTagsByIds} from '../../../../entity/tag';
 import {deleteCard} from '../../../../features/card/deleteCard';
 
 export interface CardProps {

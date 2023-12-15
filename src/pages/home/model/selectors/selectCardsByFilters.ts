@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {AppState} from '../../../../shared/types/appState';
+import {AppState} from '../../../../shared/lib/store/appState';
 import {ICard} from '../../../../entity/card';
 
 type FiltersType = {
