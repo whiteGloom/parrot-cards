@@ -5,7 +5,7 @@ import {useAppDispatch} from '../../../../shared/hooks/useAppDispatch';
 import {Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectTagsByIds} from '../../../../entity/tag/model/selectors/selectTagsById';
-import {deleteCard} from '../../../card/deleteCard';
+import {deleteCard} from '../../../../features/card/deleteCard';
 
 export interface CardProps {
   cardData: ICard;
