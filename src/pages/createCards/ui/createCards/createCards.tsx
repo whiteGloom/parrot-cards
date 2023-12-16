@@ -128,9 +128,6 @@ export const CreateCards: FC = () => {
 
           control.setSubmitting(false);
         }}
-        validate={(a) => {
-          console.log('wgl', a);
-        }}
       >
         {(formState) => (
           <Form className={styles.cardEditor}>
