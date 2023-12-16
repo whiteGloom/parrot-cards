@@ -25,7 +25,9 @@ export const tagsSlice = createSlice({
       tagsIds.forEach((tagId) => {
         const tag = state.entities[tagId];
 
-        tag?.connectedCardsIds.push(cardId);
+        if (!tag.connectedCardsIds.includes(cardId)) {
+          tag.connectedCardsIds.push(cardId);
+        }
       });
     },
     disconnectTagsFromCard(state, action: PayloadAction<{tagsIds: ITag['id'][], cardId: string}>) {
