@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useSearchParams} from 'react-router-dom';
 import styles from './styles.module.scss';
 import {useSelector} from 'react-redux';
 import {Field, Form, Formik} from 'formik';
@@ -14,7 +14,11 @@ type ValuesType = {
 export const Home: FC = () => {
   const tags = useSelector(selectAllTags());
 
-  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const selectedTags = React.useMemo(() => {
+    return searchParams.get('tags')?.split(',').filter(t => t.length) || [];
+  }, [searchParams]);
 
   const cards = useSelector(selectCardsByFilters({tagsIds: selectedTags}));
 
@@ -26,9 +30,9 @@ export const Home: FC = () => {
       </header>
 
       <Formik
-        initialValues={{tags: [], smartFilter: ''}}
+        initialValues={{tags: selectedTags}}
         onSubmit={(values: ValuesType, control) => {
-          setSelectedTags(values.tags);
+          setSearchParams({tags: values.tags.length ? values.tags.join(',') : ''});
 
           control.setSubmitting(false);
         }}
