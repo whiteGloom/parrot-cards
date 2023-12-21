@@ -7,6 +7,7 @@ export {
 export {CardForm} from './ui/CardForm/CardForm';
 
 export {selectCardById} from './model/selectors/selectCardById';
+export {selectCardsByIds} from './model/selectors/selectCardsByIds';
 
 export {selectAllCards} from './model/selectors/selectAllCards';
 

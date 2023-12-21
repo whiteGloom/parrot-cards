@@ -3,6 +3,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {CreateCards} from '../../../pages/createCards';
 import {Home} from '../../../pages/home';
 import {EditCard} from '../../../pages/editCard';
+import {Revise} from '../../../pages/revise';
 
 export const appRouter = createBrowserRouter([
   {
@@ -14,12 +15,11 @@ export const appRouter = createBrowserRouter([
     element: <CreateCards/>,
   },
   {
+    path: '/revise/:cardId',
+    element: <Revise/>,
+  },
+  {
     path: '/edit-card/:cardId',
-    loader: ({params}) => {
-      return {
-        cardId: params.cardId,
-      };
-    },
     element: <EditCard/>,
   },
 ]);
