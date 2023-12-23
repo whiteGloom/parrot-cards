@@ -1,20 +1,16 @@
 import {createEntityAdapter, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ITag} from '../../types/tag';
 import {AppState} from '../../../../shared/lib/store/appState';
+import {initialTags} from './initialTags';
 
 const tagsEntityAdapter = createEntityAdapter<ITag>({
   selectId: model => model.id,
   sortComparer: (tagA, tagB) => tagA.createdAt - tagB.createdAt,
 });
 
-const mockTags: Record<string, ITag> = {
-  'Tag one': {id: 'Tag one', title: 'Tag one', createdAt: Date.now(), connectedCardsIds: ['cardOneId', 'cardThirdId']},
-  'Tag two': {id: 'Tag two', title: 'Tag two', createdAt: Date.now(), connectedCardsIds: ['cardTwoId', 'cardThirdId']},
-};
-
 export const tagsSlice = createSlice({
   name: 'tags',
-  initialState: tagsEntityAdapter.getInitialState({ids: Object.keys(mockTags), entities: mockTags}),
+  initialState: tagsEntityAdapter.getInitialState({ids: Object.keys(initialTags), entities: initialTags}),
   reducers: {
     addOneTag(state, action: PayloadAction<ITag>) {
       tagsEntityAdapter.addOne(state, action.payload);
