@@ -4,7 +4,6 @@ export {
   removeOne,
   updateOne,
 } from './model/slices/cardsSlice';
-export {CardForm} from './ui/CardForm/CardForm';
 
 export {selectCardById} from './model/selectors/selectCardById';
 export {selectCardsByIds} from './model/selectors/selectCardsByIds';
