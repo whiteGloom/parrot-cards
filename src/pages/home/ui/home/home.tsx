@@ -6,6 +6,11 @@ import {Field, Form, Formik} from 'formik';
 import {selectAllTags} from '../../../../entity/tag';
 import {Card} from '../cardListItem/card';
 import {selectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
+import {dumpState} from '../../model/actions/dumpState';
+import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
+import {saveToFileSystem} from '../../model/actions/saveToFileSystem';
+import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
+import {loadState, StateObjectType} from '../../model/actions/loadState';
 
 type ValuesType = {
   tags: string[],
@@ -13,6 +18,8 @@ type ValuesType = {
 
 export const Home: FC = () => {
   const tags = useSelector(selectAllTags());
+  const dispatch = useAppDispatch();
+  const [fileToLoad, setFileToLoad] = React.useState<File | undefined>(undefined);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -27,6 +34,33 @@ export const Home: FC = () => {
       <header className={styles.header}>
         <h1>Cards List</h1>
         <Link to={'/create-cards'}>Create new cards</Link>
+
+        <button
+          onClick={() => {
+            dispatch(dumpState()).then((s) => {
+              saveToFileSystem(JSON.stringify(s.payload), `pcd-${new Date().toLocaleDateString()}.json`, 'application/json');
+            }, null);
+          }}
+        >
+          Save to local file
+        </button>
+
+        <input
+          type={'file'}
+          onChange={(e) => {
+            setFileToLoad(e.target.files?.[0] || undefined);
+          }}
+        />
+        <button
+          disabled={!fileToLoad}
+          onClick={() => {
+            loadFileFromFileSystem(fileToLoad as File)
+              .then(result => dispatch(loadState(JSON.parse(result) as StateObjectType)))
+              .catch((err) => console.log('Load from file failed. Reason: ', err));
+          }}
+        >
+          Load cards
+        </button>
       </header>
 
       <Formik
