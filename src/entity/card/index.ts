@@ -3,6 +3,7 @@ export {
   addOne,
   removeOne,
   updateOne,
+  setAllCards,
 } from './model/slices/cardsSlice';
 
 export {selectCardById} from './model/selectors/selectCardById';
