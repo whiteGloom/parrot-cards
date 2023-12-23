@@ -5,7 +5,7 @@ import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {Field, FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import clsx from 'clsx';
 import {useSelector} from 'react-redux';
-import {addOneTag, selectAllTags} from '../../../../entity/tag';
+import {selectAllTags} from '../../../../entity/tag';
 import {createCard} from '../../../../features/card/createCard';
 import {createTag} from '../../../../features/tag/createTag';
 
