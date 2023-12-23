@@ -34,4 +34,3 @@ export const Card: FC<CardPropsType> = (props) => {
     </div>
   );
 };
-

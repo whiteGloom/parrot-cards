@@ -21,7 +21,7 @@ export const Revise: FC = () => {
       </header>
 
       {cardId ? (
-        <Card cardId={cardId}/>
+        <Card cardId={cardId} key={cardId}/>
       ) : 'Card not found'}
       <Link to={`/revise/${cardsIds[Math.round(Math.random() * (cardsIds.length - 1))]}${location.search}`}>Next Card</Link>
     </div>
