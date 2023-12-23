@@ -41,6 +41,9 @@ export const tagsSlice = createSlice({
         }
       });
     },
+    setAllTags(state, action: PayloadAction<ITag[]>) {
+      tagsEntityAdapter.setAll(state, action.payload);
+    },
   },
 });
 
@@ -48,4 +51,9 @@ export const tagsAdaptorSelectors = tagsEntityAdapter.getSelectors<AppState>(sta
 
 export const tagsSliceReducer = tagsSlice.reducer;
 
-export const {addOneTag, connectTagsWithCard, disconnectTagsFromCard} = tagsSlice.actions;
+export const {
+  addOneTag,
+  connectTagsWithCard,
+  disconnectTagsFromCard,
+  setAllTags,
+} = tagsSlice.actions;

@@ -4,6 +4,7 @@ export {
   addOneTag,
   connectTagsWithCard,
   disconnectTagsFromCard,
+  setAllTags,
 } from './model/tagsSlice/tagsSlice';
 
 export {selectAllTags} from './model/selectors/selectAllTags';
