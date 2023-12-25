@@ -4,6 +4,7 @@ import {CreateCards} from '../../../pages/createCards';
 import {Home} from '../../../pages/home';
 import {EditCard} from '../../../pages/editCard';
 import {Revise} from '../../../pages/revise';
+import {GoogleOauthPage} from '../../../pages/googleOauth';
 
 export const appRouter = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ export const appRouter = createBrowserRouter([
   {
     path: '/edit-card/:cardId',
     element: <EditCard/>,
+  },
+  {
+    path: '/google-oauth',
+    element: <GoogleOauthPage/>,
   },
 ]);
 

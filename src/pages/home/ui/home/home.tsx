@@ -16,6 +16,10 @@ type ValuesType = {
   tags: string[],
 };
 
+const GOOGLE_OAUTH_KEY = process.env.REACT_APP_GOOGLE_OAUTH_KEY as string;
+const GOOGLE_DRIVE_API_KEY = process.env.REACT_APP_GOOGLE_DRIVE_API_KEY as string;
+const GOOGLE_TEMP_OAUTH_TOKEN = process.env.REACT_APP_GOOGLE_TEMP_AUTH_TOKEN as string;
+
 export const Home: FC = () => {
   const tags = useSelector(selectAllTags());
   const dispatch = useAppDispatch();
@@ -34,7 +38,9 @@ export const Home: FC = () => {
       <header className={styles.header}>
         <h1>Cards List</h1>
         <Link to={'/create-cards'}>Create new cards</Link>
+      </header>
 
+      <div>
         <button
           onClick={() => {
             dispatch(dumpState()).then((s) => {
@@ -45,23 +51,104 @@ export const Home: FC = () => {
           Save to local file
         </button>
 
-        <input
-          type={'file'}
-          onChange={(e) => {
-            setFileToLoad(e.target.files?.[0] || undefined);
-          }}
-        />
+        <div>
+          <button
+            disabled={!fileToLoad}
+            onClick={() => {
+              loadFileFromFileSystem(fileToLoad as File)
+                .then(result => dispatch(loadState(JSON.parse(result) as StateObjectType)))
+                .catch((err) => console.log('Load from file failed. Reason: ', err));
+            }}
+          >
+            Load cards
+          </button>
+
+          <input
+            type={'file'}
+            onChange={(e) => {
+              setFileToLoad(e.target.files?.[0] || undefined);
+            }}
+          />
+        </div>
+      </div>
+
+      <div>
         <button
-          disabled={!fileToLoad}
           onClick={() => {
-            loadFileFromFileSystem(fileToLoad as File)
-              .then(result => dispatch(loadState(JSON.parse(result) as StateObjectType)))
-              .catch((err) => console.log('Load from file failed. Reason: ', err));
+            const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+
+            const params = {
+              client_id: GOOGLE_OAUTH_KEY,
+              redirect_uri: 'http://localhost:3000/google-oauth',
+              response_type: 'token',
+              scope: 'https://www.googleapis.com/auth/drive.file',
+              include_granted_scopes: 'true',
+              state: 'pass-through value',
+            };
+
+            for (const p in params) {
+              url.searchParams.set(p, params[p as keyof typeof params]);
+            }
+
+            window.location.href = url.toString();
           }}
         >
-          Load cards
+          Login via Google
         </button>
-      </header>
+
+        <button
+          onClick={() => {
+            const view = new google.picker.DocsView(google.picker.ViewId.FOLDERS);
+            view.setSelectFolderEnabled(true);
+            view.setParent('root');
+
+            const picker = new google.picker.PickerBuilder()
+              .addView(view)
+              .setDeveloperKey(GOOGLE_DRIVE_API_KEY)
+              .setOAuthToken(GOOGLE_TEMP_OAUTH_TOKEN)
+              .setCallback((e) => {
+                console.log('wgl picker callback', e);
+              })
+              .build();
+            picker.setVisible(true);
+          }}
+        >
+          Select folder in Google Drive
+        </button>
+
+        <button
+          onClick={() => {
+            dispatch(dumpState()).then((s) => {
+              const dest = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+
+              const metadata = {
+                name: 'testfile.json',
+                mimeType: 'application/json',
+                parents: ['1hdYhgQVaYft-3BiB09vK7lg8ypU5nQFn'],
+              };
+
+              const body = new FormData();
+
+              body.set(
+                'metadata',
+                new Blob([JSON.stringify(metadata)], {type: 'application/json'})
+              );
+
+              body.set('file', new Blob([JSON.stringify(s)], {type: 'application/json'}));
+
+              fetch(dest, {
+                method: 'POST',
+                headers: new Headers({
+                  Authorization: `Bearer ${GOOGLE_TEMP_OAUTH_TOKEN}`,
+                }),
+                body: body,
+              }).then((res) => console.log(res), (err) => console.log('Upload to Google Disk failed. Error:', err));
+            }, null);
+          }}
+        >
+          Upload to Google Drive
+        </button>
+      </div>
 
       <Formik
         initialValues={{tags: selectedTags}}
