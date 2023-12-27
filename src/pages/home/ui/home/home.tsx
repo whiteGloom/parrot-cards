@@ -11,12 +11,12 @@ import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {saveToFileSystem} from '../../model/actions/saveToFileSystem';
 import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
 import {loadState, StateObjectType} from '../../model/actions/loadState';
+import {OauthLoginButton} from '../../../../features/google/oauthLogin';
 
 type ValuesType = {
   tags: string[],
 };
 
-const GOOGLE_OAUTH_KEY = process.env.REACT_APP_GOOGLE_OAUTH_KEY as string;
 const GOOGLE_DRIVE_API_KEY = process.env.REACT_APP_GOOGLE_DRIVE_API_KEY as string;
 const GOOGLE_TEMP_OAUTH_TOKEN = process.env.REACT_APP_GOOGLE_TEMP_AUTH_TOKEN as string;
 
@@ -73,32 +73,14 @@ export const Home: FC = () => {
       </div>
 
       <div>
-        <button
-          onClick={() => {
-            const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
-
-            const params = {
-              client_id: GOOGLE_OAUTH_KEY,
-              redirect_uri: 'http://localhost:3000/google-oauth',
-              response_type: 'token',
-              scope: 'https://www.googleapis.com/auth/drive.file',
-              include_granted_scopes: 'true',
-              state: 'pass-through value',
-            };
-
-            for (const p in params) {
-              url.searchParams.set(p, params[p as keyof typeof params]);
-            }
-
-            window.location.href = url.toString();
-          }}
-        >
+        <OauthLoginButton scopes={['https://www.googleapis.com/auth/drive.file']}>
           Login via Google
-        </button>
+        </OauthLoginButton>
 
         <button
           onClick={() => {
             const view = new google.picker.DocsView(google.picker.ViewId.FOLDERS);
+
             view.setSelectFolderEnabled(true);
             view.setParent('root');
 
