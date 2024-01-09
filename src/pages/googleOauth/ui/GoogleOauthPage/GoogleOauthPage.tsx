@@ -1,7 +1,8 @@
 import React, {FC} from 'react';
 import {Link} from 'react-router-dom';
-import {OauthLoginButton} from '../../../features/google/oauthLogin';
-import {OpenType} from '../../../features/google/oauthLogin/api/openOauthPageThunk';
+import {OauthLoginButton, OpenType} from '../../../../features/google/oauthLogin';
+import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
+import {setTokenData} from '../../../../entity/google/oauth';
 
 type ExpectedSuccessParamsFromAuth = {
   access_token: string,
@@ -48,7 +49,16 @@ function parseState(stateString: string): StateExpectedParams {
   }
 }
 
-function SuccessView() {
+function SuccessView(props: {params: ExpectedSuccessParamsFromAuth}) {
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    dispatch(setTokenData({
+      accessToken: props.params.access_token,
+      expiresIn: +props.params.expires_in,
+    }));
+  }, [dispatch, props.params.access_token, props.params.expires_in]);
+
   return (
     <div>
       <p>You successfully authenticated. You can close this page or continue here</p>
@@ -92,7 +102,7 @@ export const GoogleOauthPage: FC = () => {
   }, []);
 
   if (isSuccessParams(params)) {
-    return <SuccessView/>;
+    return <SuccessView params={params}/>;
   }
 
   if (isErrorParams(params)) {
