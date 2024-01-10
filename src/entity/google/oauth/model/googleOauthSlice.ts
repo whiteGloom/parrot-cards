@@ -2,7 +2,9 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export interface ITokenData {
   accessToken: string,
-  expiresIn: number,
+  expiresAt: number,
+  scopes: string[],
+  tokenType: string,
 }
 
 export interface ISliceSchema {

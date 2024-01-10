@@ -55,9 +55,11 @@ function SuccessView(props: {params: ExpectedSuccessParamsFromAuth}) {
   React.useEffect(() => {
     dispatch(setTokenData({
       accessToken: props.params.access_token,
-      expiresIn: +props.params.expires_in,
+      expiresAt: Date.now() + +props.params.expires_in * 1000,
+      tokenType: props.params.token_type,
+      scopes: props.params.scope.split(','),
     }));
-  }, [dispatch, props.params.access_token, props.params.expires_in]);
+  }, [dispatch, props.params.access_token, props.params.expires_in, props.params.scope, props.params.token_type]);
 
   return (
     <div>
