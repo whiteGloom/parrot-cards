@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Navigate} from 'react-router-dom';
 import {OauthLoginButton, OpenType} from '../../../../features/google/oauthLogin';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {setTokenData} from '../../../../entity/google/oauth';
@@ -103,6 +103,10 @@ export const GoogleOauthPage: FC = () => {
       }, {} as Record<string, string>);
   }, []);
 
+  React.useEffect(() => {
+    window.history.replaceState(window.history.state, document.title, window.location.href.split('#')[0]);
+  }, [params]);
+
   if (isSuccessParams(params)) {
     return <SuccessView params={params}/>;
   }
@@ -111,10 +115,5 @@ export const GoogleOauthPage: FC = () => {
     return <ErrorView params={params}/>;
   }
 
-  return (
-    <div>
-      <p>Wrong URL of the page.</p>
-      <Link to={'/'}>Go home</Link>
-    </div>
-  );
+  return <Navigate to={'/'}/>;
 };
