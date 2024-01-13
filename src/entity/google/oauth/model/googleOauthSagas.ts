@@ -2,14 +2,13 @@ import {Task, eventChannel, TakeableChannel} from 'redux-saga';
 import {fork, cancel, delay, put, takeEvery, call} from 'redux-saga/effects';
 import {clearTokenData, ITokenData, setTokenData} from './googleOauthSlice';
 import {PayloadAction} from '@reduxjs/toolkit';
+import {REQUEST_PRELOAD_GOOGLE_OAUTH} from './actionTypes';
 
 let expirationTimerTask: Task | undefined = undefined;
 
-type LocallyStoredCredentialsSchemaType = ITokenData | null;
-
 type LocallyStoredDataUpdateEventType = {
-  newValue: LocallyStoredCredentialsSchemaType,
-  oldValue: LocallyStoredCredentialsSchemaType,
+  newValue: string | null,
+  oldValue: string | null,
 };
 
 function * startTokenExpirationTimer(duration: number) {
@@ -48,8 +47,8 @@ function locallyStoredCredentialsEmitter() {
       }
 
       emitter({
-        newValue: e.newValue ? JSON.parse(e.newValue) as LocallyStoredCredentialsSchemaType : null,
-        oldValue: e.oldValue ? JSON.parse(e.oldValue) as LocallyStoredCredentialsSchemaType : null,
+        newValue: e.newValue,
+        oldValue: e.oldValue,
       });
     };
 
@@ -62,16 +61,42 @@ function locallyStoredCredentialsEmitter() {
 }
 
 function * handleLocallyStoredCredentialsUpdate(updateData: LocallyStoredDataUpdateEventType) {
-  if (!updateData.newValue) {
+  try {
+    const newData = updateData.newValue ? JSON.parse(updateData.newValue) as ITokenData | '' : null;
+
+    if (!newData) {
+      yield put(clearTokenData());
+    } else {
+      yield put(setTokenData(newData));
+    }
+  } catch (err) {
+    localStorage.removeItem('googleOauthCredentials');
     yield put(clearTokenData());
-  } else {
-    yield put(setTokenData(updateData.newValue));
+  }
+}
+
+function * handlePreloadRequest() {
+  try {
+    const tokenDataRaw = localStorage.getItem('googleOauthCredentials');
+
+    if (tokenDataRaw) {
+      const tokenData = JSON.parse(tokenDataRaw) as ITokenData;
+
+      if (tokenData.expiresAt > Date.now()) {
+        yield put(setTokenData(tokenData));
+      } else {
+        localStorage.removeItem('googleOauthCredentials');
+      }
+    }
+  } catch (_err) {
+    localStorage.removeItem('googleOauthCredentials');
   }
 }
 
 export function * watchers() {
   yield takeEvery(setTokenData.type, handleCredentialsUpdate);
   yield takeEvery(clearTokenData.type, handleCredentialsClearing);
+  yield takeEvery(REQUEST_PRELOAD_GOOGLE_OAUTH, handlePreloadRequest);
 
   const locallyStoredCredentialsChannel = (yield call(locallyStoredCredentialsEmitter)) as TakeableChannel<LocallyStoredDataUpdateEventType>;
   yield takeEvery(locallyStoredCredentialsChannel, handleLocallyStoredCredentialsUpdate);
