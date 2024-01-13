@@ -12,13 +12,13 @@ import {saveToFileSystem} from '../../model/actions/saveToFileSystem';
 import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
 import {loadState, StateObjectType} from '../../model/actions/loadState';
 import {OauthLoginButton} from '../../../../features/google/oauthLogin';
+import {AppState} from '../../../../shared/lib/store/appState';
 
 type ValuesType = {
   tags: string[],
 };
 
 const GOOGLE_DRIVE_API_KEY = process.env.REACT_APP_GOOGLE_DRIVE_API_KEY as string;
-const GOOGLE_TEMP_OAUTH_TOKEN = process.env.REACT_APP_GOOGLE_TEMP_AUTH_TOKEN as string;
 
 export const Home: FC = () => {
   const tags = useSelector(selectAllTags());
@@ -30,6 +30,9 @@ export const Home: FC = () => {
   const selectedTags = React.useMemo(() => {
     return searchParams.get('tags')?.split(',').filter(t => t.length) || [];
   }, [searchParams]);
+
+  const tokenData = useSelector((state: AppState) => state.googleOauth.tokenData);
+  const isAuthorized = useSelector((state: AppState) => state.googleOauth.isAuthorized);
 
   const cards = useSelector(selectCardsByFilters({tagsIds: selectedTags}));
 
@@ -79,6 +82,10 @@ export const Home: FC = () => {
 
         <button
           onClick={() => {
+            if (!tokenData) {
+              return;
+            }
+
             const view = new google.picker.DocsView(google.picker.ViewId.FOLDERS);
 
             view.setSelectFolderEnabled(true);
@@ -87,13 +94,14 @@ export const Home: FC = () => {
             const picker = new google.picker.PickerBuilder()
               .addView(view)
               .setDeveloperKey(GOOGLE_DRIVE_API_KEY)
-              .setOAuthToken(GOOGLE_TEMP_OAUTH_TOKEN)
+              .setOAuthToken(tokenData?.accessToken)
               .setCallback((e) => {
                 console.log('wgl picker callback', e);
               })
               .build();
             picker.setVisible(true);
           }}
+          disabled={!isAuthorized}
         >
           Select folder in Google Drive
         </button>
@@ -101,6 +109,10 @@ export const Home: FC = () => {
         <button
           onClick={() => {
             dispatch(dumpState()).then((s) => {
+              if (!tokenData) {
+                return;
+              }
+
               const dest = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
 
               const metadata = {
@@ -121,12 +133,13 @@ export const Home: FC = () => {
               fetch(dest, {
                 method: 'POST',
                 headers: new Headers({
-                  Authorization: `Bearer ${GOOGLE_TEMP_OAUTH_TOKEN}`,
+                  Authorization: `${tokenData.tokenType} ${tokenData.accessToken}`,
                 }),
                 body: body,
               }).then((res) => console.log(res), (err) => console.log('Upload to Google Disk failed. Error:', err));
             }, null);
           }}
+          disabled={!isAuthorized}
         >
           Upload to Google Drive
         </button>
