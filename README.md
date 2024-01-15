@@ -1,12 +1,5 @@
 # Parrot flash cards
 
-Todo:
-* Localization
-* List of cards
-* Adding cards
-* Saving cards
-* Loading cards
-* Pulling from cloud
-* Pushing to cloud
-* Tags for cards
-* Random sort
+**At the moment it is an experimental project for personal use.**
+
+**Draft stage.**
