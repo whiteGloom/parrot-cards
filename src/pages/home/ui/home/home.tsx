@@ -14,6 +14,7 @@ import {OauthLoginButton} from '../../../../features/google/oauthLogin';
 import {AppState} from '../../../../shared/lib/store/appState';
 import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
 import {ENV_GOOGLE_DRIVE_API_KEY} from '../../../../shared/lib/enironmentVariables';
+import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
 
 type ValuesType = {
   tags: string[],
@@ -153,19 +154,19 @@ export const Home: FC = () => {
           control.setSubmitting(false);
         }}
       >
-        <Form>
-          <fieldset style={{display: 'flex', flexDirection: 'column'}}>
-            <legend>Filter by tags</legend>
+        <Form className={'border p-3 flex flex-col gap-3 rounded bg-[#F7F7F7]'}>
+          <fieldset className={'flex flex-col border p-3 rounded bg-white max-h-64 overflow-scroll'}>
+            <legend className={'font-semibold'}>Filter by tags</legend>
 
             {tags.map((tag) => (
-              <label key={tag.id} style={{color: tag.color}}>
+              <label key={tag.id} style={{color: tag.color}} className={'flex gap-1'}>
                 <Field type={'checkbox'} name={'tags'} value={tag.id}/>
                 {tag.title}
               </label>
             ))}
           </fieldset>
 
-          <button type={'submit'}>Apply filters</button>
+          <ButtonDefault type={'submit'}>Apply filters</ButtonDefault>
         </Form>
       </Formik>
 

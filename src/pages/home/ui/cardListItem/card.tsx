@@ -5,6 +5,7 @@ import {Link, useLocation} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectTagsByIds} from '../../../../entity/tag';
 import {deleteCard} from '../../../../features/card/deleteCard';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
 
 export interface CardProps {
   cardData: ICard;
@@ -26,17 +27,18 @@ export const Card: FC<CardProps> = (props) => {
           <p className={'font-semibold'}>{props.cardData.backSide.title}</p>
         </div>
 
-        <div className={'flex gap-3 items-center'}>
+        <div className={'flex gap-2 items-center'}>
           <Link to={`/revise/${props.cardData.id}${location.search}`}>Revise</Link>
           <Link to={`/edit-card/${props.cardData.id}`}>Edit</Link>
 
-          <button
+          <ButtonDefault
+            theme={ButtonDefaultTypes.Warning}
             onClick={() => {
               dispatch(deleteCard({cardId: props.cardData.id})).catch(null);
             }}
           >
             Delete
-          </button>
+          </ButtonDefault>
         </div>
       </div>
 
