@@ -3,4 +3,5 @@ export interface ITag {
   title: string;
   createdAt: number;
   connectedCardsIds: string[];
+  color: string,
 }
