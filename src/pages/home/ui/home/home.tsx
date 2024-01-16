@@ -13,12 +13,11 @@ import {loadState, StateObjectType} from '../../model/actions/loadState';
 import {OauthLoginButton} from '../../../../features/google/oauthLogin';
 import {AppState} from '../../../../shared/lib/store/appState';
 import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {ENV_GOOGLE_DRIVE_API_KEY} from '../../../../shared/lib/enironmentVariables';
 
 type ValuesType = {
   tags: string[],
 };
-
-const GOOGLE_DRIVE_API_KEY = process.env.REACT_APP_GOOGLE_DRIVE_API_KEY as string;
 
 export const Home: FC = () => {
   const tags = useSelector(selectAllTags());
@@ -93,7 +92,7 @@ export const Home: FC = () => {
 
             const picker = new google.picker.PickerBuilder()
               .addView(view)
-              .setDeveloperKey(GOOGLE_DRIVE_API_KEY)
+              .setDeveloperKey(ENV_GOOGLE_DRIVE_API_KEY)
               .setOAuthToken(tokenData?.accessToken)
               .setCallback((e) => {
                 console.log('wgl picker callback', e);
