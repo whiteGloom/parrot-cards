@@ -14,7 +14,7 @@ export const initialTags: Record<string, ITag> = {
     id: 'Animal',
     createdAt: 1703337596579,
     title: 'Animal',
-    color: 'hsl(18, 100%, 16%)',
+    color: 'hsl(41, 100%, 16%)',
     connectedCardsIds: [
       '44dc7f34-8f57-42f0-9065-c3a14abc77d5',
       '6a3d7754-7b95-498d-91f0-adab23ebd10f',
@@ -34,7 +34,7 @@ export const initialTags: Record<string, ITag> = {
     id: 'Mammal',
     createdAt: 1703337955121,
     title: 'Mammal',
-    color: 'hsl(340, 100%, 16%)',
+    color: 'hsl(292, 100%, 16%)',
     connectedCardsIds: [
       '6a3d7754-7b95-498d-91f0-adab23ebd10f',
     ],
