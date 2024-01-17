@@ -27,10 +27,8 @@ export const Home: FC = () => {
 
   return (
     <MainLayout>
-      <header className={'border p-3 flex flex-col gap-3 rounded bg-[#F7F7F7] '}>
-        <div className={'flex justify-between items-end'}>
-          <h1 className={'text-3xl font-bold'}>Cards List</h1>
-        </div>
+      <header className={'border p-3 flex flex-col gap-3 rounded bg-[#F7F7F7]'}>
+        <h1 className={'text-3xl font-bold'}>Cards List</h1>
 
         <nav className={'flex gap-3'}>
           <LinkButton to={'/create-cards'}>Create new cards</LinkButton>
