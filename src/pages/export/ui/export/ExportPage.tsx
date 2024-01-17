@@ -29,7 +29,7 @@ const LocalExportView: FC = () => {
           onSubmit={(values: {title: string}, formikHelpers) => {
             console.log('wgl onSubmit.values', values);
             dispatch(dumpState()).then((s) => {
-              saveToFileSystem(JSON.stringify(s.payload), `${values.title}.json`, 'application/json');
+              saveToFileSystem(JSON.stringify(s.payload), `${values.title || generatedTitle}.json`, 'application/json');
             }, null);
           }}
         >
