@@ -26,13 +26,20 @@ function App() {
       <AppRouterProvider/>
 
       {isWarningVisible ? (
-        <div className={'absolute w-full h-full bg-white flex flex-col items-center justify-center top-0 left-0 gap-3'}>
+        <div className={'fixed w-full h-full bg-white flex flex-col items-center justify-center top-0 left-0 gap-3'}>
           <p className={'text-center'}>
             <b>Reloading of the page will reset all cards!</b><br/>
             Saving inside of the browser is not implemented yet<br/>
             Export features are under development
           </p>
-          <ButtonDefault theme={ButtonDefaultTypes.Warning} onClick={() => {setWarningVisibility(false);}}>I understand</ButtonDefault>
+
+          <ButtonDefault
+            theme={ButtonDefaultTypes.Warning}
+            onClick={() => {setWarningVisibility(false);}}
+            autoFocus
+          >
+            I understand
+          </ButtonDefault>
         </div>
       ) : undefined}
     </div>
