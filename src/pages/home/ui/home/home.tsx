@@ -6,8 +6,8 @@ import {selectAllTags} from '../../../../entity/tag';
 import {Card} from '../cardListItem/card';
 import {selectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
 import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
-import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
-import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
 
 type ValuesType = {
@@ -31,7 +31,7 @@ export const Home: FC = () => {
         <h1 className={'text-3xl font-bold'}>Cards List</h1>
 
         <nav className={'flex gap-3'}>
-          <LinkButton to={'/create-cards'}>Create new cards</LinkButton>
+          <LinkButton theme={LinkButtonDefaultTypes.Accent} to={'/create-cards'}>Create new cards</LinkButton>
 
           <ButtonDefault disabled className={'flex gap-0.5 items-center'}>
             <ArrowDownToLine className={'h-5'}/> Import
@@ -54,7 +54,7 @@ export const Home: FC = () => {
           }}
         >
           <Form className={'flex flex-col gap-3 '}>
-            <fieldset className={'flex flex-col shadow p-3 rounded bg-white max-h-64 overflow-scroll'}>
+            <fieldset className={'flex flex-col shadow-inner border p-3 rounded bg-white max-h-64 overflow-scroll'} draggable>
               <legend className={'font-semibold'}>Filter by tags</legend>
 
               {tags.map((tag) => (
@@ -65,7 +65,7 @@ export const Home: FC = () => {
               ))}
             </fieldset>
 
-            <ButtonDefault type={'submit'}>Apply filters</ButtonDefault>
+            <ButtonDefault theme={ButtonDefaultTypes.Accent} type={'submit'}>Apply filters</ButtonDefault>
           </Form>
         </Formik>
 

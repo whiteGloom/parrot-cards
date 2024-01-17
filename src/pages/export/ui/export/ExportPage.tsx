@@ -3,7 +3,7 @@ import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 import {useSearchParams} from 'react-router-dom';
 import {Field, Form, Formik} from 'formik';
-import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {dumpState} from '../../model/actions/dumpState';
 import {saveToFileSystem} from '../../model/actions/saveToFileSystem';
@@ -42,7 +42,7 @@ const LocalExportView: FC = () => {
                 placeholder={generatedTitle}
               />
             </label>
-            <ButtonDefault>Save</ButtonDefault>
+            <ButtonDefault theme={ButtonDefaultTypes.Accent}>Save</ButtonDefault>
           </Form>
         </Formik>
       </div>

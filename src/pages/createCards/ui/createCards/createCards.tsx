@@ -9,7 +9,7 @@ import {createTag} from '../../../../features/tag/createTag';
 import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
 import {ArrowLeft} from 'lucide-react';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
-import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
 import {LabeledCheckbox} from '../../../../shared/ui/inputs/labeledCheckbox/LabeledCheckbox';
 
 enum GroupNames {
@@ -138,7 +138,7 @@ export const CreateCards: FC = () => {
                     const groupName = sideGroupParams.groupName;
 
                     return (
-                      <fieldset className={'flex flex-col border rounded flex-1 p-3 bg-white gap-3'} key={groupName}>
+                      <fieldset className={'flex flex-col border rounded flex-1 p-3 bg-white gap-3 shadow-inner border'} key={groupName}>
                         <legend className={'font-semibold'}>{sideGroupParams.title}</legend>
 
                         <label className={'flex flex-col gap-1'}>
@@ -192,12 +192,13 @@ export const CreateCards: FC = () => {
 
               <ButtonDefault
                 type={'submit'}
+                theme={ButtonDefaultTypes.Accent}
                 disabled={formState.isSubmitting || formState.isValidating || !formState.isValid}
               >
                 Create card
               </ButtonDefault>
 
-              <fieldset className={'flex flex-col border p-3 gap-3 bg-white rounded'}>
+              <fieldset className={'flex shadow-inner border flex-col border p-3 gap-3 bg-white rounded'}>
                 <legend className={'font-semibold'}>Tags</legend>
 
                 <ul className={'flex flex-col gap-2'}>
