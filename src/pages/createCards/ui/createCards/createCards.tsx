@@ -1,6 +1,4 @@
 import React, {FC} from 'react';
-import {Link} from 'react-router-dom';
-import styles from './styles.module.scss';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {Field, FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import clsx from 'clsx';
@@ -8,6 +6,10 @@ import {useSelector} from 'react-redux';
 import {selectAllTags} from '../../../../entity/tag';
 import {createCard} from '../../../../features/card/createCard';
 import {createTag} from '../../../../features/tag/createTag';
+import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {ArrowLeft} from 'lucide-react';
+import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -104,133 +106,141 @@ export const CreateCards: FC = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <Link to={'/'}>⬅️</Link>
-        <h1>Create Cards</h1>
+    <MainLayout>
+      <header className={'flex gap-3 p-3 bg-[#F7F7F7] rounded border items-center'}>
+        <LinkButton to={'/'}><ArrowLeft/></LinkButton>
+        <h1 className={'text-3xl font-bold'}>Create new cards</h1>
       </header>
 
-      <Formik
-        validateOnChange={false}
-        validateOnBlur={false}
-        initialValues={emptyInitialValues}
-        onSubmit={async (values: ValuesType, control) => {
-          console.log('CreateCardForm onSubmit', values); // TODO REMOVE
+      <div className={'flex flex-col gap-3 p-3 bg-[#F7F7F7] rounded border'}>
+        <Formik
+          isInitialValid={false}
+          initialValues={emptyInitialValues}
+          onSubmit={async (values: ValuesType, control) => {
+            await dispatch(createCard({
+              frontSide: prepareDataFromSideFields(values[GroupNames.FrontSide]),
+              backSide: prepareDataFromSideFields(values[GroupNames.BackSide]),
+              tagsIds: values.tags,
+            }));
 
-          await dispatch(createCard({
-            frontSide: prepareDataFromSideFields(values[GroupNames.FrontSide]),
-            backSide: prepareDataFromSideFields(values[GroupNames.BackSide]),
-            tagsIds: values.tags,
-          }));
+            control.resetForm();
+            firstFieldRef.current?.focus();
 
-          control.resetForm();
-          firstFieldRef.current?.focus();
+            control.setSubmitting(false);
+          }}
+        >
+          {(formState) => (
+            <Form className={'flex flex-col gap-3'}>
+              <div className={'flex gap-7'}>
+                {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {groupName: GroupNames.BackSide, title: 'Back side'}]
+                  .map((sideGroupParams, groupIndex) => {
+                    const groupName = sideGroupParams.groupName;
 
-          control.setSubmitting(false);
-        }}
-      >
-        {(formState) => (
-          <Form className={styles.cardEditor}>
-            <div className={styles.sidesWrapper}>
-              {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {groupName: GroupNames.BackSide, title: 'Back side'}]
-                .map((sideGroupParams, groupIndex) => {
-                  const groupName = sideGroupParams.groupName;
+                    return (
+                      <fieldset className={'flex flex-col border rounded flex-1 p-3 bg-white gap-3'} key={groupName}>
+                        <legend className={'font-semibold'}>{sideGroupParams.title}</legend>
 
-                  return (
-                    <fieldset className={styles.sideEditor} key={groupName}>
-                      <legend>{sideGroupParams.title}</legend>
+                        <label className={'flex flex-col gap-1'}>
+                          Title
+                          <Field
+                            name={`${groupName}.title`}
+                            validate={titleValidator}
+                            autoFocus={!groupIndex}
+                            innerRef={!groupIndex ? firstFieldRef : undefined}
+                            className={clsx(formState.errors[groupName]?.title && 'border-red-500', 'border p-2 rounded shadow')}
+                          />
+                        </label>
 
-                      <label>
-                        {'Title: '}
-                        <Field
-                          name={`${groupName}.title`}
-                          validate={titleValidator}
-                          autoFocus={!groupIndex}
-                          innerRef={!groupIndex ? firstFieldRef : undefined}
-                          className={clsx(formState.errors[groupName]?.title && styles.fieldError)}
+                        <label className={'flex flex-col gap-1'}>
+                          Description
+                          <Field name={`${groupName}.description`} className={'border p-2 rounded shadow '} as={'textarea'}/>
+                        </label>
+
+                        <FieldArray
+                          name={`${groupName}.hints`}
+                          render={(helpers) => {
+                            return (
+                              <>
+                                {formState.values[groupName].hints.map((_value, index) => {
+                                  return (
+                                    <label key={index} className={'flex flex-col gap-1'}>
+                                      Hint {index + 1}
+                                      <Field
+                                        name={`${groupName}.hints[${index}]`}
+                                        className={'border p-2 rounded shadow'}
+                                        onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
+                                          await formState.setFieldValue(`${groupName}.hints[${index}]`, event.target.value);
+
+                                          if (event.target.value && formState.values[groupName].hints.length - 1 === index) {
+                                            helpers.push('');
+                                          }
+                                        }}
+                                      />
+                                    </label>
+                                  );
+                                })}
+                              </>
+                            );
+                          }}
                         />
+                      </fieldset>
+                    );
+                  })
+                }
+              </div>
+
+              <ButtonDefault
+                type={'submit'}
+                disabled={formState.isSubmitting || formState.isValidating || !formState.isValid}
+              >
+                Create card
+              </ButtonDefault>
+
+              <fieldset className={'flex flex-col border p-3 gap-3 bg-white rounded'}>
+                <legend className={'font-semibold'}>Tags</legend>
+
+                <ul className={'flex flex-col gap-2'}>
+                  {tags.map((tag) => (
+                    <li key={tag.id}>
+                      <label style={{color: tag.color}} className={'p-2 border rounded bg-white shadow flex items-center gap-2 cursor-pointer'}>
+                        <Field type={'checkbox'} name={'tags'} value={tag.id} />
+                        {tag.title}
                       </label>
+                    </li>
+                  ))}
+                </ul>
 
-                      <label>Description: <Field name={`${groupName}.description`} as={'textarea'} /></label>
+                <label className={'flex flex-col gap-1'}>
+                  Title for new tag
+                  <Field
+                    name={'newTagTitle'}
+                    className={'border p-2 rounded shadow'}
+                    onKeyDown={(event: KeyboardEvent) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault();
 
-                      <FieldArray
-                        name={`${groupName}.hints`}
-                        render={(helpers) => {
-                          return (
-                            <>
-                              {formState.values[groupName].hints.map((_value, index) => {
-                                return (
-                                  <label key={index}>
-                                    {`Hint ${index + 1}: `}
-                                    <Field
-                                      name={`${groupName}.hints[${index}]`}
-                                      onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
-                                        await formState.setFieldValue(`${groupName}.hints[${index}]`, event.target.value);
-
-                                        if (event.target.value && formState.values[groupName].hints.length - 1 === index) {
-                                          helpers.push('');
-                                        }
-                                      }}
-                                    />
-                                  </label>
-                                );
-                              })}
-                            </>
-                          );
-                        }}
-                      />
-                    </fieldset>
-                  );
-                })
-              }
-            </div>
-
-            <button type={'submit'} disabled={formState.isSubmitting || formState.isValidating}>Create card</button>
-
-            <fieldset>
-              <legend>Add tags</legend>
-              <ul style={{listStyle: 'none'}}>
-                {tags.map((tag) => (
-                  <li key={tag.id}>
-                    <label>
-                      <Field type={'checkbox'} name={'tags'} value={tag.id} />
-                      {tag.title}
-                    </label>
-                  </li>
-                ))}
-
-                <div>
-                  <label>
-                    {'New tag: '}
-                    <Field
-                      name={'newTagTitle'}
-                      onKeyDown={(event: KeyboardEvent) => {
-                        if (event.key === 'Enter') {
-                          event.preventDefault();
-
-                          if (!tagTitleValidator(formState.values.newTagTitle)) {
-                            createNewTag(formState.values, formState).catch(null);
-                          }
+                        if (!tagTitleValidator(formState.values.newTagTitle)) {
+                          createNewTag(formState.values, formState).catch(null);
                         }
-                      }}
-                      innerRef={newTagTitleInputRef}
-                      placeholder={'Enter title of new tag'}
-                    />
-                  </label>
+                      }
+                    }}
+                    innerRef={newTagTitleInputRef}
+                    placeholder={'Enter title for new tag'}
+                  />
+                </label>
 
-                  <button
-                    type={'button'}
-                    disabled={!!tagTitleValidator(formState.values.newTagTitle) || formState.isSubmitting}
-                    onClick={() => {createNewTag(formState.values, formState).catch(null);}}
-                  >
-                    Create new Tag
-                  </button>
-                </div>
-              </ul>
-            </fieldset>
-          </Form>
-        )}
-      </Formik>
-    </div>
+                <ButtonDefault
+                  type={'button'}
+                  disabled={!!tagTitleValidator(formState.values.newTagTitle) || formState.isSubmitting}
+                  onClick={() => {createNewTag(formState.values, formState).catch(null);}}
+                >
+                  Create new Tag
+                </ButtonDefault>
+              </fieldset>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </MainLayout>
   );
 };
