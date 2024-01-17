@@ -30,7 +30,7 @@ function App() {
           <p className={'text-center'}>
             <b>Reloading of the page will reset all cards!</b><br/>
             Saving inside of the browser is not implemented yet<br/>
-            Export features are under development
+            Import feature is under development
           </p>
 
           <ButtonDefault

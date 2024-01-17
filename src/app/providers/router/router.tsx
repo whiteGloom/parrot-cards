@@ -5,6 +5,7 @@ import {Home} from '../../../pages/home';
 import {EditCard} from '../../../pages/editCard';
 import {Revise} from '../../../pages/revise';
 import {GoogleOauthPage} from '../../../pages/googleOauth';
+import {ExportPage} from '../../../pages/export';
 
 export const appRouter = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const appRouter = createBrowserRouter([
   {
     path: '/google-oauth',
     element: <GoogleOauthPage/>,
+  },
+  {
+    path: '/export',
+    element: <ExportPage/>,
   },
 ]);
 

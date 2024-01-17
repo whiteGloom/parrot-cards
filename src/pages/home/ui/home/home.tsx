@@ -35,9 +35,9 @@ export const Home: FC = () => {
         <nav className={'flex gap-3'}>
           <LinkButton to={'/create-cards'}>Create new cards</LinkButton>
 
-          <LinkButton to={'/import'} className={'flex gap-0.5 items-center'}>
+          <ButtonDefault disabled className={'flex gap-0.5 items-center'}>
             <ArrowDownToLine className={'h-5'}/> Import
-          </LinkButton>
+          </ButtonDefault>
 
           <LinkButton to={'/export'} className={'flex gap-0.5 items-center'}>
             <ArrowUpFromLine className={'h-5'}/> Export
