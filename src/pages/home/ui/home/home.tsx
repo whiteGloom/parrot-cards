@@ -45,42 +45,44 @@ export const Home: FC = () => {
         </nav>
       </header>
 
-      <Formik
-        initialValues={{tags: selectedTags}}
-        onSubmit={(values: ValuesType, control) => {
-          searchParams.set('tags', values.tags.length ? values.tags.join(',') : '');
-          setSearchParams(searchParams);
+      <div className={'flex flex-col p-3 gap-7 border rounded bg-[#F7F7F7]'}>
+        <Formik
+          initialValues={{tags: selectedTags}}
+          onSubmit={(values: ValuesType, control) => {
+            searchParams.set('tags', values.tags.length ? values.tags.join(',') : '');
+            setSearchParams(searchParams);
 
-          control.setSubmitting(false);
-        }}
-      >
-        <Form className={'border p-3 flex flex-col gap-3 rounded bg-[#F7F7F7]'}>
-          <fieldset className={'flex flex-col border p-3 rounded bg-white max-h-64 overflow-scroll'}>
-            <legend className={'font-semibold'}>Filter by tags</legend>
+            control.setSubmitting(false);
+          }}
+        >
+          <Form className={'flex flex-col gap-3 '}>
+            <fieldset className={'flex flex-col shadow p-3 rounded bg-white max-h-64 overflow-scroll'}>
+              <legend className={'font-semibold'}>Filter by tags</legend>
 
-            {tags.map((tag) => (
-              <label key={tag.id} style={{color: tag.color}} className={'flex gap-1'}>
-                <Field type={'checkbox'} name={'tags'} value={tag.id}/>
-                {tag.title}
-              </label>
-            ))}
-          </fieldset>
+              {tags.map((tag) => (
+                <label key={tag.id} style={{color: tag.color}} className={'flex gap-1'}>
+                  <Field type={'checkbox'} name={'tags'} value={tag.id}/>
+                  {tag.title}
+                </label>
+              ))}
+            </fieldset>
 
-          <ButtonDefault type={'submit'}>Apply filters</ButtonDefault>
-        </Form>
-      </Formik>
+            <ButtonDefault type={'submit'}>Apply filters</ButtonDefault>
+          </Form>
+        </Formik>
 
-      <ul className={'bg-[#F7F7F7] p-3 rounded flex flex-col gap-3'}>
-        {!cards.length ? (
-          'No cards available yet'
-        ) : undefined}
+        <ul className={'flex flex-col gap-3'}>
+          {!cards.length ? (
+            'No cards available yet'
+          ) : undefined}
 
-        {cards.map((card) => (
-          <li key={card.id}>
-            <Card cardData={card}/>
-          </li>
-        ))}
-      </ul>
+          {cards.map((card) => (
+            <li key={card.id}>
+              <Card cardData={card}/>
+            </li>
+          ))}
+        </ul>
+      </div>
     </MainLayout>
   );
 };
