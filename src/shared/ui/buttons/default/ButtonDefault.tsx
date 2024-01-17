@@ -1,18 +1,14 @@
-import React, {FC, PropsWithChildren, ButtonHTMLAttributes, DetailedHTMLProps} from 'react';
+import React, {FC, ButtonHTMLAttributes, DetailedHTMLProps} from 'react';
 import clsx from 'clsx';
 
 export enum ButtonDefaultTypes {
   Normal = 1,
-  Accent,
   Warning
 }
 
-export type ButtonDefaultPropsType =
-  {
-    theme?: ButtonDefaultTypes,
-  }
-  & DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
-  & PropsWithChildren;
+export type ButtonDefaultPropsType = DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> & {
+  theme?: ButtonDefaultTypes,
+};
 
 export const ButtonDefault: FC<ButtonDefaultPropsType> = (props) => {
   const {
