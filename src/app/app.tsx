@@ -4,8 +4,11 @@ import {ReduxStoreProvider} from './providers/store';
 import {AppRouterProvider} from './providers/router/router';
 import {useAppDispatch} from '../shared/lib/store/useAppDispatch';
 import {REQUEST_PRELOAD_GOOGLE_OAUTH} from '../entity/google/oauth';
+import {ButtonDefault, ButtonDefaultTypes} from '../shared/ui/buttons/default/ButtonDefault';
 
 function App() {
+  const [isWarningVisible, setWarningVisibility] = React.useState(true);
+
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
@@ -21,6 +24,17 @@ function App() {
   return (
     <div className="app">
       <AppRouterProvider/>
+
+      {isWarningVisible ? (
+        <div className={'absolute w-full h-full bg-white flex flex-col items-center justify-center top-0 left-0 gap-3'}>
+          <p className={'text-center'}>
+            <b>Reloading of the page will reset all cards!</b><br/>
+            Saving inside of the browser is not implemented yet<br/>
+            Export features are under development
+          </p>
+          <ButtonDefault theme={ButtonDefaultTypes.Warning} onClick={() => {setWarningVisibility(false);}}>I understand</ButtonDefault>
+        </div>
+      ) : undefined}
     </div>
   );
 }
