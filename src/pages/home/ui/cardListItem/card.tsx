@@ -1,11 +1,12 @@
 import React, {FC} from 'react';
 import {ICard} from '../../../../entity/card';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {Link, useLocation} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectTagsByIds} from '../../../../entity/tag';
 import {deleteCard} from '../../../../features/card/deleteCard';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 
 export interface CardProps {
   cardData: ICard;
@@ -28,8 +29,9 @@ export const Card: FC<CardProps> = (props) => {
         </div>
 
         <div className={'flex gap-2 items-center'}>
-          <Link to={`/revise/${props.cardData.id}${location.search}`}>Revise</Link>
-          <Link to={`/edit-card/${props.cardData.id}`}>Edit</Link>
+          <LinkButton to={`/revise/${props.cardData.id}${location.search}`}>Revise</LinkButton>
+
+          <LinkButton to={`/edit-card/${props.cardData.id}`}>Edit</LinkButton>
 
           <ButtonDefault
             theme={ButtonDefaultTypes.Warning}
@@ -42,7 +44,7 @@ export const Card: FC<CardProps> = (props) => {
         </div>
       </div>
 
-      <ul className={'flex gap-3'}>
+      <ul className={'flex gap-x-3 gap-y-0.5 flex-wrap'}>
         {tags.map(tag => {
           return (
             <li

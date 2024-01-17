@@ -1,20 +1,14 @@
 import React, {FC} from 'react';
-import {Link, useSearchParams} from 'react-router-dom';
+import {useSearchParams} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {Field, Form, Formik} from 'formik';
 import {selectAllTags} from '../../../../entity/tag';
 import {Card} from '../cardListItem/card';
 import {selectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
-import {dumpState} from '../../model/actions/dumpState';
-import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {saveToFileSystem} from '../../model/actions/saveToFileSystem';
-import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
-import {loadState, StateObjectType} from '../../model/actions/loadState';
-import {OauthLoginButton} from '../../../../features/google/oauthLogin';
-import {AppState} from '../../../../shared/lib/store/appState';
 import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
-import {ENV_GOOGLE_DRIVE_API_KEY} from '../../../../shared/lib/enironmentVariables';
 import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
 
 type ValuesType = {
   tags: string[],
@@ -22,8 +16,6 @@ type ValuesType = {
 
 export const Home: FC = () => {
   const tags = useSelector(selectAllTags());
-  const dispatch = useAppDispatch();
-  const [fileToLoad, setFileToLoad] = React.useState<File | undefined>(undefined);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -31,119 +23,27 @@ export const Home: FC = () => {
     return searchParams.get('tags')?.split(',').filter(t => t.length) || [];
   }, [searchParams]);
 
-  const tokenData = useSelector((state: AppState) => state.googleOauth.tokenData);
-  const isAuthorized = useSelector((state: AppState) => state.googleOauth.isAuthorized);
-
   const cards = useSelector(selectCardsByFilters({tagsIds: selectedTags}));
 
   return (
     <MainLayout>
-      <header className={'flex justify-between items-end'}>
-        <h1 className={'text-3xl font-bold underline'}>Cards List</h1>
-        <Link to={'/create-cards'}>Create new cards</Link>
-      </header>
-
-      <div>
-        <button
-          onClick={() => {
-            dispatch(dumpState()).then((s) => {
-              saveToFileSystem(JSON.stringify(s.payload), `pcd-${new Date().toLocaleDateString()}.json`, 'application/json');
-            }, null);
-          }}
-        >
-          Save to local file
-        </button>
-
-        <div>
-          <button
-            disabled={!fileToLoad}
-            onClick={() => {
-              loadFileFromFileSystem(fileToLoad as File)
-                .then(result => dispatch(loadState(JSON.parse(result) as StateObjectType)))
-                .catch((err) => console.log('Load from file failed. Reason: ', err));
-            }}
-          >
-            Load cards
-          </button>
-
-          <input
-            type={'file'}
-            onChange={(e) => {
-              setFileToLoad(e.target.files?.[0] || undefined);
-            }}
-          />
+      <header className={'border p-3 flex flex-col gap-3 rounded bg-[#F7F7F7] '}>
+        <div className={'flex justify-between items-end'}>
+          <h1 className={'text-3xl font-bold'}>Cards List</h1>
         </div>
-      </div>
 
-      <div>
-        <OauthLoginButton scopes={['https://www.googleapis.com/auth/drive.file']}>
-          Login via Google
-        </OauthLoginButton>
+        <nav className={'flex gap-3'}>
+          <LinkButton to={'/create-cards'}>Create new cards</LinkButton>
 
-        <button
-          onClick={() => {
-            if (!tokenData) {
-              return;
-            }
+          <LinkButton to={'/import'} className={'flex gap-0.5 items-center'}>
+            <ArrowDownToLine className={'h-5'}/> Import
+          </LinkButton>
 
-            const view = new google.picker.DocsView(google.picker.ViewId.FOLDERS);
-
-            view.setSelectFolderEnabled(true);
-            view.setParent('root');
-
-            const picker = new google.picker.PickerBuilder()
-              .addView(view)
-              .setDeveloperKey(ENV_GOOGLE_DRIVE_API_KEY)
-              .setOAuthToken(tokenData?.accessToken)
-              .setCallback((e) => {
-                console.log('wgl picker callback', e);
-              })
-              .build();
-            picker.setVisible(true);
-          }}
-          disabled={!isAuthorized}
-        >
-          Select folder in Google Drive
-        </button>
-
-        <button
-          onClick={() => {
-            dispatch(dumpState()).then((s) => {
-              if (!tokenData) {
-                return;
-              }
-
-              const dest = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
-
-              const metadata = {
-                name: 'testfile.json',
-                mimeType: 'application/json',
-                parents: ['1hdYhgQVaYft-3BiB09vK7lg8ypU5nQFn'],
-              };
-
-              const body = new FormData();
-
-              body.set(
-                'metadata',
-                new Blob([JSON.stringify(metadata)], {type: 'application/json'})
-              );
-
-              body.set('file', new Blob([JSON.stringify(s)], {type: 'application/json'}));
-
-              fetch(dest, {
-                method: 'POST',
-                headers: new Headers({
-                  Authorization: `${tokenData.tokenType} ${tokenData.accessToken}`,
-                }),
-                body: body,
-              }).then((res) => console.log(res), (err) => console.log('Upload to Google Disk failed. Error:', err));
-            }, null);
-          }}
-          disabled={!isAuthorized}
-        >
-          Upload to Google Drive
-        </button>
-      </div>
+          <LinkButton to={'/export'} className={'flex gap-0.5 items-center'}>
+            <ArrowUpFromLine className={'h-5'}/> Export
+          </LinkButton>
+        </nav>
+      </header>
 
       <Formik
         initialValues={{tags: selectedTags}}
