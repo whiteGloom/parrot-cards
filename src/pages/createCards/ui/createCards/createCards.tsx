@@ -10,6 +10,7 @@ import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
 import {ArrowLeft} from 'lucide-react';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {LabeledCheckbox} from '../../../../shared/ui/inputs/labeledCheckbox/LabeledCheckbox';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -202,10 +203,7 @@ export const CreateCards: FC = () => {
                 <ul className={'flex flex-col gap-2'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
-                      <label style={{color: tag.color}} className={'p-2 border rounded bg-white shadow flex items-center gap-2 cursor-pointer'}>
-                        <Field type={'checkbox'} name={'tags'} value={tag.id} />
-                        {tag.title}
-                      </label>
+                      <LabeledCheckbox name={'tags'} title={tag.title} value={tag.id} style={{color: tag.color}}/>
                     </li>
                   ))}
                 </ul>
