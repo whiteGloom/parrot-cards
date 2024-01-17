@@ -138,7 +138,7 @@ export const CreateCards: FC = () => {
                     const groupName = sideGroupParams.groupName;
 
                     return (
-                      <fieldset className={'flex flex-col border rounded flex-1 p-3 bg-white gap-3 shadow-inner border'} key={groupName}>
+                      <fieldset className={'flex flex-col border rounded flex-1 p-3 bg-white gap-3 shadow-inner'} key={groupName}>
                         <legend className={'font-semibold'}>{sideGroupParams.title}</legend>
 
                         <label className={'flex flex-col gap-1'}>
@@ -198,10 +198,10 @@ export const CreateCards: FC = () => {
                 Create card
               </ButtonDefault>
 
-              <fieldset className={'flex shadow-inner border flex-col border p-3 gap-3 bg-white rounded'}>
+              <fieldset className={'flex shadow-inner border flex-col p-3 gap-3 bg-white rounded'}>
                 <legend className={'font-semibold'}>Tags</legend>
 
-                <ul className={'flex flex-col gap-2'}>
+                <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
                       <LabeledCheckbox name={'tags'} title={tag.title} value={tag.id} style={{color: tag.color}}/>

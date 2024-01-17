@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 import {selectAllTags} from '../../../../entity/tag';
 import {Card} from '../cardListItem/card';
 import {selectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
@@ -9,6 +9,7 @@ import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
+import {LabeledCheckbox} from '../../../../shared/ui/inputs/labeledCheckbox/LabeledCheckbox';
 
 type ValuesType = {
   tags: string[],
@@ -54,15 +55,16 @@ export const Home: FC = () => {
           }}
         >
           <Form className={'flex flex-col gap-3 '}>
-            <fieldset className={'flex flex-col shadow-inner border p-3 rounded bg-white max-h-64 overflow-scroll'} draggable>
+            <fieldset className={'flex flex-col shadow-inner border gap-1 p-3 rounded bg-white max-h-64 overflow-scroll'} draggable>
               <legend className={'font-semibold'}>Filter by tags</legend>
 
-              {tags.map((tag) => (
-                <label key={tag.id} style={{color: tag.color}} className={'flex gap-1'}>
-                  <Field type={'checkbox'} name={'tags'} value={tag.id}/>
-                  {tag.title}
-                </label>
-              ))}
+              <ul className={'flex flex-col gap-1'}>
+                {tags.map((tag) => (
+                  <li key={tag.id}>
+                    <LabeledCheckbox key={tag.id} name={'tags'} title={tag.title} value={tag.id} style={{color: tag.color}}/>
+                  </li>
+                ))}
+              </ul>
             </fieldset>
 
             <ButtonDefault theme={ButtonDefaultTypes.Accent} type={'submit'}>Apply filters</ButtonDefault>
