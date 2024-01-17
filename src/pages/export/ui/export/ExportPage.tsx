@@ -26,7 +26,7 @@ const LocalExportView: FC = () => {
           initialValues={{
             title: generatedTitle,
           }}
-          onSubmit={(values: {title: string}, formikHelpers) => {
+          onSubmit={(values: {title: string}) => {
             console.log('wgl onSubmit.values', values);
             dispatch(dumpState()).then((s) => {
               saveToFileSystem(JSON.stringify(s.payload), `${values.title || generatedTitle}.json`, 'application/json');
