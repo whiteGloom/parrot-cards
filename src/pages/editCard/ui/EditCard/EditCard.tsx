@@ -1,14 +1,21 @@
 import React, {FC} from 'react';
-import {Link, useParams} from 'react-router-dom';
-import styles from './styles.module.scss';
+import {useParams} from 'react-router-dom';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {Field, FieldArray, Form, Formik, FormikHelpers} from 'formik';
-import clsx from 'clsx';
+import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import {useSelector} from 'react-redux';
 import {createTag} from '../../../../features/tag/createTag';
 import {ICard, selectCardById} from '../../../../entity/card';
 import {selectAllTags} from '../../../../entity/tag';
 import {editCard} from '../../../../features/card/editCard';
+import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {ArrowLeft} from 'lucide-react';
+import {Fieldset} from '../../../../shared/ui/Fieldset/Fieldset';
+import {LabelAbove} from '../../../../shared/ui/inputs/LabelAbove/LabelAbove';
+import {InputDefault} from '../../../../shared/ui/inputs/InputDefault/InputDefault';
+import {ErrorLabel} from '../../../../shared/ui/inputs/ErrorLabel/ErrorLabel';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {LabeledCheckbox} from '../../../../shared/ui/inputs/LabeledCheckbox/LabeledCheckbox';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -31,19 +38,7 @@ type ValuesType = {
 };
 
 function titleValidator(value: string): string | undefined {
-  if (!value.trim()) {
-    return 'Title is required field for both sides of Card';
-  }
-
-  return undefined;
-}
-
-function tagTitleValidator(value: string): string | undefined {
-  if (!value.trim()) {
-    return 'Title is required for Tag';
-  }
-
-  return undefined;
+  if (!value.trim()) return 'Title is required field for both sides of the Card';
 }
 
 function prepareDataFromSideFields(sideFields: ValuesType['frontSide']) {
@@ -81,8 +76,8 @@ export const EditCard: FC = () => {
   const dispatch = useAppDispatch();
   const pageParams = useParams<{cardId: string}>();
 
-  const firstFieldRef = React.useRef<HTMLInputElement>();
-  const newTagTitleInputRef = React.useRef<HTMLInputElement>();
+  const firstFieldRef = React.useRef<HTMLInputElement>(null);
+  const newTagTitleInputRef = React.useRef<HTMLInputElement>(null);
 
   const card: ICard | undefined = useSelector(selectCardById(pageParams.cardId || ''));
   const tags = useSelector(selectAllTags());
@@ -108,151 +103,154 @@ export const EditCard: FC = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <Link to={'/'}>⬅️</Link>
-        <h1>Edit card</h1>
+    <MainLayout>
+      <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
+        <LinkButton to={'/'}><ArrowLeft/></LinkButton>
+        <h1 className={'text-3xl font-bold'}>Edit card</h1>
       </header>
 
-      {card ? <Formik
-        validateOnChange={false}
-        validateOnBlur={false}
-        initialValues={{
-          newTagTitle: emptyInitialValues.newTagTitle,
-          frontSide: {
-            title: card?.frontSide.title || emptyInitialValues.frontSide.title,
-            description: card?.frontSide.description || emptyInitialValues.frontSide.description,
-            hints: card?.frontSide.hints.length ? [...card.frontSide.hints] : emptyInitialValues.frontSide.hints,
-          },
-          backSide: {
-            title: card?.backSide.title || emptyInitialValues.backSide.title,
-            description: card?.backSide.description || emptyInitialValues.backSide.description,
-            hints: card?.backSide.hints.length ? [...card.backSide.hints] : emptyInitialValues.backSide.hints,
-          },
-          tags: card?.tagsIds.length ? [...card.tagsIds] : emptyInitialValues.tags,
-        }}
-        onSubmit={async (values: ValuesType, control) => {
-          console.log('EditCardForm onSubmit', values); // TODO REMOVE
-
-          await dispatch(editCard({
-            id: card.id,
-            changes: {
-              frontSide: prepareDataFromSideFields(values[GroupNames.FrontSide]),
-              backSide: prepareDataFromSideFields(values[GroupNames.BackSide]),
-              tagsIds: values.tags,
+      <section className={'flex flex-col gap-3 p-3 bg-gray-50 rounded border'}>
+        {card ? <Formik
+          initialValues={{
+            newTagTitle: emptyInitialValues.newTagTitle,
+            frontSide: {
+              title: card?.frontSide.title || emptyInitialValues.frontSide.title,
+              description: card?.frontSide.description || emptyInitialValues.frontSide.description,
+              hints: card?.frontSide.hints.length ? [...card.frontSide.hints] : emptyInitialValues.frontSide.hints,
             },
-          }));
+            backSide: {
+              title: card?.backSide.title || emptyInitialValues.backSide.title,
+              description: card?.backSide.description || emptyInitialValues.backSide.description,
+              hints: card?.backSide.hints.length ? [...card.backSide.hints] : emptyInitialValues.backSide.hints,
+            },
+            tags: card?.tagsIds.length ? [...card.tagsIds] : emptyInitialValues.tags,
+          }}
+          onSubmit={async (values: ValuesType, control) => {
+            await dispatch(editCard({
+              id: card.id,
+              changes: {
+                frontSide: prepareDataFromSideFields(values[GroupNames.FrontSide]),
+                backSide: prepareDataFromSideFields(values[GroupNames.BackSide]),
+                tagsIds: values.tags,
+              },
+            }));
 
-          control.setSubmitting(false);
-        }}
-      >
-        {(formState) => (
-          <Form className={styles.cardEditor}>
-            <div className={styles.sidesWrapper}>
-              {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {
-                groupName: GroupNames.BackSide,
-                title: 'Back side',
-              }]
-                .map((sideGroupParams, groupIndex) => {
-                  const groupName = sideGroupParams.groupName;
+            control.setSubmitting(false);
+          }}
+        >
+          {(formState) => (
+            <Form className={'flex flex-col gap-3'}>
+              <div className={'flex gap-7'}>
+                {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {
+                  groupName: GroupNames.BackSide,
+                  title: 'Back side',
+                }]
+                  .map((sideGroupParams, groupIndex) => {
+                    const groupName = sideGroupParams.groupName;
 
-                  return (
-                    <fieldset className={styles.sideEditor} key={groupName}>
-                      <legend>{sideGroupParams.title}</legend>
+                    return (
+                      <Fieldset key={groupName} legend={sideGroupParams.title}>
+                        <LabelAbove>
+                          Title
+                          <InputDefault
+                            name={`${groupName}.title`}
+                            validate={titleValidator}
+                            autoFocus={!groupIndex}
+                            innerRef={!groupIndex ? firstFieldRef : undefined}
+                            errorString={(formState.touched[groupName]?.title && formState.errors[groupName]?.title) || ''}
+                          />
 
-                      <label>
-                        {'Title: '}
-                        <Field
-                          name={`${groupName}.title`}
-                          validate={titleValidator}
-                          autoFocus={!groupIndex}
-                          innerRef={!groupIndex ? firstFieldRef : undefined}
-                          className={clsx(formState.errors[groupName]?.title && styles.fieldError)}
+                          <ErrorLabel name={`${groupName}.title`}/>
+                        </LabelAbove>
+
+                        <LabelAbove>
+                          Description
+                          <InputDefault name={`${groupName}.description`} as={'textarea'}/>
+                        </LabelAbove>
+
+                        <FieldArray
+                          name={`${groupName}.hints`}
+                          render={(helpers) => {
+                            return (
+                              <>
+                                {formState.values[groupName].hints.map((_value, index) => {
+                                  return (
+                                    <LabelAbove key={index}>
+                                      Hint {index + 1}
+                                      <InputDefault
+                                        name={`${groupName}.hints[${index}]`}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                          formState.handleChange(event);
+
+                                          if (event.target.value && formState.values[groupName].hints.length - 1 === index) {
+                                            helpers.push('');
+                                          }
+                                        }}
+                                      />
+                                    </LabelAbove>
+                                  );
+                                })}
+                              </>
+                            );
+                          }}
                         />
-                      </label>
+                      </Fieldset>
+                    );
+                  })
+                }
+              </div>
 
-                      <label>Description: <Field name={`${groupName}.description`} as={'textarea'}/></label>
+              <ButtonDefault
+                type={'submit'}
+                theme={ButtonDefaultTypes.Accent}
+                disabled={formState.isSubmitting || formState.isValidating || !formState.isValid}
+              >
+                Save changes
+              </ButtonDefault>
 
-                      <FieldArray
-                        name={`${groupName}.hints`}
-                        render={(helpers) => {
-                          return (
-                            <>
-                              {formState.values[groupName].hints.map((_value, index) => {
-                                return (
-                                  <label key={index}>
-                                    {`Hint ${index + 1}: `}
-                                    <Field
-                                      name={`${groupName}.hints[${index}]`}
-                                      onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
-                                        await formState.setFieldValue(`${groupName}.hints[${index}]`, event.target.value);
+              <Fieldset legend={'Tags'}>
+                <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
+                  {tags.map((tag) => (
+                    <li key={tag.id}>
+                      <LabeledCheckbox name={'tags'} value={tag.id} style={{color: tag.color}}>
+                        {tag.title}
+                      </LabeledCheckbox>
+                    </li>
+                  ))}
+                </ul>
 
-                                        if (event.target.value && formState.values[groupName].hints.length - 1 === index) {
-                                          helpers.push('');
-                                        }
-                                      }}
-                                    />
-                                  </label>
-                                );
-                              })}
-                            </>
-                          );
-                        }}
-                      />
-                    </fieldset>
-                  );
-                })
-              }
-            </div>
+                <LabelAbove>
+                  Title for a new tag
+                  <InputDefault
+                    name={'newTagTitle'}
+                    onKeyDown={(event: React.KeyboardEvent) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault();
 
-            <button type={'submit'} disabled={formState.isSubmitting || formState.isValidating}>Save changes</button>
-
-            <fieldset>
-              <legend>Add tags</legend>
-              <ul style={{listStyle: 'none'}}>
-                {tags.map((tag) => (
-                  <li key={tag.id}>
-                    <label>
-                      <Field type={'checkbox'} name={'tags'} value={tag.id}/>
-                      {tag.title}
-                    </label>
-                  </li>
-                ))}
-
-                <div>
-                  <label>
-                    {'New tag: '}
-                    <Field
-                      name={'newTagTitle'}
-                      onKeyDown={(event: KeyboardEvent) => {
-                        if (event.key === 'Enter') {
-                          event.preventDefault();
-
-                          if (!tagTitleValidator(formState.values.newTagTitle)) {
-                            createNewTag(formState.values, formState).catch(null);
-                          }
+                        if (formState.values.newTagTitle.trim()) {
+                          createNewTag(formState.values, formState).catch(null);
                         }
-                      }}
-                      innerRef={newTagTitleInputRef}
-                      placeholder={'Enter title of new tag'}
-                    />
-                  </label>
-
-                  <button
-                    type={'button'}
-                    disabled={!!tagTitleValidator(formState.values.newTagTitle) || formState.isSubmitting}
-                    onClick={() => {
-                      createNewTag(formState.values, formState).catch(null);
+                      }
                     }}
-                  >
-                    Create new Tag
-                  </button>
-                </div>
-              </ul>
-            </fieldset>
-          </Form>
-        )}
-      </Formik> : 'Error'}
-    </div>
+                    innerRef={newTagTitleInputRef}
+                    placeholder={'Enter title of new tag'}
+                  />
+                </LabelAbove>
+
+                <ButtonDefault
+                  type={'button'}
+                  disabled={!formState.values.newTagTitle.trim() || formState.isSubmitting}
+                  onClick={() => {
+                    createNewTag(formState.values, formState).catch(null);
+                  }}
+                >
+                  Create new Tag
+                </ButtonDefault>
+              </Fieldset>
+            </Form>
+          )}
+        </Formik> : 'Error. No card with such ID'}
+      </section>
+    </MainLayout>
   );
 };
