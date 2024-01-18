@@ -6,6 +6,9 @@ import {EditCard} from '../../../pages/editCard';
 import {Revise} from '../../../pages/revise';
 import {GoogleOauthPage} from '../../../pages/googleOauth';
 import {ExportPage} from '../../../pages/export';
+import {PageExportLocal} from '../../../pages/export-local';
+import {PageImport} from '../../../pages/import';
+import {PageImportLocal} from '../../../pages/import-local';
 
 export const appRouter = createBrowserRouter([
   {
@@ -31,6 +34,18 @@ export const appRouter = createBrowserRouter([
   {
     path: '/export',
     element: <ExportPage/>,
+  },
+  {
+    path: '/export-local',
+    element: <PageExportLocal/>,
+  },
+  {
+    path: '/import',
+    element: <PageImport/>,
+  },
+  {
+    path: '/import-local',
+    element: <PageImportLocal/>,
   },
 ]);
 

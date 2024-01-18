@@ -43,7 +43,8 @@ export const PageExportLocal: FC = () => {
                 placeholder={generatedTitle}
               />
             </LabelAbove>
-            <ButtonDefault theme={ButtonDefaultTypes.Accent}>Save</ButtonDefault>
+
+            <ButtonDefault theme={ButtonDefaultTypes.Accent}>Export</ButtonDefault>
           </Form>
         </Formik>
       </section>

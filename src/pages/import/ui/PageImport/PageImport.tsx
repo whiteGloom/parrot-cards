@@ -13,7 +13,7 @@ export const PageImport: FC = () => {
       </header>
 
       <section className={'flex flex-col p-3 gap-3 border rounded bg-gray-50 items-start'}>
-        <ButtonDefault disabled>Import from JSON file</ButtonDefault>
+        <LinkButton to={'/import-local'}>Import from JSON file</LinkButton>
         <ButtonDefault disabled>Import from Google Drive</ButtonDefault>
       </section>
     </MainLayout>
