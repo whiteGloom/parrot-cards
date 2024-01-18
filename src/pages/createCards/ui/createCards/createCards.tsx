@@ -204,7 +204,9 @@ export const CreateCards: FC = () => {
                 <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
-                      <LabeledCheckbox name={'tags'} title={tag.title} value={tag.id} style={{color: tag.color}}/>
+                      <LabeledCheckbox name={'tags'} value={tag.id} style={{color: tag.color}}>
+                        {tag.title}
+                      </LabeledCheckbox>
                     </li>
                   ))}
                 </ul>

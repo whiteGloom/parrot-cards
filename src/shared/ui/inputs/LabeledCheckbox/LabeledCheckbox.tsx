@@ -4,7 +4,6 @@ import clsx from 'clsx';
 
 export type InputCheckboxPropsType = {
   name: string;
-  title: string;
   value: string | number,
   className?: string;
   disabled?: boolean,
@@ -29,7 +28,7 @@ export const LabeledCheckbox: FC<InputCheckboxPropsType> = (props) => {
         value={value}
       />
 
-      {props.title}
+      {props.children}
     </label>
   );
 };
