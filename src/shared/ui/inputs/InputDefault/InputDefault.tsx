@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 export type InputDefaultPropsType = {
     className?: string;
-    name: string;
+    name?: string;
     innerRef?: React.RefObject<HTMLInputElement>;
     errorString?: string;
 } & GenericFieldHTMLAttributes & Omit<FieldConfig, 'innerRef'>;
