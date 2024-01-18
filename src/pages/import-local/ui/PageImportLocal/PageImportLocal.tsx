@@ -2,9 +2,7 @@ import React, {FC} from 'react';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowLeft} from 'lucide-react';
-import {Field, Form, Formik} from 'formik';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
-import {InputDefault} from '../../../../shared/ui/inputs/InputDefault/InputDefault';
 import {LabelAbove} from '../../../../shared/ui/inputs/LabelAbove/LabelAbove';
 import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
 import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
@@ -12,6 +10,8 @@ import {loadState, StateObjectType} from '../../model/actions/loadState';
 
 export const PageImportLocal: FC = () => {
   const dispatch = useAppDispatch();
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [fileToImport, setFileToImport] = React.useState<File>();
   const [isImporting, setIsImporting] = React.useState(false);
 
@@ -37,9 +37,18 @@ export const PageImportLocal: FC = () => {
 
             setIsImporting(true);
 
-            loadFileFromFileSystem(fileToImport)
-              .then((fileDataRaw) => dispatch(loadState(JSON.parse(fileDataRaw) as StateObjectType)))
+            const importingPromise = loadFileFromFileSystem(fileToImport)
+              .then((fileDataRaw) => dispatch(loadState(JSON.parse(fileDataRaw) as StateObjectType)));
+
+            // Synthetic loading to prevent ui flashes
+            // TODO: Remove after implementation of notifications system
+            Promise
+              .all([
+                importingPromise,
+                new Promise(resolve => setTimeout(resolve, 750)),
+              ])
               .finally(() => {
+                (event.target as HTMLFormElement).reset();
                 setIsImporting(false);
               });
           }}
@@ -47,6 +56,7 @@ export const PageImportLocal: FC = () => {
           <LabelAbove>
             Select file to import:
             <input
+              ref={fileInputRef}
               className={'p-3 rounded border bg-white'}
               type={'file'}
               onChange={(event) => {
@@ -55,7 +65,7 @@ export const PageImportLocal: FC = () => {
             />
           </LabelAbove>
 
-          <ButtonDefault disabled={!fileToImport || isImporting} theme={ButtonDefaultTypes.Accent}>Import</ButtonDefault>
+          <ButtonDefault disabled={!fileToImport || isImporting} theme={ButtonDefaultTypes.Accent}>{isImporting ? 'Loading...' : 'Import'}</ButtonDefault>
         </form>
       </section>
     </MainLayout>
