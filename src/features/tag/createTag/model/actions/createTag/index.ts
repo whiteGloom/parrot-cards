@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {addOneTag, ITag} from '../../../../../../entity/tag';
+import {addOneTag} from '../../../../../../entity/tag';
 
 type CreateTagParamsType = {
   title: string;

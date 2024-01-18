@@ -45,7 +45,7 @@ export const Home: FC = () => {
         </nav>
       </header>
 
-      <div className={'flex flex-col p-3 gap-7 border rounded bg-[#F7F7F7]'}>
+      <section className={'flex flex-col p-3 gap-7 border rounded bg-[#F7F7F7]'}>
         <Formik
           initialValues={{tags: selectedTags}}
           onSubmit={(values: ValuesType, control) => {
@@ -56,9 +56,7 @@ export const Home: FC = () => {
           }}
         >
           <Form className={'flex flex-col gap-3 '}>
-            <fieldset className={'flex flex-col shadow-inner border gap-1 p-3 rounded bg-white max-h-64 overflow-scroll'} draggable>
-              <legend className={'font-semibold'}>Filter by tags</legend>
-
+            <Fieldset className={'max-h-64 overflow-scroll'} legend={'Filter by tags'}>
               <ul className={'flex flex-col gap-1'}>
                 {tags.map((tag) => (
                   <li key={tag.id}>
@@ -68,7 +66,7 @@ export const Home: FC = () => {
                   </li>
                 ))}
               </ul>
-            </fieldset>
+            </Fieldset>
 
             <ButtonDefault theme={ButtonDefaultTypes.Accent} type={'submit'}>Apply filters</ButtonDefault>
           </Form>
@@ -85,7 +83,7 @@ export const Home: FC = () => {
             </li>
           ))}
         </ul>
-      </div>
+      </section>
     </MainLayout>
   );
 };

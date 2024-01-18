@@ -1,7 +1,6 @@
 import React, {FC} from 'react';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {Field, FieldArray, Form, Formik, FormikHelpers} from 'formik';
-import clsx from 'clsx';
+import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import {useSelector} from 'react-redux';
 import {selectAllTags} from '../../../../entity/tag';
 import {createCard} from '../../../../features/card/createCard';
@@ -10,7 +9,11 @@ import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
 import {ArrowLeft} from 'lucide-react';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
-import {LabeledCheckbox} from '../../../../shared/ui/inputs/labeledCheckbox/LabeledCheckbox';
+import {LabeledCheckbox} from '../../../../shared/ui/inputs/LabeledCheckbox/LabeledCheckbox';
+import {InputDefault} from '../../../../shared/ui/inputs/InputDefault/InputDefault';
+import {LabelAbove} from '../../../../shared/ui/inputs/LabelAbove/LabelAbove';
+import {ErrorLabel} from '../../../../shared/ui/inputs/ErrorLabel/ErrorLabel';
+import {Fieldset} from '../../../../shared/ui/Fieldset/Fieldset';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -34,7 +37,7 @@ type ValuesType = {
 
 function titleValidator(value: string): string | undefined {
   if (!value.trim()) {
-    return 'Title is required field for both sides of Card';
+    return 'Title is required field for both sides of the Card';
   }
 
   return undefined;
@@ -81,8 +84,8 @@ const emptyInitialValues: ValuesType = {
 
 export const CreateCards: FC = () => {
   const dispatch = useAppDispatch();
-  const firstFieldRef = React.useRef<HTMLInputElement>();
-  const newTagTitleInputRef = React.useRef<HTMLInputElement>();
+  const firstFieldRef = React.useRef<HTMLInputElement>(null);
+  const newTagTitleInputRef = React.useRef<HTMLInputElement>(null);
 
   const tags = useSelector(selectAllTags());
 
@@ -138,24 +141,24 @@ export const CreateCards: FC = () => {
                     const groupName = sideGroupParams.groupName;
 
                     return (
-                      <fieldset className={'flex flex-col border rounded flex-1 p-3 bg-white gap-3 shadow-inner'} key={groupName}>
-                        <legend className={'font-semibold'}>{sideGroupParams.title}</legend>
-
-                        <label className={'flex flex-col gap-1'}>
+                      <Fieldset key={groupName} legend={sideGroupParams.title}>
+                        <LabelAbove>
                           Title
-                          <Field
+                          <InputDefault
                             name={`${groupName}.title`}
                             validate={titleValidator}
                             autoFocus={!groupIndex}
                             innerRef={!groupIndex ? firstFieldRef : undefined}
-                            className={clsx(formState.errors[groupName]?.title && 'border-red-500', 'border p-2 rounded shadow')}
+                            errorString={(formState.touched[groupName]?.title && formState.errors[groupName]?.title) || ''}
                           />
-                        </label>
 
-                        <label className={'flex flex-col gap-1'}>
+                          <ErrorLabel name={`${groupName}.title`}/>
+                        </LabelAbove>
+
+                        <LabelAbove>
                           Description
-                          <Field name={`${groupName}.description`} className={'border p-2 rounded shadow '} as={'textarea'}/>
-                        </label>
+                          <InputDefault name={`${groupName}.description`} as={'textarea'}/>
+                        </LabelAbove>
 
                         <FieldArray
                           name={`${groupName}.hints`}
@@ -164,27 +167,26 @@ export const CreateCards: FC = () => {
                               <>
                                 {formState.values[groupName].hints.map((_value, index) => {
                                   return (
-                                    <label key={index} className={'flex flex-col gap-1'}>
+                                    <LabelAbove key={index}>
                                       Hint {index + 1}
-                                      <Field
+                                      <InputDefault
                                         name={`${groupName}.hints[${index}]`}
-                                        className={'border p-2 rounded shadow'}
-                                        onChange={async (event: React.ChangeEvent<HTMLInputElement>) => {
-                                          await formState.setFieldValue(`${groupName}.hints[${index}]`, event.target.value);
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                          formState.handleChange(event);
 
                                           if (event.target.value && formState.values[groupName].hints.length - 1 === index) {
                                             helpers.push('');
                                           }
                                         }}
                                       />
-                                    </label>
+                                    </LabelAbove>
                                   );
                                 })}
                               </>
                             );
                           }}
                         />
-                      </fieldset>
+                      </Fieldset>
                     );
                   })
                 }
@@ -198,9 +200,7 @@ export const CreateCards: FC = () => {
                 Create card
               </ButtonDefault>
 
-              <fieldset className={'flex shadow-inner border flex-col p-3 gap-3 bg-white rounded'}>
-                <legend className={'font-semibold'}>Tags</legend>
-
+              <Fieldset legend={'Tags'}>
                 <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
@@ -211,12 +211,11 @@ export const CreateCards: FC = () => {
                   ))}
                 </ul>
 
-                <label className={'flex flex-col gap-1'}>
+                <LabelAbove>
                   Title for new tag
-                  <Field
+                  <InputDefault
                     name={'newTagTitle'}
-                    className={'border p-2 rounded shadow'}
-                    onKeyDown={(event: KeyboardEvent) => {
+                    onKeyDown={(event: React.KeyboardEvent) => {
                       if (event.key === 'Enter') {
                         event.preventDefault();
 
@@ -228,7 +227,7 @@ export const CreateCards: FC = () => {
                     innerRef={newTagTitleInputRef}
                     placeholder={'Enter title for new tag'}
                   />
-                </label>
+                </LabelAbove>
 
                 <ButtonDefault
                   type={'button'}
@@ -237,7 +236,7 @@ export const CreateCards: FC = () => {
                 >
                   Create new Tag
                 </ButtonDefault>
-              </fieldset>
+              </Fieldset>
             </Form>
           )}
         </Formik>
