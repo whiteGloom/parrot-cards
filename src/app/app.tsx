@@ -28,8 +28,9 @@ function App() {
       {isWarningVisible ? (
         <div className={'fixed w-full h-full bg-white flex flex-col items-center justify-center top-0 left-0 gap-3'}>
           <p className={'text-center'}>
-            <b>Reloading of the page will reset all cards!</b><br/>
-            Saving inside of the browser is not implemented yet<br/>
+            <b>Reloading of the page will reset your actions on the website!</b><br/>
+            Saving inside of the browser is not implemented yet!<br/>
+            Use export to save your data!
           </p>
 
           <ButtonDefault
