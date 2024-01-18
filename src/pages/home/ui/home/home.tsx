@@ -29,7 +29,7 @@ export const Home: FC = () => {
 
   return (
     <MainLayout>
-      <header className={'border p-3 flex flex-col gap-3 rounded bg-[#F7F7F7]'}>
+      <header className={'border p-3 flex flex-col gap-3 rounded bg-gray-50'}>
         <h1 className={'text-3xl font-bold'}>Cards List</h1>
 
         <nav className={'flex gap-3'}>
@@ -45,7 +45,7 @@ export const Home: FC = () => {
         </nav>
       </header>
 
-      <section className={'flex flex-col p-3 gap-7 border rounded bg-[#F7F7F7]'}>
+      <section className={'flex flex-col p-3 gap-7 border rounded bg-gray-50'}>
         <Formik
           initialValues={{tags: selectedTags}}
           onSubmit={(values: ValuesType, control) => {

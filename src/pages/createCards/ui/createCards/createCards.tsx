@@ -111,12 +111,12 @@ export const CreateCards: FC = () => {
 
   return (
     <MainLayout>
-      <header className={'flex gap-3 p-3 bg-[#F7F7F7] rounded border items-center'}>
+      <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         <LinkButton to={'/'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Create new cards</h1>
       </header>
 
-      <div className={'flex flex-col gap-3 p-3 bg-[#F7F7F7] rounded border'}>
+      <div className={'flex flex-col gap-3 p-3 bg-gray-50 rounded border'}>
         <Formik
           isInitialValid={false}
           initialValues={emptyInitialValues}

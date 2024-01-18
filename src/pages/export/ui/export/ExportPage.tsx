@@ -16,12 +16,12 @@ const LocalExportView: FC = () => {
 
   return (
     <div className={'flex flex-col gap-7'}>
-      <header className={'flex gap-3 p-3 bg-[#F7F7F7] rounded border items-center'}>
+      <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         <LinkButton to={'/export'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Export to local file</h1>
       </header>
 
-      <div className={'flex flex-col p-3 gap-7 border rounded bg-[#F7F7F7]'}>
+      <div className={'flex flex-col p-3 gap-7 border rounded bg-gray-50'}>
         <Formik
           initialValues={{
             title: generatedTitle,
@@ -53,12 +53,12 @@ const LocalExportView: FC = () => {
 const MethodSelectorView: FC = () => {
   return (
     <div className={'flex flex-col gap-7'}>
-      <header className={'flex gap-3 p-3 bg-[#F7F7F7] rounded border'}>
+      <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>
         <LinkButton to={'/'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Export methods</h1>
       </header>
 
-      <div className={'flex flex-col p-3 gap-3 border rounded bg-[#F7F7F7] items-start'}>
+      <div className={'flex flex-col p-3 gap-3 border rounded bg-gray-50 items-start'}>
         <LinkButton to={'/export?exportType=local'}>Export as local JSON file</LinkButton>
 
         <ButtonDefault disabled>Export to Google Drive</ButtonDefault>
