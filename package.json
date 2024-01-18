@@ -1,7 +1,13 @@
 {
   "name": "parrot-cards",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
+  "author": {
+    "email": "karabin.m@yandex.ru",
+    "name": "Evgenii Miller",
+    "url": "https://github.com/whiteGloom"
+  },
+  "homepage": "https://github.com/whiteGloom/parrot-cards",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^5.17.0",
