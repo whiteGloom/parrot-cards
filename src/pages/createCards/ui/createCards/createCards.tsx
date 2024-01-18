@@ -36,19 +36,7 @@ type ValuesType = {
 };
 
 function titleValidator(value: string): string | undefined {
-  if (!value.trim()) {
-    return 'Title is required field for both sides of the Card';
-  }
-
-  return undefined;
-}
-
-function tagTitleValidator(value: string): string | undefined {
-  if (!value.trim()) {
-    return 'Title is required for Tag';
-  }
-
-  return undefined;
+  if (!value.trim()) return 'Title is required field for both sides of the Card';
 }
 
 function prepareDataFromSideFields(sideFields: ValuesType['frontSide']) {
@@ -116,7 +104,7 @@ export const CreateCards: FC = () => {
         <h1 className={'text-3xl font-bold'}>Create new cards</h1>
       </header>
 
-      <div className={'flex flex-col gap-3 p-3 bg-gray-50 rounded border'}>
+      <section className={'flex flex-col gap-3 p-3 bg-gray-50 rounded border'}>
         <Formik
           isInitialValid={false}
           initialValues={emptyInitialValues}
@@ -212,14 +200,14 @@ export const CreateCards: FC = () => {
                 </ul>
 
                 <LabelAbove>
-                  Title for new tag
+                  Title for a new tag
                   <InputDefault
                     name={'newTagTitle'}
                     onKeyDown={(event: React.KeyboardEvent) => {
                       if (event.key === 'Enter') {
                         event.preventDefault();
 
-                        if (!tagTitleValidator(formState.values.newTagTitle)) {
+                        if (formState.values.newTagTitle.trim()) {
                           createNewTag(formState.values, formState).catch(null);
                         }
                       }
@@ -231,7 +219,7 @@ export const CreateCards: FC = () => {
 
                 <ButtonDefault
                   type={'button'}
-                  disabled={!!tagTitleValidator(formState.values.newTagTitle) || formState.isSubmitting}
+                  disabled={!formState.values.newTagTitle.trim() || formState.isSubmitting}
                   onClick={() => {createNewTag(formState.values, formState).catch(null);}}
                 >
                   Create new Tag
@@ -240,7 +228,7 @@ export const CreateCards: FC = () => {
             </Form>
           )}
         </Formik>
-      </div>
+      </section>
     </MainLayout>
   );
 };
