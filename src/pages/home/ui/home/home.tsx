@@ -32,7 +32,7 @@ export const Home: FC = () => {
       <header className={'border p-3 flex flex-col gap-3 rounded bg-gray-50'}>
         <h1 className={'text-3xl font-bold'}>Cards List</h1>
 
-        <nav className={'flex gap-3'}>
+        <nav className={'flex gap-3 overflow-x-auto'}>
           <LinkButton theme={LinkButtonDefaultTypes.Accent} to={'/create-cards'}>Create new cards</LinkButton>
 
           <LinkButton to={'/import'} className={'flex gap-0.5 items-center'}>

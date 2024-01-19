@@ -18,8 +18,8 @@ export const Card: FC<CardProps> = (props) => {
   const location = useLocation();
 
   return (
-    <div className={'bg-white rounded p-3 flex shadow flex-col gap-1'}>
-      <div className={'flex justify-between'}>
+    <div className={'bg-white rounded p-3 flex shadow flex-col gap-3'}>
+      <div className={'flex gap-3 flex-col md:flex-row md:justify-between'}>
         <div className={'flex flex-col gap-1'}>
           <p className={'font-semibold'}>{props.cardData.frontSide.title}</p>
 
@@ -28,7 +28,7 @@ export const Card: FC<CardProps> = (props) => {
           <p className={'font-semibold'}>{props.cardData.backSide.title}</p>
         </div>
 
-        <div className={'flex gap-2 items-center'}>
+        <div className={'flex gap-2 items-center flex-wrap'}>
           <LinkButton to={`/revise/${props.cardData.id}${location.search}`}>Revise</LinkButton>
 
           <LinkButton to={`/edit-card/${props.cardData.id}`}>Edit</LinkButton>
