@@ -19,7 +19,7 @@ export const Card: FC<CardPropsType> = (props) => {
   const currentSide = isFrontSideVisible ? cardData.frontSide : cardData.backSide;
 
   return (
-    <article className={'flex flex-col gap-3 p-3 items-center bg-white border rounded shadow min-w-[500px]'}>
+    <article className={'flex flex-col gap-3 p-3 items-center bg-white border rounded shadow min-w-full md:min-w-[500px]'}>
       <div
         className={'flex flex-col gap-3 items-center w-full'}
         onClick={() => {setFrontSideVisible((value) => !value);}}
