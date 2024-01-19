@@ -32,12 +32,14 @@ export const Revise: FC = () => {
 
       <section className={'flex flex-col p-3 gap-3 border rounded bg-gray-50'}>
         <div className={'flex flex-col gap-3 items-center'}>
-          <LinkButton
-            to={`/revise/${cardsIds[nextCardIndex]}${location.search}`}
-            theme={LinkButtonDefaultTypes.Accent}
-          >
-            Next Card
-          </LinkButton>
+          {nextCardIndex !== cardIndex ? (
+            <LinkButton
+              to={`/revise/${cardsIds[nextCardIndex]}${location.search}`}
+              theme={LinkButtonDefaultTypes.Accent}
+            >
+              Next Card
+            </LinkButton>
+          ) : undefined}
 
           {cardsIds.includes(cardId) ? (
             <Card cardId={cardId} key={cardId}/>
