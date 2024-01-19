@@ -140,7 +140,7 @@ export const EditCard: FC = () => {
         >
           {(formState) => (
             <Form className={'flex flex-col gap-3'}>
-              <div className={'flex gap-7'}>
+              <div className={'flex gap-7 flex-wrap'}>
                 {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {
                   groupName: GroupNames.BackSide,
                   title: 'Back side',
