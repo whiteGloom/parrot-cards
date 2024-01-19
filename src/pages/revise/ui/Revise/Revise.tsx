@@ -1,9 +1,11 @@
 import React, {FC} from 'react';
-import styles from './styles.module.scss';
-import {Link, useLocation, useParams, useSearchParams} from 'react-router-dom';
+import {useLocation, useParams, useSearchParams} from 'react-router-dom';
 import {Card} from '../Card/Card';
 import {useSelector} from 'react-redux';
 import {selectCardsIdsByFilters} from '../../model/selectors/selectCardsIdsByFilters';
+import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/button/LinkButton';
+import {ArrowLeft} from 'lucide-react';
 
 export const Revise: FC = () => {
   const [searchParams] = useSearchParams();
@@ -14,17 +16,26 @@ export const Revise: FC = () => {
   const cardId = useParams().cardId;
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <Link to={'/'}>⬅️</Link>
-        <h1>Edit card</h1>
+    <MainLayout>
+      <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>
+        <LinkButton to={'/'}><ArrowLeft/></LinkButton>
+        <h1 className={'text-3xl font-bold'}>Revise</h1>
       </header>
 
-      {cardId ? (
-        <Card cardId={cardId} key={cardId}/>
-      ) : 'Card not found'}
+      <section className={'flex flex-col p-3 gap-3 border rounded bg-gray-50'}>
+        <div className={'flex flex-col gap-3 items-center'}>
+          {cardId ? (
+            <Card cardId={cardId} key={cardId}/>
+          ) : 'Card not found'}
 
-      <Link to={`/revise/${cardsIds[Math.round(Math.random() * (cardsIds.length - 1))]}${location.search}`}>Next Card</Link>
-    </div>
+          <LinkButton
+            to={`/revise/${cardsIds[Math.round(Math.random() * (cardsIds.length - 1))]}${location.search}`}
+            theme={LinkButtonDefaultTypes.Accent}
+          >
+            Next Card
+          </LinkButton>
+        </div>
+      </section>
+    </MainLayout>
   );
 };

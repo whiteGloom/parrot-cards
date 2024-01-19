@@ -1,5 +1,4 @@
 import React, {FC} from 'react';
-import styles from './styles.module.scss';
 import {useSelector} from 'react-redux';
 import {selectCardById} from '../../../../entity/card';
 import {Hint} from '../Hint/Hint';
@@ -20,17 +19,24 @@ export const Card: FC<CardPropsType> = (props) => {
   const currentSide = isFrontSideVisible ? cardData.frontSide : cardData.backSide;
 
   return (
-    <div className={styles.card} onClick={() => {setFrontSideVisible((value) => !value);}}>
-      <p className={styles.sideTitle}>{isFrontSideVisible ? 'FRONT SIDE' : 'BACK SIDE'}</p>
-      <p className={styles.title}>{currentSide.title}</p>
+    <article
+      className={'flex flex-col gap-3 p-3 items-center bg-white border rounded shadow min-w-[500px]'}
+      onClick={() => {setFrontSideVisible((value) => !value);}}
+    >
+      <p className={'text-gray-800 uppercase'}>{isFrontSideVisible ? 'Front side' : 'Back side'}</p>
+      <p className={'text-3xl cursor-pointer'}>{currentSide.title}</p>
 
       {currentSide.description.length ? (
-        <p className={styles.description}>{currentSide.description}</p>
+        <p>{currentSide.description}</p>
       ) : undefined}
 
-      {currentSide.hints.length ? currentSide.hints.map((hint) => (
-        <Hint title={hint} key={hint}/>
-      )) : undefined}
-    </div>
+      <ul className={'flex flex-col gap-2 w-full'}>
+        {currentSide.hints.length ? currentSide.hints.map((hint) => (
+          <li key={hint}>
+            <Hint title={hint}/>
+          </li>
+        )) : undefined}
+      </ul>
+    </article>
   );
 };

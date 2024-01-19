@@ -1,6 +1,4 @@
 import React, {FC} from 'react';
-import styles from './styles.module.scss';
-import clsx from 'clsx';
 
 export interface IHintProps {
   title: string;
@@ -11,20 +9,20 @@ export const Hint: FC<IHintProps> = (props) => {
 
   if (!isVisible) {
     return (
-      <div
+      <button
+        className={'px-2 py-1 border rounded shadow w-full text-center'}
         onClick={(e) => {
           e.stopPropagation();
           setVisible(true);
         }}
-        className={clsx(styles.hint, styles.hintButton)}
       >
         <p>{props.title.replaceAll(/\S/g, '*')}</p>
-      </div>
+      </button>
     );
   }
 
   return (
-    <div className={styles.hint}>
+    <div className={'px-2 py-1 border rounded shadow w-full text-center' }>
       <p>{props.title}</p>
     </div>
   );
