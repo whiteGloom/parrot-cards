@@ -5,7 +5,7 @@ import {useLocation} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {selectTagsByIds} from '../../../../entity/tag';
 import {deleteCard} from '../../../../features/card/deleteCard';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 
 export interface CardProps {

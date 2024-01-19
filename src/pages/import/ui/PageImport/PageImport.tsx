@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowLeft} from 'lucide-react';
-import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {ButtonDefault} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 
 export const PageImport: FC = () => {
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>
         <LinkButton to={'/'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Import methods</h1>
@@ -16,6 +16,6 @@ export const PageImport: FC = () => {
         <LinkButton to={'/import-local'}>Import from JSON file</LinkButton>
         <ButtonDefault disabled>Import from Google Drive</ButtonDefault>
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };

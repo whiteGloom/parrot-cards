@@ -5,12 +5,12 @@ import {Form, Formik} from 'formik';
 import {selectAllTags} from '../../../../entity/tag';
 import {Card} from '../cardListItem/card';
 import {selectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
-import {LabeledCheckbox} from '../../../../shared/ui/inputs/LabeledCheckbox/LabeledCheckbox';
-import {Fieldset} from '../../../../shared/ui/Fieldset/Fieldset';
+import {CheckboxLabeled} from '../../../../shared/ui/fields/CheckboxLabeled/CheckboxLabeled';
+import {Fieldset} from '../../../../shared/ui/fields/Fieldset/Fieldset';
 
 type ValuesType = {
   tags: string[],
@@ -28,7 +28,7 @@ export const Home: FC = () => {
   const cards = useSelector(selectCardsByFilters({tagsIds: selectedTags}));
 
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'border p-3 flex flex-col gap-3 rounded bg-gray-50'}>
         <h1 className={'text-3xl font-bold'}>Cards List</h1>
 
@@ -60,9 +60,9 @@ export const Home: FC = () => {
               <ul className={'flex flex-col gap-1'}>
                 {tags.map((tag) => (
                   <li key={tag.id}>
-                    <LabeledCheckbox key={tag.id} name={'tags'} value={tag.id} style={{color: tag.color}}>
+                    <CheckboxLabeled key={tag.id} name={'tags'} value={tag.id} style={{color: tag.color}}>
                       {tag.title}
-                    </LabeledCheckbox>
+                    </CheckboxLabeled>
                   </li>
                 ))}
               </ul>
@@ -84,6 +84,6 @@ export const Home: FC = () => {
           ))}
         </ul>
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };

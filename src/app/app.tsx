@@ -4,7 +4,7 @@ import {ReduxStoreProvider} from './providers/store';
 import {AppRouterProvider} from './providers/router/router';
 import {useAppDispatch} from '../shared/lib/store/useAppDispatch';
 import {REQUEST_PRELOAD_GOOGLE_OAUTH} from '../entity/google/oauth';
-import {ButtonDefault, ButtonDefaultTypes} from '../shared/ui/buttons/default/ButtonDefault';
+import {ButtonDefault, ButtonDefaultTypes} from '../shared/ui/buttons/ButtonDefault/ButtonDefault';
 
 function App() {
   const [isWarningVisible, setWarningVisibility] = React.useState(true);

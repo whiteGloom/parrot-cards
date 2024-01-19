@@ -5,10 +5,10 @@ import {ArrowLeft} from 'lucide-react';
 import {Form, Formik} from 'formik';
 import {dumpState} from '../../model/actions/dumpState';
 import {saveToFileSystem} from '../../model/actions/saveToFileSystem';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
-import {InputDefault} from '../../../../shared/ui/inputs/InputDefault/InputDefault';
-import {LabelAbove} from '../../../../shared/ui/inputs/LabelAbove/LabelAbove';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {InputDefault} from '../../../../shared/ui/fields/InputDefault/InputDefault';
+import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 
 export const PageExportLocal: FC = () => {
   const dispatch = useAppDispatch();
@@ -16,7 +16,7 @@ export const PageExportLocal: FC = () => {
   const generatedTitle = `myAwesomeCards-${new Date().toLocaleDateString()}-${new Date().getHours()}.${new Date().getMinutes()}`;
 
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         <LinkButton to={'/export'}><ArrowLeft/></LinkButton>
 
@@ -48,6 +48,6 @@ export const PageExportLocal: FC = () => {
           </Form>
         </Formik>
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };

@@ -5,15 +5,15 @@ import {useSelector} from 'react-redux';
 import {selectAllTags} from '../../../../entity/tag';
 import {createCard} from '../../../../features/card/createCard';
 import {createTag} from '../../../../features/tag/createTag';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ArrowLeft} from 'lucide-react';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
-import {LabeledCheckbox} from '../../../../shared/ui/inputs/LabeledCheckbox/LabeledCheckbox';
-import {InputDefault} from '../../../../shared/ui/inputs/InputDefault/InputDefault';
-import {LabelAbove} from '../../../../shared/ui/inputs/LabelAbove/LabelAbove';
-import {ErrorLabel} from '../../../../shared/ui/inputs/ErrorLabel/ErrorLabel';
-import {Fieldset} from '../../../../shared/ui/Fieldset/Fieldset';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {CheckboxLabeled} from '../../../../shared/ui/fields/CheckboxLabeled/CheckboxLabeled';
+import {InputDefault} from '../../../../shared/ui/fields/InputDefault/InputDefault';
+import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
+import {ErrorLabel} from '../../../../shared/ui/fields/ErrorLabel/ErrorLabel';
+import {Fieldset} from '../../../../shared/ui/fields/Fieldset/Fieldset';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -98,7 +98,7 @@ export const CreateCards: FC = () => {
   }
 
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         <LinkButton to={'/'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Create new cards</h1>
@@ -192,9 +192,9 @@ export const CreateCards: FC = () => {
                 <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
-                      <LabeledCheckbox name={'tags'} value={tag.id} style={{color: tag.color}}>
+                      <CheckboxLabeled name={'tags'} value={tag.id} style={{color: tag.color}}>
                         {tag.title}
-                      </LabeledCheckbox>
+                      </CheckboxLabeled>
                     </li>
                   ))}
                 </ul>
@@ -229,6 +229,6 @@ export const CreateCards: FC = () => {
           )}
         </Formik>
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };

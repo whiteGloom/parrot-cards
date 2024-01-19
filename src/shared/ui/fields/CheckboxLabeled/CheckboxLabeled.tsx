@@ -2,14 +2,14 @@ import React, {FC, HTMLProps} from 'react';
 import {Field} from 'formik';
 import clsx from 'clsx';
 
-export type InputCheckboxPropsType = {
+export type CheckboxLabeledPropsType = HTMLProps<HTMLLabelElement> & {
   name: string;
   value: string | number,
   className?: string;
   disabled?: boolean,
-} & HTMLProps<HTMLLabelElement>;
+};
 
-export const LabeledCheckbox: FC<InputCheckboxPropsType> = (props) => {
+export const CheckboxLabeled: FC<CheckboxLabeledPropsType> = (props) => {
   const {
     className,
     title,

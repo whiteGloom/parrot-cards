@@ -1,11 +1,11 @@
 import React, {FC, HTMLProps} from 'react';
 import clsx from 'clsx';
 
-export type FieldsetProps = HTMLProps<HTMLFieldSetElement> & {
+export type FieldsetPropsType = HTMLProps<HTMLFieldSetElement> & {
   legend?: string;
 };
 
-export const Fieldset: FC<FieldsetProps> = (props) => {
+export const Fieldset: FC<FieldsetPropsType> = (props) => {
   const {legend, className, ...otherProps} = props;
 
   return (

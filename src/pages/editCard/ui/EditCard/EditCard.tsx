@@ -7,15 +7,15 @@ import {createTag} from '../../../../features/tag/createTag';
 import {ICard, selectCardById} from '../../../../entity/card';
 import {selectAllTags} from '../../../../entity/tag';
 import {editCard} from '../../../../features/card/editCard';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowLeft} from 'lucide-react';
-import {Fieldset} from '../../../../shared/ui/Fieldset/Fieldset';
-import {LabelAbove} from '../../../../shared/ui/inputs/LabelAbove/LabelAbove';
-import {InputDefault} from '../../../../shared/ui/inputs/InputDefault/InputDefault';
-import {ErrorLabel} from '../../../../shared/ui/inputs/ErrorLabel/ErrorLabel';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
-import {LabeledCheckbox} from '../../../../shared/ui/inputs/LabeledCheckbox/LabeledCheckbox';
+import {Fieldset} from '../../../../shared/ui/fields/Fieldset/Fieldset';
+import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
+import {InputDefault} from '../../../../shared/ui/fields/InputDefault/InputDefault';
+import {ErrorLabel} from '../../../../shared/ui/fields/ErrorLabel/ErrorLabel';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {CheckboxLabeled} from '../../../../shared/ui/fields/CheckboxLabeled/CheckboxLabeled';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -103,7 +103,7 @@ export const EditCard: FC = () => {
   }
 
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         <LinkButton to={'/'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Edit card</h1>
@@ -212,9 +212,9 @@ export const EditCard: FC = () => {
                 <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
-                      <LabeledCheckbox name={'tags'} value={tag.id} style={{color: tag.color}}>
+                      <CheckboxLabeled name={'tags'} value={tag.id} style={{color: tag.color}}>
                         {tag.title}
-                      </LabeledCheckbox>
+                      </CheckboxLabeled>
                     </li>
                   ))}
                 </ul>
@@ -251,6 +251,6 @@ export const EditCard: FC = () => {
           )}
         </Formik> : 'Error. No card with such ID'}
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };

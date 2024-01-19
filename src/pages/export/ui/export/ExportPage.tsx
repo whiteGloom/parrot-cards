@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
-import {ButtonDefault} from '../../../../shared/ui/buttons/default/ButtonDefault';
+import {ButtonDefault} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {ArrowLeft} from 'lucide-react';
 
 export const ExportPage: FC = () => {
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>
         <LinkButton to={'/'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Export methods</h1>
@@ -17,6 +17,6 @@ export const ExportPage: FC = () => {
 
         <ButtonDefault disabled>Export to Google Drive</ButtonDefault>
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };

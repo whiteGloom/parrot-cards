@@ -2,9 +2,9 @@ import React, {FC} from 'react';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowLeft} from 'lucide-react';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/default/ButtonDefault';
-import {LabelAbove} from '../../../../shared/ui/inputs/LabelAbove/LabelAbove';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
 import {loadState, StateObjectType} from '../../model/actions/loadState';
 
@@ -16,7 +16,7 @@ export const PageImportLocal: FC = () => {
   const [isImporting, setIsImporting] = React.useState(false);
 
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         {isImporting
           ? <ButtonDefault disabled={isImporting}><ArrowLeft/></ButtonDefault>
@@ -68,6 +68,6 @@ export const PageImportLocal: FC = () => {
           <ButtonDefault disabled={!fileToImport || isImporting} theme={ButtonDefaultTypes.Accent}>{isImporting ? 'Loading...' : 'Import'}</ButtonDefault>
         </form>
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };

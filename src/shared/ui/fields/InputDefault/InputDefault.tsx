@@ -2,12 +2,12 @@ import React, {FC} from 'react';
 import {Field, FieldConfig, GenericFieldHTMLAttributes} from 'formik';
 import clsx from 'clsx';
 
-export type InputDefaultPropsType = {
+export type InputDefaultPropsType = GenericFieldHTMLAttributes & Omit<FieldConfig, 'innerRef'> & {
     className?: string;
     name?: string;
     innerRef?: React.RefObject<HTMLInputElement>;
     errorString?: string;
-} & GenericFieldHTMLAttributes & Omit<FieldConfig, 'innerRef'>;
+};
 
 export const InputDefault: FC<InputDefaultPropsType> = (props) => {
   const {className, errorString, ...otherProps} = props;

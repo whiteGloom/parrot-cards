@@ -3,7 +3,7 @@ import {Navigate, useLocation, useParams, useSearchParams} from 'react-router-do
 import {Card} from '../Card/Card';
 import {useSelector} from 'react-redux';
 import {selectCardsIdsByFilters} from '../../model/selectors/selectCardsIdsByFilters';
-import {MainLayout} from '../../../../shared/ui/layouts/main/MainLayout';
+import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/button/LinkButton';
 import {ArrowLeft} from 'lucide-react';
 
@@ -24,7 +24,7 @@ export const Revise: FC = () => {
   }
 
   return (
-    <MainLayout>
+    <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>
         <LinkButton to={'/'}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Revise</h1>
@@ -44,6 +44,6 @@ export const Revise: FC = () => {
           ) : <div className={'bg-white p-3 border shadow rounded font-bold'}>Card no found!</div>}
         </div>
       </section>
-    </MainLayout>
+    </LayoutMain>
   );
 };
