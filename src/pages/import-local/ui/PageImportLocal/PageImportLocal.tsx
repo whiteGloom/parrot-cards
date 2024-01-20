@@ -53,8 +53,7 @@ export const PageImportLocal: FC = () => {
               });
           }}
         >
-          <LabelAbove>
-            Select file to import:
+          <LabelAbove label={'Select file to import'}>
             <input
               ref={fileInputRef}
               className={'p-3 rounded border bg-white'}

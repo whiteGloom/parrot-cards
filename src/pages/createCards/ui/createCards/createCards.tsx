@@ -130,8 +130,7 @@ export const CreateCards: FC = () => {
 
                     return (
                       <Fieldset key={groupName} legend={sideGroupParams.title}>
-                        <LabelAbove>
-                          Title
+                        <LabelAbove label={'Title'} required>
                           <InputDefault
                             name={`${groupName}.title`}
                             validate={titleValidator}
@@ -143,8 +142,7 @@ export const CreateCards: FC = () => {
                           <ErrorLabel name={`${groupName}.title`}/>
                         </LabelAbove>
 
-                        <LabelAbove>
-                          Description
+                        <LabelAbove label={'Description'}>
                           <InputDefault name={`${groupName}.description`} as={'textarea'}/>
                         </LabelAbove>
 
@@ -155,8 +153,7 @@ export const CreateCards: FC = () => {
                               <>
                                 {formState.values[groupName].hints.map((_value, index) => {
                                   return (
-                                    <LabelAbove key={index}>
-                                      Hint {index + 1}
+                                    <LabelAbove key={index} label={`Hint ${index + 1}`}>
                                       <InputDefault
                                         name={`${groupName}.hints[${index}]`}
                                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -199,8 +196,7 @@ export const CreateCards: FC = () => {
                   ))}
                 </ul>
 
-                <LabelAbove>
-                  Title for a new tag
+                <LabelAbove label={'Title for a new tag'} required>
                   <InputDefault
                     name={'newTagTitle'}
                     onKeyDown={(event: React.KeyboardEvent) => {

@@ -36,8 +36,7 @@ export const PageExportLocal: FC = () => {
           }}
         >
           <Form className={'flex flex-col gap-3'}>
-            <LabelAbove>
-              Filename:
+            <LabelAbove label={'Filename'}>
               <InputDefault
                 name={'title'}
                 placeholder={generatedTitle}
