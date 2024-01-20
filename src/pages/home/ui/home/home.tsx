@@ -1,10 +1,9 @@
 import React, {FC} from 'react';
 import {useSearchParams} from 'react-router-dom';
-import {useSelector} from 'react-redux';
 import {Form, Formik} from 'formik';
-import {selectAllTags} from '../../../../entity/tag';
+import {useSelectAllTags} from '../../../../entity/tag';
 import {Card} from '../cardListItem/card';
-import {selectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
+import {useSelectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/LinkButton/LinkButton';
@@ -17,7 +16,7 @@ type ValuesType = {
 };
 
 export const Home: FC = () => {
-  const tags = useSelector(selectAllTags());
+  const tags = useSelectAllTags();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,7 +24,9 @@ export const Home: FC = () => {
     return searchParams.get('tags')?.split(',').filter(t => t.length) || [];
   }, [searchParams]);
 
-  const cards = useSelector(selectCardsByFilters({tagsIds: selectedTags}));
+  const cards = useSelectCardsByFilters(
+    React.useMemo(() => ({tagsIds: selectedTags}), [selectedTags])
+  );
 
   return (
     <LayoutMain>

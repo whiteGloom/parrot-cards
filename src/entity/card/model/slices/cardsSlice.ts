@@ -1,7 +1,7 @@
 import {createEntityAdapter, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {AppState} from '../../../../shared/lib/store/appState';
-import {ICard} from '../../types/card';
-import {initialCards} from './initialCards';
+import {ICard} from '../../types/Card';
+import {initialState} from './initialState';
 
 const cardsEntityAdapter = createEntityAdapter<ICard>({
   selectId: (model) => model.id,
@@ -10,15 +10,15 @@ const cardsEntityAdapter = createEntityAdapter<ICard>({
 
 export const cardsSlice = createSlice({
   name: 'cards',
-  initialState: cardsEntityAdapter.getInitialState({ids: Object.keys(initialCards), entities: initialCards}),
+  initialState: cardsEntityAdapter.getInitialState(initialState),
   reducers: {
     addOne(state, action: PayloadAction<ICard>) {
       cardsEntityAdapter.addOne(state, action.payload);
     },
-    removeOne(state, action: PayloadAction<ICard['id']>) {
+    removeOne(state, action: PayloadAction<string>) {
       cardsEntityAdapter.removeOne(state, action.payload);
     },
-    updateOne(state, action: PayloadAction<{changes: Partial<ICard>, id: ICard['id']}>) {
+    updateOne(state, action: PayloadAction<{changes: Partial<ICard>, id: string}>) {
       cardsEntityAdapter.updateOne(state, action.payload);
     },
     setAllCards(state, action: PayloadAction<ICard[]>) {

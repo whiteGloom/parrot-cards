@@ -1,7 +1,7 @@
-import {ITag} from '../../types/tag';
+import {ITag} from '../../types/Tag';
 
-export const initialTags: Record<string, ITag> = {
-  Bird: {
+export const initialTags: ITag[] = [
+  {
     id: 'Bird',
     createdAt: 1703337593421,
     title: 'Bird',
@@ -10,7 +10,7 @@ export const initialTags: Record<string, ITag> = {
       '44dc7f34-8f57-42f0-9065-c3a14abc77d5',
     ],
   },
-  Animal: {
+  {
     id: 'Animal',
     createdAt: 1703337596579,
     title: 'Animal',
@@ -20,7 +20,7 @@ export const initialTags: Record<string, ITag> = {
       '6a3d7754-7b95-498d-91f0-adab23ebd10f',
     ],
   },
-  Noun: {
+  {
     id: 'Noun',
     createdAt: 1703337608690,
     title: 'Noun',
@@ -30,7 +30,7 @@ export const initialTags: Record<string, ITag> = {
       '6a3d7754-7b95-498d-91f0-adab23ebd10f',
     ],
   },
-  Mammal: {
+  {
     id: 'Mammal',
     createdAt: 1703337955121,
     title: 'Mammal',
@@ -39,4 +39,12 @@ export const initialTags: Record<string, ITag> = {
       '6a3d7754-7b95-498d-91f0-adab23ebd10f',
     ],
   },
+];
+
+export const initialState = {
+  ids: initialTags.map(tag => tag.id),
+  entities: initialTags.reduce((acc, tag) => {
+    acc[tag.id] = tag;
+    return acc;
+  }, {} as Record<string, ITag>),
 };

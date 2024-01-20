@@ -12,17 +12,11 @@ function App() {
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    window.onload = () => {
-      window.gapi.load('picker', () => {
-        console.log('wgl picker loaded');
-      });
-    };
-
     dispatch({type: REQUEST_PRELOAD_GOOGLE_OAUTH});
   });
 
   return (
-    <div className="app">
+    <div className="w-full min-h-100% overflow-y-auto">
       <AppRouterProvider/>
 
       {isWarningVisible ? (

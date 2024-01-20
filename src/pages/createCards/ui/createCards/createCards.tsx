@@ -1,8 +1,7 @@
 import React, {FC} from 'react';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
-import {useSelector} from 'react-redux';
-import {selectAllTags} from '../../../../entity/tag';
+import {useSelectAllTags} from '../../../../entity/tag';
 import {createCard} from '../../../../features/card/createCard';
 import {createTag} from '../../../../features/tag/createTag';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
@@ -75,7 +74,7 @@ export const CreateCards: FC = () => {
   const firstFieldRef = React.useRef<HTMLInputElement>(null);
   const newTagTitleInputRef = React.useRef<HTMLInputElement>(null);
 
-  const tags = useSelector(selectAllTags());
+  const tags = useSelectAllTags();
 
   async function createNewTag(values: ValuesType, formControl: FormikHelpers<ValuesType>) {
     formControl.setSubmitting(true);
@@ -106,7 +105,7 @@ export const CreateCards: FC = () => {
 
       <section className={'flex flex-col gap-3 p-3 bg-gray-50 rounded border'}>
         <Formik
-          isInitialValid={false}
+          validateOnMount={true}
           initialValues={emptyInitialValues}
           onSubmit={async (values: ValuesType, control) => {
             await dispatch(createCard({

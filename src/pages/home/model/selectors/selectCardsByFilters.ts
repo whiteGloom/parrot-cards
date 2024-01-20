@@ -1,13 +1,15 @@
 import {createSelector} from '@reduxjs/toolkit';
 import {AppState} from '../../../../shared/lib/store/appState';
 import {ICard} from '../../../../entity/card';
+import {useRef} from 'react';
+import {useSelector} from 'react-redux';
 
-type FiltersType = {
+export type FiltersType = {
   tagsIds: string[],
 }
 
-export function selectCardsByFilters(filters: FiltersType) {
-  const selector = createSelector(
+export function makeSelectCardsByFilters() {
+  return createSelector(
     (_state: AppState, filters: FiltersType) => filters,
     (state: AppState) => state.tags.entities,
     (state: AppState) => state.cards.entities,
@@ -32,6 +34,10 @@ export function selectCardsByFilters(filters: FiltersType) {
       return result;
     }
   );
+}
 
-  return (state: AppState) => selector(state, filters);
+export function useSelectCardsByFilters(filters: FiltersType) {
+  const selector = useRef(makeSelectCardsByFilters()).current;
+
+  return useSelector((state: AppState) => selector(state, filters));
 }

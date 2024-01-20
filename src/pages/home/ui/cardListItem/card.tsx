@@ -1,9 +1,7 @@
 import React, {FC} from 'react';
 import {ICard} from '../../../../entity/card';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {useLocation} from 'react-router-dom';
-import {useSelector} from 'react-redux';
-import {selectTagsByIds} from '../../../../entity/tag';
+import {useSelectTagsByIds} from '../../../../entity/tag';
 import {deleteCard} from '../../../../features/card/deleteCard';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
@@ -14,8 +12,7 @@ export interface CardProps {
 
 export const Card: FC<CardProps> = (props) => {
   const dispatch = useAppDispatch();
-  const tags = useSelector(selectTagsByIds(props.cardData.tagsIds));
-  const location = useLocation();
+  const tags = useSelectTagsByIds(props.cardData.tagsIds);
 
   return (
     <div className={'bg-white rounded p-3 flex shadow flex-col gap-3'}>
@@ -29,7 +26,7 @@ export const Card: FC<CardProps> = (props) => {
         </div>
 
         <div className={'flex gap-2 items-center flex-wrap'}>
-          <LinkButton to={`/revise/${props.cardData.id}${location.search}`}>Revise</LinkButton>
+          <LinkButton to={`/revise/${props.cardData.id}${window.location.search}`}>Revise</LinkButton>
 
           <LinkButton to={`/edit-card/${props.cardData.id}`}>Edit</LinkButton>
 
@@ -51,7 +48,7 @@ export const Card: FC<CardProps> = (props) => {
               key={tag.id}
               style={{color: tag.color}}
             >
-              {'#' + tag.title}
+              #{tag.title}
             </li>
           );
         })}

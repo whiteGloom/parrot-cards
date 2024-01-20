@@ -1,15 +1,20 @@
-import {ICard} from '../../types/card';
 import {AppState} from '../../../../shared/lib/store/appState';
 import {createSelector} from '@reduxjs/toolkit';
+import {useRef} from 'react';
+import {useSelector} from 'react-redux';
 
-export function selectCardsByIds(ids: ICard['id'][]) {
-  const selector = createSelector(
-    (_state: AppState, ids: ICard['id'][]) => ids,
+export function makeSelectCardsByIds() {
+  return createSelector(
+    (_state: AppState, ids: string[]) => ids,
     (state: AppState) => state.cards.entities,
     (ids, cards) => {
       return ids.map(id => cards[id]);
     }
   );
+}
 
-  return (state: AppState) => selector(state, ids);
+export function useSelectCardsByIds(ids: string[]) {
+  const selector = useRef(makeSelectCardsByIds()).current;
+
+  return useSelector((state: AppState) => selector(state, ids));
 }

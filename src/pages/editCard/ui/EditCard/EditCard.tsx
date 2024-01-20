@@ -2,10 +2,9 @@ import React, {FC} from 'react';
 import {useParams} from 'react-router-dom';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
-import {useSelector} from 'react-redux';
 import {createTag} from '../../../../features/tag/createTag';
-import {ICard, selectCardById} from '../../../../entity/card';
-import {selectAllTags} from '../../../../entity/tag';
+import {ICard, useSelectCardById} from '../../../../entity/card';
+import {useSelectAllTags} from '../../../../entity/tag';
 import {editCard} from '../../../../features/card/editCard';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
@@ -79,8 +78,8 @@ export const EditCard: FC = () => {
   const firstFieldRef = React.useRef<HTMLInputElement>(null);
   const newTagTitleInputRef = React.useRef<HTMLInputElement>(null);
 
-  const card: ICard | undefined = useSelector(selectCardById(pageParams.cardId || ''));
-  const tags = useSelector(selectAllTags());
+  const card: ICard | undefined = useSelectCardById(pageParams.cardId || '');
+  const tags = useSelectAllTags();
 
   async function createNewTag(values: ValuesType, formControl: FormikHelpers<ValuesType>) {
     formControl.setSubmitting(true);

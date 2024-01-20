@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
-import {useSelector} from 'react-redux';
-import {selectCardById} from '../../../../entity/card';
+import {useSelectCardById} from '../../../../entity/card';
 import {Hint} from '../Hint/Hint';
 
 export type CardPropsType = {
@@ -8,7 +7,7 @@ export type CardPropsType = {
 }
 
 export const Card: FC<CardPropsType> = (props) => {
-  const cardData = useSelector(selectCardById(props.cardId));
+  const cardData = useSelectCardById(props.cardId);
 
   const [isFrontSideVisible, setFrontSideVisible] = React.useState(true);
 

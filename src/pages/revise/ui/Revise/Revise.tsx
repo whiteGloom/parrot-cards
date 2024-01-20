@@ -1,8 +1,7 @@
 import React, {FC} from 'react';
 import {Navigate, useLocation, useParams, useSearchParams} from 'react-router-dom';
 import {Card} from '../Card/Card';
-import {useSelector} from 'react-redux';
-import {selectCardsIdsByFilters} from '../../model/selectors/selectCardsIdsByFilters';
+import {useSelectCardsIdsByFilters} from '../../model/selectors/selectCardsIdsByFilters';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
@@ -10,7 +9,7 @@ import {ArrowLeft} from 'lucide-react';
 export const Revise: FC = () => {
   const [searchParams] = useSearchParams();
 
-  const cardsIds = useSelector(selectCardsIdsByFilters({tagsIds: searchParams.get('tags')?.split(',').filter(t => t.length) || []}));
+  const cardsIds = useSelectCardsIdsByFilters({tagsIds: searchParams.get('tags')?.split(',').filter(t => t.length) || []});
   const location = useLocation();
 
   const cardId = useParams().cardId;

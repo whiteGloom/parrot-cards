@@ -1,7 +1,7 @@
 import {createEntityAdapter, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {ITag} from '../../types/tag';
+import {ITag} from '../../types/Tag';
 import {AppState} from '../../../../shared/lib/store/appState';
-import {initialTags} from './initialTags';
+import {initialState} from './initialState';
 
 const tagsEntityAdapter = createEntityAdapter<ITag>({
   selectId: model => model.id,
@@ -10,12 +10,12 @@ const tagsEntityAdapter = createEntityAdapter<ITag>({
 
 export const tagsSlice = createSlice({
   name: 'tags',
-  initialState: tagsEntityAdapter.getInitialState({ids: Object.keys(initialTags), entities: initialTags}),
+  initialState: tagsEntityAdapter.getInitialState(initialState),
   reducers: {
     addOneTag(state, action: PayloadAction<ITag>) {
       tagsEntityAdapter.addOne(state, action.payload);
     },
-    connectTagsWithCard(state, action: PayloadAction<{tagsIds: ITag['id'][], cardId: string}>) {
+    connectTagsWithCard(state, action: PayloadAction<{tagsIds: string[], cardId: string}>) {
       const {tagsIds, cardId} = action.payload;
 
       tagsIds.forEach((tagId) => {
@@ -26,7 +26,7 @@ export const tagsSlice = createSlice({
         }
       });
     },
-    disconnectTagsFromCard(state, action: PayloadAction<{tagsIds: ITag['id'][], cardId: string}>) {
+    disconnectTagsFromCard(state, action: PayloadAction<{tagsIds: string[], cardId: string}>) {
       const {tagsIds, cardId} = action.payload;
 
       tagsIds.forEach((tagId) => {

@@ -1,14 +1,14 @@
-export {tagsSliceReducer} from './model/tagsSlice/tagsSlice';
+export {tagsSliceReducer} from './model/slice/tagsSlice';
 
 export {
   addOneTag,
   connectTagsWithCard,
   disconnectTagsFromCard,
   setAllTags,
-} from './model/tagsSlice/tagsSlice';
+} from './model/slice/tagsSlice';
 
-export {selectAllTags} from './model/selectors/selectAllTags';
+export {makeSelectAllTags, useSelectAllTags} from './model/selectors/selectAllTags';
 
-export {selectTagsByIds} from './model/selectors/selectTagsById';
+export {makeSelectTagsByIds, useSelectTagsByIds} from './model/selectors/selectTagsByIds';
 
-export type {ITag} from './types/tag';
+export type {ITag} from './types/Tag';

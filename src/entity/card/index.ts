@@ -6,9 +6,9 @@ export {
   setAllCards,
 } from './model/slices/cardsSlice';
 
-export {selectCardById} from './model/selectors/selectCardById';
-export {selectCardsByIds} from './model/selectors/selectCardsByIds';
+export {makeSelectCardById, useSelectCardById} from './model/selectors/selectCardById';
+export {makeSelectCardsByIds, useSelectCardsByIds} from './model/selectors/selectCardsByIds';
 
-export {selectAllCards} from './model/selectors/selectAllCards';
+export {makeSelectAllCards, useSelectAllCards} from './model/selectors/selectAllCards';
 
-export type {ICard, ICardSide} from './types/card';
+export type {ICard, ICardSide} from './types/Card';
