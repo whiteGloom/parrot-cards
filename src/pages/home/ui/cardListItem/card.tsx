@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 import {selectTagsByIds} from '../../../../entity/tag';
 import {deleteCard} from '../../../../features/card/deleteCard';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 
 export interface CardProps {
   cardData: ICard;

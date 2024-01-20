@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
-import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
 import {ButtonDefault} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 

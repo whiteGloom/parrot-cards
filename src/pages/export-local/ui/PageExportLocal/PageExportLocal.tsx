@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
 import {Form, Formik} from 'formik';
 import {dumpState} from '../../model/actions/dumpState';

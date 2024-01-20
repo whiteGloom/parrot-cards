@@ -7,7 +7,7 @@ import {Card} from '../cardListItem/card';
 import {selectCardsByFilters} from '../../model/selectors/selectCardsByFilters';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/button/LinkButton';
+import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
 import {CheckboxLabeled} from '../../../../shared/ui/fields/CheckboxLabeled/CheckboxLabeled';
 import {Fieldset} from '../../../../shared/ui/fields/Fieldset/Fieldset';

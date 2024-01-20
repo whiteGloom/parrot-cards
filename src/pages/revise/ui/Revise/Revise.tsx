@@ -4,7 +4,7 @@ import {Card} from '../Card/Card';
 import {useSelector} from 'react-redux';
 import {selectCardsIdsByFilters} from '../../model/selectors/selectCardsIdsByFilters';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
-import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/button/LinkButton';
+import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
 
 export const Revise: FC = () => {

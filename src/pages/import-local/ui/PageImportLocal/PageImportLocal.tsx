@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';

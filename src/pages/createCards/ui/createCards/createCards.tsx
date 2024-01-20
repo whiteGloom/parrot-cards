@@ -7,7 +7,7 @@ import {createCard} from '../../../../features/card/createCard';
 import {createTag} from '../../../../features/tag/createTag';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ArrowLeft} from 'lucide-react';
-import {LinkButton} from '../../../../shared/ui/links/button/LinkButton';
+import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {CheckboxLabeled} from '../../../../shared/ui/fields/CheckboxLabeled/CheckboxLabeled';
 import {InputDefault} from '../../../../shared/ui/fields/InputDefault/InputDefault';
