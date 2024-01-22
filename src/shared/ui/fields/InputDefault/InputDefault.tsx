@@ -15,7 +15,7 @@ export const InputDefault: FC<InputDefaultPropsType> = (props) => {
   return (
     <Field
       className={clsx([
-        'border bg-white rounded p-2 shadow',
+        'border bg-white rounded p-2 shadow-inner',
         'invalid:border-red-500',
         errorString && 'border-red-500',
         className,

@@ -9,7 +9,7 @@ export const Fieldset: FC<FieldsetPropsType> = (props) => {
   const {legend, className, ...otherProps} = props;
 
   return (
-    <fieldset className={clsx('flex flex-col border rounded flex-1 p-3 bg-white gap-3 shadow-inner', className)} {...otherProps}>
+    <fieldset className={clsx('flex flex-col border rounded flex-1 p-3 bg-white gap-3 shadow', className)} {...otherProps}>
       {legend ? (<legend className={'font-semibold'}>{legend}</legend>) : undefined}
 
       {props.children}
