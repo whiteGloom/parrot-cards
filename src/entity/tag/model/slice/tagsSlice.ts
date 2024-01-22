@@ -43,6 +43,13 @@ export const tagsSlice = createSlice({
     setAllTags(state, action: PayloadAction<ITag[]>) {
       tagsEntityAdapter.setAll(state, action.payload);
     },
+    setTagTitle(state, action: PayloadAction<{tagId: string, newTitle: string}>) {
+      const tag = state.entities[action.payload.tagId];
+
+      if (tag) {
+        tag.title = action.payload.newTitle;
+      }
+    },
   },
 });
 
@@ -56,4 +63,5 @@ export const {
   disconnectTagsFromCard,
   setAllTags,
   removeOne,
+  setTagTitle,
 } = tagsSlice.actions;

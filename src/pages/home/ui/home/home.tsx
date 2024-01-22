@@ -8,8 +8,8 @@ import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
-import {CheckboxLabeled} from '../../../../shared/ui/fields/CheckboxLabeled/CheckboxLabeled';
 import {Fieldset} from '../../../../shared/ui/fields/Fieldset/Fieldset';
+import {TagSelectItem} from '../../../../widgets/tagSelectItem';
 
 type ValuesType = {
   tags: string[],
@@ -61,9 +61,7 @@ export const Home: FC = () => {
               <ul className={'flex flex-col gap-1'}>
                 {tags.map((tag) => (
                   <li key={tag.id}>
-                    <CheckboxLabeled key={tag.id} name={'tags'} value={tag.id} style={{color: tag.color}}>
-                      {tag.title}
-                    </CheckboxLabeled>
+                    <TagSelectItem tagId={tag.id} name={'tags'}/>
                   </li>
                 ))}
               </ul>

@@ -14,7 +14,7 @@ import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
 import {InputDefault} from '../../../../shared/ui/fields/InputDefault/InputDefault';
 import {ErrorLabel} from '../../../../shared/ui/fields/ErrorLabel/ErrorLabel';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {CheckboxLabeled} from '../../../../shared/ui/fields/CheckboxLabeled/CheckboxLabeled';
+import {TagSelectItem} from '../../../../widgets/tagSelectItem';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -208,9 +208,7 @@ export const EditCard: FC = () => {
                 <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
-                      <CheckboxLabeled name={'tags'} value={tag.id} style={{color: tag.color}}>
-                        {tag.title}
-                      </CheckboxLabeled>
+                      <TagSelectItem tagId={tag.id} name={'tags'}/>
                     </li>
                   ))}
                 </ul>
