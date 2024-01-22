@@ -24,6 +24,17 @@ export const cardsSlice = createSlice({
     setAllCards(state, action: PayloadAction<ICard[]>) {
       cardsEntityAdapter.setAll(state, action.payload);
     },
+    disconnectCardsFromTag(state, action: PayloadAction<{cardsIds: string[], tagId: string}>) {
+      const {cardsIds, tagId} = action.payload;
+
+      cardsIds.forEach((cardId) => {
+        const card = state.entities[cardId];
+
+        if (card) {
+          card.tagsIds = card.tagsIds.filter(id => id !== tagId);
+        }
+      });
+    },
   },
 });
 
@@ -36,4 +47,5 @@ export const {
   removeOne,
   updateOne,
   setAllCards,
+  disconnectCardsFromTag,
 } = cardsSlice.actions;

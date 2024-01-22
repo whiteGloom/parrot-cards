@@ -15,6 +15,9 @@ export const tagsSlice = createSlice({
     addOneTag(state, action: PayloadAction<ITag>) {
       tagsEntityAdapter.addOne(state, action.payload);
     },
+    removeOne(state, action: PayloadAction<{tagId: string}>) {
+      tagsEntityAdapter.removeOne(state, action.payload.tagId);
+    },
     connectTagsWithCard(state, action: PayloadAction<{tagsIds: string[], cardId: string}>) {
       const {tagsIds, cardId} = action.payload;
 
@@ -33,7 +36,7 @@ export const tagsSlice = createSlice({
         const tag = state.entities[tagId];
 
         if (tag) {
-          tag.connectedCardsIds = tag?.connectedCardsIds.filter(id => id !== cardId);
+          tag.connectedCardsIds = tag.connectedCardsIds.filter(id => id !== cardId);
         }
       });
     },
@@ -52,4 +55,5 @@ export const {
   connectTagsWithCard,
   disconnectTagsFromCard,
   setAllTags,
+  removeOne,
 } = tagsSlice.actions;

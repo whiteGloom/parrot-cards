@@ -5,6 +5,7 @@ export {
   connectTagsWithCard,
   disconnectTagsFromCard,
   setAllTags,
+  removeOne,
 } from './model/slice/tagsSlice';
 
 export {makeSelectAllTags, useSelectAllTags} from './model/selectors/selectAllTags';

@@ -4,6 +4,7 @@ export {
   removeOne,
   updateOne,
   setAllCards,
+  disconnectCardsFromTag,
 } from './model/slices/cardsSlice';
 
 export {makeSelectCardById, useSelectCardById} from './model/selectors/selectCardById';
