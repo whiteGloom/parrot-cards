@@ -28,14 +28,14 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
     <div className={'group/tagSelect flex flex-row border rounded items-center py-2 px-3 gap-2 min-h-[3.5rem]'}>
       {!isEditMode && (
         <label className={'flex gap-2 flex-grow cursor-pointer'} style={{color: tag.color}}>
-          <Field type={'checkbox'} name={tag} value={props.tagId} className={'cursor-pointer'}/>
+          <Field type={'checkbox'} name={props.name} value={props.tagId} className={'cursor-pointer'}/>
           {tag.title}
         </label>
       )}
 
       {isEditMode && (
         <div className={'flex gap-2 flex-grow'}>
-          <Field type={'checkbox'} name={tag} value={props.tagId} className={'cursor-pointer'}/>
+          <Field type={'checkbox'} name={props.name} value={props.tagId} className={'cursor-pointer'}/>
 
           <input
             className={'py-1 px-2 shadow-inner border rounded flex-grow'}
