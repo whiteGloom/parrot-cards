@@ -18,9 +18,9 @@ export const cards: ICard[] = [
       hints: [],
     },
     tagsIds: [
-      'Bird',
-      'Animal',
-      'Noun',
+      '9994ad29-1fa4-4343-9f00-83cf0c777413',
+      'b562b953-0c88-4b5f-b076-f473568ac673',
+      'c9612ba9-713c-4843-b78b-d68862c9cc3d',
     ],
   },
   {
@@ -40,9 +40,9 @@ export const cards: ICard[] = [
       hints: [],
     },
     tagsIds: [
-      'Noun',
-      'Animal',
-      'Mammal',
+      'c9612ba9-713c-4843-b78b-d68862c9cc3d',
+      'b562b953-0c88-4b5f-b076-f473568ac673',
+      '52f37712-b1bf-48f8-892e-56db1c23cc43',
     ],
   },
 ];
