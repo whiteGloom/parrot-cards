@@ -38,7 +38,8 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
           <Field type={'checkbox'} name={props.name} value={props.tagId} className={'cursor-pointer'}/>
 
           <input
-            className={'py-1 px-2 shadow-inner border rounded flex-grow'}
+            className={'py-1 px-2 shadow-inner border rounded flex-grow min-w-0'}
+            size={1}
             autoFocus
             value={editValue}
             placeholder={'Enter new title for the tag'}
@@ -97,7 +98,7 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
         ><XCircle/></ButtonDefault>
       </div>}
 
-      {!isDeleteConfirmation && !isEditMode && <div className={'hidden gap-2 items-center group-hover/tagSelect:flex'}>
+      {!isDeleteConfirmation && !isEditMode && <div className={'flex supports-hover:hidden gap-2 items-center group-hover/tagSelect:flex'}>
         <ButtonDefault onClick={() => {
           setEditMode(true);
         }}><Edit/></ButtonDefault>
