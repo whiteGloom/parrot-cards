@@ -7,7 +7,15 @@
     "name": "Evgenii Miller",
     "url": "https://github.com/whiteGloom"
   },
-  "homepage": "https://github.com/whiteGloom/parrot-cards",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "fakeend": "json-server --port 3050 fakeend/db.json",
+    "lint": "eslint .",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "homepage": "https://whitegloom.github.io/parrot-cards/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^5.17.0",
@@ -25,6 +33,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.33.2",
     "formik": "^2.4.5",
+    "gh-pages": "^6.1.1",
     "json-server": "^0.17.4",
     "lucide-react": "^0.311.0",
     "react": "^18.2.0",
@@ -38,14 +47,6 @@
     "typescript": "^4.9.5",
     "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "fakeend": "json-server --port 3050 fakeend/db.json",
-    "lint": "eslint .",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
