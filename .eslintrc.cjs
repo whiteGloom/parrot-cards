@@ -32,5 +32,6 @@ module.exports = {
   "root": true,
   "parserOptions": {
     "project": true
-  }
+  },
+  "ignorePatterns": ["tailwind.config.js"]
 }
