@@ -4,6 +4,12 @@
 
 **Draft stage.**
 
+## Live preview
+
+There is a Github Pages preview: https://whitegloom.github.io/parrot-cards/
+
+Keep in mind that it may be outdated.
+
 ## Beautiful
 
 [![Typescript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)](https://www.typescriptlang.org/)
