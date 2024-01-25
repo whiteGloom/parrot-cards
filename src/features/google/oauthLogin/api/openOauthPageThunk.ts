@@ -14,7 +14,7 @@ export type OauthParamsType = {
 
 export const openOauthPageThunk = createAsyncThunk<void, OauthParamsType, {state: AppState}>(
   'oauthLogin',
-  function (params, api) {
+  function (params) {
     const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
 
     const searchParams = {
