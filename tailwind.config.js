@@ -11,7 +11,7 @@ module.exports = {
   },
   plugins: [
     plugin(function({ addVariant }) {
-      addVariant('only-fine', '@media (not (any-pointer: coarse)) and (not (any-pointer: none))');
+      addVariant('only-fine', '@media (not (any-pointer: coarse)) and (not (pointer: none))');
     }),
   ],
 }
