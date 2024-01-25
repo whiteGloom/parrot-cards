@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.css": "/parrot-cards/static/css/main.94a0fb67.css",
-    "main.js": "/parrot-cards/static/js/main.34cef8ae.js",
+    "main.css": "/parrot-cards/static/css/main.d4dc781e.css",
+    "main.js": "/parrot-cards/static/js/main.6b6d83d9.js",
     "index.html": "/parrot-cards/index.html"
   },
   "entrypoints": [
-    "static/css/main.94a0fb67.css",
-    "static/js/main.34cef8ae.js"
+    "static/css/main.d4dc781e.css",
+    "static/js/main.6b6d83d9.js"
   ]
 }
