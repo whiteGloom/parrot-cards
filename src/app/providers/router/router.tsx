@@ -48,7 +48,7 @@ export const appRouter = createBrowserRouter([
     element: <PageImportLocal/>,
   },
 ], {
-  basename: '/parrot-cards/',
+  basename: '/parrot-cards',
 });
 
 export const AppRouterProvider: FC = () => {
