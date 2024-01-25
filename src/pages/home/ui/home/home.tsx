@@ -57,7 +57,7 @@ export const Home: FC = () => {
           }}
         >
           <Form className={'flex flex-col gap-3 '}>
-            <Fieldset className={'max-h-64 overflow-scroll'} legend={'Filter by tags'}>
+            <Fieldset className={'max-h-64 overflow-auto'} legend={'Filter by tags'}>
               <ul className={'flex flex-col gap-1'}>
                 {tags.map((tag) => (
                   <li key={tag.id}>

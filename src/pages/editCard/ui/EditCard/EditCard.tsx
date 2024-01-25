@@ -205,7 +205,7 @@ export const EditCard: FC = () => {
               </ButtonDefault>
 
               <Fieldset legend={'Tags'}>
-                <ul className={'flex flex-col gap-1 max-h-64 overflow-scroll'}>
+                <ul className={'flex flex-col gap-1 max-h-64 overflow-auto'}>
                   {tags.map((tag) => (
                     <li key={tag.id}>
                       <TagSelectItem tagId={tag.id} name={'tags'}/>
