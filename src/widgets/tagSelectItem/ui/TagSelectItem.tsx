@@ -98,7 +98,7 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
         ><XCircle/></ButtonDefault>
       </div>}
 
-      {!isDeleteConfirmation && !isEditMode && <div className={'flex supports-hover:hidden gap-2 items-center group-hover/tagSelect:flex'}>
+      {!isDeleteConfirmation && !isEditMode && <div className={'flex only-fine:hidden gap-2 items-center group-hover/tagSelect:flex'}>
         <ButtonDefault onClick={() => {
           setEditMode(true);
         }}><Edit/></ButtonDefault>
