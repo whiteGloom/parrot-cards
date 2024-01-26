@@ -1,1 +1,1 @@
-export {CreateCards} from './ui/CreateCards/CreateCards';
+export {CreateCardsPage} from './ui/CreateCardsPage';

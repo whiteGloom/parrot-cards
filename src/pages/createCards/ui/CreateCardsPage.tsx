@@ -1,18 +1,18 @@
 import React, {FC} from 'react';
-import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
+import {useAppDispatch} from '../../../shared/lib/store/useAppDispatch';
 import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
-import {useSelectAllTags} from '../../../../entity/tag';
-import {createCard} from '../../../../features/card/createCard';
-import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
+import {useSelectAllTags} from '../../../entity/tag';
+import {createCard} from '../../../features/card/createCard';
+import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ArrowLeft} from 'lucide-react';
-import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {InputDefault} from '../../../../shared/ui/fields/InputDefault/InputDefault';
-import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
-import {ErrorLabel} from '../../../../shared/ui/fields/ErrorLabel/ErrorLabel';
-import {Fieldset} from '../../../../shared/ui/fields/Fieldset/Fieldset';
-import {TagSelectItem} from '../../../../widgets/tagSelectItem';
-import {useCreateTagThunk} from '../../../../features/tag/createTag';
+import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {InputDefault} from '../../../shared/ui/fields/InputDefault/InputDefault';
+import {LabelAbove} from '../../../shared/ui/fields/LabelAbove/LabelAbove';
+import {ErrorLabel} from '../../../shared/ui/fields/ErrorLabel/ErrorLabel';
+import {Fieldset} from '../../../shared/ui/fields/Fieldset/Fieldset';
+import {TagSelectItem} from '../../../widgets/tagSelectItem';
+import {useCreateTagThunk} from '../../../features/tag/createTag';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -69,7 +69,7 @@ const emptyInitialValues: ValuesType = {
   newTagTitle: '',
 };
 
-export const CreateCards: FC = () => {
+export const CreateCardsPage: FC = () => {
   const dispatch = useAppDispatch();
   const dispatchCreateTag = useCreateTagThunk();
 

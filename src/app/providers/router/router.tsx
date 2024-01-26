@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
-import {CreateCards} from '../../../pages/createCards';
-import {Home} from '../../../pages/home';
-import {EditCard} from '../../../pages/editCard';
+import {CreateCardsPage} from '../../../pages/createCards';
+import {HomePage} from '../../../pages/home';
+import {EditCardPage} from '../../../pages/editCard';
 import {Revise} from '../../../pages/revise';
 import {GoogleOauthPage} from '../../../pages/googleOauth';
 import {ExportPage} from '../../../pages/export';
@@ -13,11 +13,11 @@ import {PageImportLocal} from '../../../pages/importLocal';
 export const appRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Home/>,
+    element: <HomePage/>,
   },
   {
     path: '/create-cards',
-    element: <CreateCards/>,
+    element: <CreateCardsPage/>,
   },
   {
     path: '/revise/:cardId',
@@ -25,7 +25,7 @@ export const appRouter = createBrowserRouter([
   },
   {
     path: '/edit-card/:cardId',
-    element: <EditCard/>,
+    element: <EditCardPage/>,
   },
   {
     path: '/google-oauth',

@@ -1,1 +1,1 @@
-export {Home} from './ui/home/home';
+export {HomePage} from './ui/HomePage';
