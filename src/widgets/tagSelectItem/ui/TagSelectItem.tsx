@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import {useSelectTagById, useSetTagTitle} from '../../../entity/tag';
 import {Field} from 'formik';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {Edit, Save, Trash2, XCircle} from 'lucide-react';
+import {X, Check, PencilLine, Trash2} from 'lucide-react';
 import {useDeleteTag} from '../../../features/tag/deleteTag';
 
 export type TagSelectItemPropsType = {
@@ -25,9 +25,9 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
   }
 
   return (
-    <div className={'group/tagSelect flex flex-row border rounded items-center py-2 px-3 gap-2 min-h-[3.5rem]'}>
+    <div className={'group/tagSelect flex flex-col md:flex-row md:items-center border rounded py-1 px-2 gap-2 min-h-[3rem]'}>
       {!isEditMode && (
-        <label className={'flex gap-2 flex-grow cursor-pointer'} style={{color: tag.color}}>
+        <label className={'flex gap-2 flex-grow cursor-pointer items-center font-semibold p-1'} style={{color: tag.color}}>
           <Field type={'checkbox'} name={props.name} value={props.tagId} className={'cursor-pointer'}/>
           {tag.title}
         </label>
@@ -69,7 +69,7 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
             setEditMode(false);
             setEditValue(tag.title);
           }}
-        ><XCircle/></ButtonDefault>
+        ><X/></ButtonDefault>
 
         <ButtonDefault
           theme={ButtonDefaultTypes.Accent}
@@ -77,7 +77,7 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
             setEditMode(false);
             if (editValue !== tag.title) setTagTitle({tagId: tag.id, newTitle: editValue});
           }}
-        ><Save/></ButtonDefault>
+        ><Check/></ButtonDefault>
       </div>}
 
       {isDeleteConfirmation && <div className={'flex gap-2 items-center'}>
@@ -95,13 +95,13 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
           onClick={() => {
             setDeleteConfirmation(false);
           }}
-        ><XCircle/></ButtonDefault>
+        ><X/></ButtonDefault>
       </div>}
 
-      {!isDeleteConfirmation && !isEditMode && <div className={'flex only-fine:hidden gap-2 items-center group-hover/tagSelect:flex'}>
+      {!isDeleteConfirmation && !isEditMode && <div className={'flex md:only-fine:hidden gap-2 items-center group-hover/tagSelect:flex'}>
         <ButtonDefault onClick={() => {
           setEditMode(true);
-        }}><Edit/></ButtonDefault>
+        }}><PencilLine/></ButtonDefault>
 
         <ButtonDefault
           theme={ButtonDefaultTypes.Warning}
