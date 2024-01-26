@@ -10,7 +10,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "fakeend": "json-server --port 3050 fakeend/db.json",
     "lint": "eslint .",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
