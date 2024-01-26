@@ -7,6 +7,7 @@ import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
 import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
 import {loadState, StateObjectType} from '../../model/actions/loadState';
+import {FileInput} from '../../../../shared/ui/fields/InputFile/FileInput';
 
 export const PageImportLocal: FC = () => {
   const dispatch = useAppDispatch();
@@ -54,10 +55,8 @@ export const PageImportLocal: FC = () => {
           }}
         >
           <LabelAbove label={'Select file to import'}>
-            <input
+            <FileInput
               ref={fileInputRef}
-              className={'p-3 rounded border bg-white file:border file:shadow file:bg-white file:px-3 file:py-2 file:rounded file:border-solid file:border-gray-200 file:hover:bg-[#f2f2f2] file:active:bg-[#E7E7E7] file:disabled:text-gray-500 file:disabled:bg-gray-200'}
-              type={'file'}
               onChange={(event) => {
                 setFileToImport(event.target.files?.[0]);
               }}
