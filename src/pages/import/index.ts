@@ -1,1 +1,1 @@
-export {PageImport} from './ui/PageImport/PageImport';
+export {ImportPage} from './ui/ImportPage';

@@ -7,7 +7,7 @@ import {RevisePage} from '../../../pages/revise';
 import {GoogleOauthPage} from '../../../pages/googleOauth';
 import {ExportPage} from '../../../pages/export';
 import {PageExportLocal} from '../../../pages/exportLocal';
-import {PageImport} from '../../../pages/import';
+import {ImportPage} from '../../../pages/import';
 import {PageImportLocal} from '../../../pages/importLocal';
 
 export const appRouter = createBrowserRouter([
@@ -41,7 +41,7 @@ export const appRouter = createBrowserRouter([
   },
   {
     path: '/import',
-    element: <PageImport/>,
+    element: <ImportPage/>,
   },
   {
     path: '/import-local',

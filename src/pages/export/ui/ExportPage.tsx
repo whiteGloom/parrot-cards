@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
-import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
-import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
-import {ButtonDefault} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
+import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
+import {ButtonDefault} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {ArrowLeft} from 'lucide-react';
 
 export const ExportPage: FC = () => {

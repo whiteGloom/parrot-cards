@@ -1,10 +1,10 @@
 import React, {FC} from 'react';
-import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
-import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
+import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
+import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
-import {ButtonDefault} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {ButtonDefault} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 
-export const PageImport: FC = () => {
+export const ImportPage: FC = () => {
   return (
     <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>
