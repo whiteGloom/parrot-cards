@@ -4,7 +4,11 @@ import {disconnectCardsFromTag} from '../../../../../entity/card';
 import {removeOne} from '../../../../../entity/tag';
 import {useAppDispatch} from '../../../../../shared/lib/store/useAppDispatch';
 
-export const deleteTag = createAsyncThunk<void, {tagId: string}, {state: AppState}>(
+type DeleteTagDataType = {
+  tagId: string;
+}
+
+export const deleteTag = createAsyncThunk<void, DeleteTagDataType, {state: AppState}>(
   'deleteTag',
   function(data, thunkAPI) {
     thunkAPI.dispatch(disconnectCardsFromTag({
@@ -21,5 +25,5 @@ export const deleteTag = createAsyncThunk<void, {tagId: string}, {state: AppStat
 export function useDeleteTag() {
   const dispatch = useAppDispatch();
 
-  return (data: {tagId: string}) => dispatch(deleteTag(data));
+  return (data: DeleteTagDataType) => dispatch(deleteTag(data));
 }
