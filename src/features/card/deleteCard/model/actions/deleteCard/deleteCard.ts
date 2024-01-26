@@ -2,8 +2,9 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {removeOne} from '../../../../../../entity/card';
 import {AppState} from '../../../../../../shared/lib/store/appState';
 import {disconnectTagsFromCard} from '../../../../../../entity/tag';
+import {useAppDispatch} from '../../../../../../shared/lib/store/useAppDispatch';
 
-export const deleteCard = createAsyncThunk<void, {cardId: string}, {state: AppState}>(
+export const deleteCardThunk = createAsyncThunk<void, {cardId: string}, {state: AppState}>(
   'deleteCard',
   function(data, thunkAPI) {
     thunkAPI.dispatch(disconnectTagsFromCard({
@@ -14,3 +15,9 @@ export const deleteCard = createAsyncThunk<void, {cardId: string}, {state: AppSt
     thunkAPI.dispatch(removeOne(data.cardId));
   }
 );
+
+export function useDeleteCardThunk() {
+  const dispatch = useAppDispatch();
+
+  return (data: {cardId: string}) => dispatch(deleteCardThunk(data));
+}

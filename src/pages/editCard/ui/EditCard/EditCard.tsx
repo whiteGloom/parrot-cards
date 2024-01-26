@@ -2,7 +2,6 @@ import React, {FC} from 'react';
 import {useParams} from 'react-router-dom';
 import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
-import {createTag} from '../../../../features/tag/createTag';
 import {ICard, useSelectCardById} from '../../../../entity/card';
 import {useSelectAllTags} from '../../../../entity/tag';
 import {editCard} from '../../../../features/card/editCard';
@@ -15,6 +14,7 @@ import {InputDefault} from '../../../../shared/ui/fields/InputDefault/InputDefau
 import {ErrorLabel} from '../../../../shared/ui/fields/ErrorLabel/ErrorLabel';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {TagSelectItem} from '../../../../widgets/tagSelectItem';
+import {useCreateTagThunk} from '../../../../features/tag/createTag';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -73,6 +73,8 @@ const emptyInitialValues: ValuesType = {
 
 export const EditCard: FC = () => {
   const dispatch = useAppDispatch();
+  const dispatchCreateTag = useCreateTagThunk();
+
   const pageParams = useParams<{cardId: string}>();
 
   const firstFieldRef = React.useRef<HTMLInputElement>(null);
@@ -84,16 +86,14 @@ export const EditCard: FC = () => {
   async function createNewTag(values: ValuesType, formControl: FormikHelpers<ValuesType>) {
     formControl.setSubmitting(true);
 
-    const title = values.newTagTitle.trim();
-
-    await dispatch(createTag({
+    const newTagId = (await dispatchCreateTag({
       title: values.newTagTitle.trim(),
       connectedCardsIds: [],
-    }));
+    }).unwrap()).id;
 
     await formControl.setFieldValue('newTagTitle', '');
-    if (!values.tags.includes(title)) {
-      await formControl.setFieldValue('tags', [...values.tags, title]);
+    if (!values.tags.includes(newTagId)) {
+      await formControl.setFieldValue('tags', [...values.tags, newTagId]);
     }
 
     newTagTitleInputRef.current?.focus();

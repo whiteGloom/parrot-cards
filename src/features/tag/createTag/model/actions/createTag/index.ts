@@ -1,6 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {addOneTag} from '../../../../../../entity/tag';
+import {addOneTag, ITag} from '../../../../../../entity/tag';
 import {UniqueIdGenerator} from '../../../../../../shared/lib/UniqueIdGenerator/UniqueIdGenerator';
+import {useAppDispatch} from '../../../../../../shared/lib/store/useAppDispatch';
+import {AppState} from '../../../../../../shared/lib/store/appState';
 
 type CreateTagParamsType = {
   title: string;
@@ -10,15 +12,25 @@ type CreateTagParamsType = {
   color?: string,
 }
 
-export const createTag = createAsyncThunk(
+export const createTagThunk = createAsyncThunk<ITag, CreateTagParamsType, {state: AppState}>(
   'createCard',
-  function(data: CreateTagParamsType, thunkApi) {
+  function(data, thunkApi) {
+    const id = data.id || UniqueIdGenerator.generateSimpleUniqueId();
+
     thunkApi.dispatch(addOneTag({
-      id: data.id || UniqueIdGenerator.generateSimpleUniqueId(),
+      id,
       title: data.title,
       createdAt: data.createdAt || Date.now(),
       color: data.color || `hsl(${Math.round(Math.random() * 360)}, 100%, 16%)`,
       connectedCardsIds: data.connectedCardsIds,
     }));
+
+    return thunkApi.getState().tags.entities[id];
   }
 );
+
+export function useCreateTagThunk() {
+  const dispatch = useAppDispatch();
+
+  return (data: CreateTagParamsType) => dispatch(createTagThunk(data));
+}
