@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import {useSelectCardById} from '../../../../entity/card';
-import {Hint} from '../Hint/Hint';
+import {Hint} from './Hint';
 
 export type CardPropsType = {
   cardId: string;
 }
 
-export const Card: FC<CardPropsType> = (props) => {
+export const CardReviseItem: FC<CardPropsType> = (props) => {
   const cardData = useSelectCardById(props.cardId);
 
   const [isFrontSideVisible, setFrontSideVisible] = React.useState(true);

@@ -9,7 +9,7 @@ export {
 
 export {makeSelectCardById, useSelectCardById} from './model/selectors/selectCardById';
 export {makeSelectCardsByIds, useSelectCardsByIds} from './model/selectors/selectCardsByIds';
-
 export {makeSelectAllCards, useSelectAllCards} from './model/selectors/selectAllCards';
+export {makeSelectCardsIdsByFilters, useSelectCardsIdsByFilters} from './model/selectors/selectCardsIdsByFilters';
 
 export type {ICard, ICardSide} from './types/Card';

@@ -1,1 +1,1 @@
-export {Revise} from './ui/Revise/Revise';
+export {RevisePage} from './ui/RevisePage';

@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import {Navigate, useLocation, useParams, useSearchParams} from 'react-router-dom';
-import {Card} from '../Card/Card';
-import {useSelectCardsIdsByFilters} from '../../model/selectors/selectCardsIdsByFilters';
-import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
-import {LinkButton, LinkButtonDefaultTypes} from '../../../../shared/ui/links/LinkButton/LinkButton';
+import {useSelectCardsIdsByFilters} from '../../../entity/card';
+import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
+import {LinkButton, LinkButtonDefaultTypes} from '../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
+import {CardReviseItem} from '../../../widgets/card/cardReviseItem';
 
-export const Revise: FC = () => {
+export const RevisePage: FC = () => {
   const [searchParams] = useSearchParams();
 
   const cardsIds = useSelectCardsIdsByFilters({tagsIds: searchParams.get('tags')?.split(',').filter(t => t.length) || []});
@@ -41,7 +41,7 @@ export const Revise: FC = () => {
           ) : undefined}
 
           {cardsIds.includes(cardId) ? (
-            <Card cardId={cardId} key={cardId}/>
+            <CardReviseItem cardId={cardId} key={cardId}/>
           ) : <div className={'bg-white p-3 border shadow rounded font-bold'}>Card no found!</div>}
         </div>
       </section>

@@ -1,9 +1,9 @@
 import React, {FC, useState} from 'react';
-import {ICard} from '../../../entity/card';
-import {useSelectTagsByIds} from '../../../entity/tag';
-import {useDeleteCardThunk} from '../../../features/card/deleteCard';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
+import {ICard} from '../../../../entity/card';
+import {useSelectTagsByIds} from '../../../../entity/tag';
+import {useDeleteCardThunk} from '../../../../features/card/deleteCard';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {PencilLine, Trash2, X} from 'lucide-react';
 
 export interface CardProps {

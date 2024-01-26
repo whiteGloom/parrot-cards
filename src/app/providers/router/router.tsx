@@ -3,7 +3,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {CreateCardsPage} from '../../../pages/createCards';
 import {HomePage} from '../../../pages/home';
 import {EditCardPage} from '../../../pages/editCard';
-import {Revise} from '../../../pages/revise';
+import {RevisePage} from '../../../pages/revise';
 import {GoogleOauthPage} from '../../../pages/googleOauth';
 import {ExportPage} from '../../../pages/export';
 import {PageExportLocal} from '../../../pages/exportLocal';
@@ -21,7 +21,7 @@ export const appRouter = createBrowserRouter([
   },
   {
     path: '/revise/:cardId',
-    element: <Revise/>,
+    element: <RevisePage/>,
   },
   {
     path: '/edit-card/:cardId',

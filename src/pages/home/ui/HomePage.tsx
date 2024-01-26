@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 import {useSelectAllTags} from '../../../entity/tag';
-import {CardListItem} from '../../../widgets/cardListItem';
+import {CardListItem} from '../../../widgets/card/cardListItem';
 import {useSelectCardsByFilters} from '../model/selectors/selectCardsByFilters';
 import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ButtonDefault} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
