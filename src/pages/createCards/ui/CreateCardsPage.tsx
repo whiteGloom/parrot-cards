@@ -1,8 +1,7 @@
 import React, {FC} from 'react';
-import {useAppDispatch} from '../../../shared/lib/store/useAppDispatch';
 import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import {useSelectAllTags} from '../../../entity/tag';
-import {createCard} from '../../../features/card/createCard';
+import {useCreateCardThunk} from '../../../features/card/createCard';
 import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ArrowLeft} from 'lucide-react';
 import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
@@ -70,8 +69,8 @@ const emptyInitialValues: ValuesType = {
 };
 
 export const CreateCardsPage: FC = () => {
-  const dispatch = useAppDispatch();
-  const dispatchCreateTag = useCreateTagThunk();
+  const dispatchCreateTagThunk = useCreateTagThunk();
+  const dispatchCreateCardThunk = useCreateCardThunk();
 
   const firstFieldRef = React.useRef<HTMLInputElement>(null);
   const newTagTitleInputRef = React.useRef<HTMLInputElement>(null);
@@ -81,7 +80,7 @@ export const CreateCardsPage: FC = () => {
   async function createNewTag(values: ValuesType, formControl: FormikHelpers<ValuesType>) {
     formControl.setSubmitting(true);
 
-    const newTagId = (await dispatchCreateTag({
+    const newTagId = (await dispatchCreateTagThunk({
       title: values.newTagTitle.trim(),
       connectedCardsIds: [],
     }).unwrap()).id;
@@ -108,11 +107,11 @@ export const CreateCardsPage: FC = () => {
           validateOnMount={true}
           initialValues={emptyInitialValues}
           onSubmit={async (values: ValuesType, control) => {
-            await dispatch(createCard({
+            await dispatchCreateCardThunk({
               frontSide: prepareDataFromSideFields(values[GroupNames.FrontSide]),
               backSide: prepareDataFromSideFields(values[GroupNames.BackSide]),
               tagsIds: values.tags,
-            }));
+            });
 
             control.resetForm();
             firstFieldRef.current?.focus();

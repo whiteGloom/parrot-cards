@@ -1,10 +1,9 @@
 import React, {FC} from 'react';
 import {useParams} from 'react-router-dom';
-import {useAppDispatch} from '../../../shared/lib/store/useAppDispatch';
 import {FieldArray, Form, Formik, FormikHelpers} from 'formik';
 import {ICard, useSelectCardById} from '../../../entity/card';
 import {useSelectAllTags} from '../../../entity/tag';
-import {editCard} from '../../../features/card/editCard';
+import {useEditCardThunk} from '../../../features/card/editCard';
 import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
@@ -72,8 +71,8 @@ const emptyInitialValues: ValuesType = {
 };
 
 export const EditCardPage: FC = () => {
-  const dispatch = useAppDispatch();
   const dispatchCreateTag = useCreateTagThunk();
+  const dispatchEditCard = useEditCardThunk();
 
   const pageParams = useParams<{cardId: string}>();
 
@@ -125,14 +124,14 @@ export const EditCardPage: FC = () => {
             tags: card?.tagsIds.length ? [...card.tagsIds] : emptyInitialValues.tags,
           }}
           onSubmit={async (values: ValuesType, control) => {
-            await dispatch(editCard({
+            await dispatchEditCard({
               id: card.id,
               changes: {
                 frontSide: prepareDataFromSideFields(values[GroupNames.FrontSide]),
                 backSide: prepareDataFromSideFields(values[GroupNames.BackSide]),
                 tagsIds: values.tags,
               },
-            }));
+            });
 
             control.setSubmitting(false);
           }}

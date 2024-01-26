@@ -1,1 +1,1 @@
-export {editCard} from './model/actions/editCard/editCard';
+export {editCardThunk, useEditCardThunk} from './model/actions/editCard';

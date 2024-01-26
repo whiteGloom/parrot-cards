@@ -1,1 +1,1 @@
-export {createCard} from './model/actions/createCard/createCard';
+export {createCardThunk, useCreateCardThunk} from './model/actions/createCard';

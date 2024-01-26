@@ -1,1 +1,1 @@
-export {deleteCardThunk, useDeleteCardThunk} from './model/actions/deleteCard/deleteCard';
+export {deleteCardThunk, useDeleteCardThunk} from './model/actions/deleteCard';
