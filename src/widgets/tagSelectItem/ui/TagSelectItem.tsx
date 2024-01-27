@@ -1,9 +1,10 @@
 import React, {FC, useState} from 'react';
-import {useSelectTagById, useSetTagTitle} from '../../../entity/tag';
+import {useSelectTagById} from '../../../entity/tag';
 import {Field} from 'formik';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {X, Check, PencilLine, Trash2} from 'lucide-react';
 import {useDeleteTag} from '../../../features/tag/deleteTag';
+import {useRenameTag} from '../../../features/tag/renameTag';
 
 export type TagSelectItemPropsType = {
   tagId: string;
@@ -13,8 +14,8 @@ export type TagSelectItemPropsType = {
 export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
   const tag = useSelectTagById(props.tagId);
 
-  const deleteTag = useDeleteTag();
-  const setTagTitle = useSetTagTitle();
+  const dispatchDeleteTag = useDeleteTag();
+  const dispatchRenameTag = useRenameTag();
 
   const [isDeleteConfirmation, setDeleteConfirmation] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
@@ -50,7 +51,7 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
               if (event.key === 'Enter') {
                 event.preventDefault();
                 setEditMode(false);
-                if (editValue !== tag.title) setTagTitle({tagId: tag.id, newTitle: editValue});
+                if (editValue !== tag.title) dispatchRenameTag({tagId: tag.id, newTitle: editValue});
               }
 
               if (event.key === 'Escape') {
@@ -75,7 +76,7 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
           theme={ButtonDefaultTypes.Accent}
           onClick={() => {
             setEditMode(false);
-            if (editValue !== tag.title) setTagTitle({tagId: tag.id, newTitle: editValue});
+            if (editValue !== tag.title) dispatchRenameTag({tagId: tag.id, newTitle: editValue});
           }}
         ><Check/></ButtonDefault>
       </div>}
@@ -86,7 +87,7 @@ export const TagSelectItem: FC<TagSelectItemPropsType> = (props) => {
         <ButtonDefault
           theme={ButtonDefaultTypes.Warning}
           onClick={() => {
-            deleteTag({tagId: props.tagId}).catch(null);
+            dispatchDeleteTag({tagId: props.tagId}).catch(null);
           }}
         ><Trash2/></ButtonDefault>
 

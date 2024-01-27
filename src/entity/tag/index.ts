@@ -14,6 +14,4 @@ export {makeSelectTagsByIds, useSelectTagsByIds} from './model/selectors/selectT
 
 export {makeSelectTagById, useSelectTagById} from './model/selectors/selectTagById';
 
-export {setTagTitle, useSetTagTitle} from './model/actions/setTagTitle';
-
 export type {ITag} from './types/Tag';
