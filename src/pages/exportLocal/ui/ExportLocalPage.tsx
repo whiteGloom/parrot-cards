@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useMemo, useState} from 'react';
-import {LinkButton, LinkButtonDefaultTypes} from '../../../shared/ui/links/LinkButton/LinkButton';
+import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
 import {Form, Formik} from 'formik';
 import {InputDefault} from '../../../shared/ui/fields/InputDefault/InputDefault';

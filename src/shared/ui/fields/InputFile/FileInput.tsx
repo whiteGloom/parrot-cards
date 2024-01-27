@@ -1,4 +1,4 @@
-import React, {FC, DetailedHTMLProps, InputHTMLAttributes, useImperativeHandle, useRef, forwardRef} from 'react';
+import React, {DetailedHTMLProps, InputHTMLAttributes, useImperativeHandle, useRef, forwardRef} from 'react';
 import clsx from 'clsx';
 
 export type FileInputPropsType = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
