@@ -11,5 +11,6 @@ export {makeSelectCardById, useSelectCardById} from './model/selectors/selectCar
 export {makeSelectCardsByIds, useSelectCardsByIds} from './model/selectors/selectCardsByIds';
 export {makeSelectAllCards, useSelectAllCards} from './model/selectors/selectAllCards';
 export {makeSelectCardsIdsByFilters, useSelectCardsIdsByFilters} from './model/selectors/selectCardsIdsByFilters';
+export {makeSelectCardsByFilters, useSelectCardsByFilters} from './model/selectors/selectCardsByFilters';
 
 export type {ICard, ICardSide} from './types/Card';
