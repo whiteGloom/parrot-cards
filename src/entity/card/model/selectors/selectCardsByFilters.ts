@@ -1,6 +1,6 @@
 import {createSelector} from '@reduxjs/toolkit';
 import {AppState} from '../../../../shared/lib/store/appState';
-import {ICard} from '../../../../entity/card';
+import {ICard} from '../../index';
 import {useRef} from 'react';
 import {useSelector} from 'react-redux';
 
