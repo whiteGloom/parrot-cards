@@ -8,7 +8,7 @@ import {GoogleOauthPage} from '../../../pages/googleOauth';
 import {ExportPage} from '../../../pages/export';
 import {ExportLocalPage} from '../../../pages/exportLocal';
 import {ImportPage} from '../../../pages/import';
-import {PageImportLocal} from '../../../pages/importLocal';
+import {ImportLocalPage} from '../../../pages/importLocal';
 
 export const appRouter = createBrowserRouter([
   {
@@ -45,7 +45,7 @@ export const appRouter = createBrowserRouter([
   },
   {
     path: '/import-local',
-    element: <PageImportLocal/>,
+    element: <ImportLocalPage/>,
   },
 ], {
   basename: '/parrot-cards',

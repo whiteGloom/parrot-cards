@@ -4,13 +4,9 @@ import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {ICard} from '../../../../entity/card';
 import {ITag} from '../../../../entity/tag';
 import {useRef} from 'react';
+import {IDumpActual} from '../../../../entity/dump';
 
-export type DumpedStateType = {
-  cards: ICard[],
-  tags: ITag[],
-}
-
-export const dumpDataThunk = createAsyncThunk<DumpedStateType, void, {state: AppState}>(
+export const dumpDataThunk = createAsyncThunk<IDumpActual, void, {state: AppState}>(
   'dumpState',
   (_params, thunkApi) => {
     const state = thunkApi.getState();
@@ -18,6 +14,7 @@ export const dumpDataThunk = createAsyncThunk<DumpedStateType, void, {state: App
     return {
       cards: Object.values(state.cards.entities) as ICard[],
       tags: Object.values(state.tags.entities) as ITag[],
+      version: 1,
     };
   }
 );

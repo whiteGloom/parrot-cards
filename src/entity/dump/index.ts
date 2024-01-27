@@ -1,0 +1,1 @@
+export type {IDumpActual} from './types/dump';

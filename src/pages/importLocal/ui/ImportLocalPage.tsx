@@ -1,18 +1,18 @@
 import React, {FC} from 'react';
-import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
-import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
+import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
-import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {LabelAbove} from '../../../../shared/ui/fields/LabelAbove/LabelAbove';
-import {LayoutMain} from '../../../../shared/ui/layouts/LayoutMain/LayoutMain';
-import {loadFileFromFileSystem} from '../../model/actions/loadFileFromFileSystem';
-import {loadState, StateObjectType} from '../../model/actions/loadState';
-import {FileInput} from '../../../../shared/ui/fields/InputFile/FileInput';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
+import {LabelAbove} from '../../../shared/ui/fields/LabelAbove/LabelAbove';
+import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
+import {loadFileFromFileSystem} from '../../../shared/lib/loadFileFromFileSystem';
+import {FileInput} from '../../../shared/ui/fields/InputFile/FileInput';
+import {useLoadDataDumpThunk} from '../../../features/importData/model/actions/loadDataDump';
+import {IDumpUnknown} from '../../../entity/dump/types/dump';
 
-export const PageImportLocal: FC = () => {
-  const dispatch = useAppDispatch();
+export const ImportLocalPage: FC = () => {
+  const dispatchLoadDataDump = useLoadDataDumpThunk();
 
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const fileInputRef = React.useRef<typeof FileInput>(null);
   const [fileToImport, setFileToImport] = React.useState<File>();
   const [isImporting, setIsImporting] = React.useState(false);
 
@@ -39,7 +39,11 @@ export const PageImportLocal: FC = () => {
             setIsImporting(true);
 
             const importingPromise = loadFileFromFileSystem(fileToImport)
-              .then((fileDataRaw) => dispatch(loadState(JSON.parse(fileDataRaw) as StateObjectType)));
+              .then((fileDataRaw) => dispatchLoadDataDump({dump: JSON.parse(fileDataRaw) as IDumpUnknown}))
+              .catch((err) => {
+                // TODO: Remove
+                console.log('An error occurred while importing', err);
+              });
 
             // Synthetic loading to prevent ui flashes
             // TODO: Remove after implementation of notifications system

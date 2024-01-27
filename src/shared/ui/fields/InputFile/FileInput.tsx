@@ -1,14 +1,24 @@
-import React, {FC, DetailedHTMLProps, InputHTMLAttributes} from 'react';
+import React, {FC, DetailedHTMLProps, InputHTMLAttributes, useImperativeHandle, useRef, forwardRef} from 'react';
 import clsx from 'clsx';
 
 export type FileInputPropsType = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
-export const FileInput: FC<FileInputPropsType> = (props) => {
+export const FileInput = forwardRef((props: FileInputPropsType, ref) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const {className} = props;
+
+  useImperativeHandle(ref, () => {
+    return {
+      focus() {
+        inputRef.current?.focus();
+      },
+    };
+  });
 
   return (
     <input
       {...props}
+      ref={inputRef}
       type={'file'}
       className={clsx([
         'p-3 rounded border bg-white',
@@ -18,4 +28,6 @@ export const FileInput: FC<FileInputPropsType> = (props) => {
       ])}
     />
   );
-};
+});
+
+FileInput.displayName = 'FileInput';
