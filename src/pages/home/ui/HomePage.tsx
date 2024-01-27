@@ -61,6 +61,8 @@ export const HomePage: FC = () => {
 
             <Fieldset className={'max-h-64 overflow-auto'} legend={'Tags'}>
               <ul className={'flex flex-col gap-1'}>
+                {!cards.length && 'No tags available yet'}
+
                 {tags.map((tag) => (
                   <li key={tag.id}>
                     <TagSelectItem tagId={tag.id} name={'tags'}/>
@@ -87,9 +89,7 @@ export const HomePage: FC = () => {
         )}
 
         <ul className={'flex flex-col gap-3'}>
-          {!cards.length ? (
-            'No cards available yet'
-          ) : undefined}
+          {!cards.length && 'No cards available yet'}
 
           {cards.map((card) => (
             <li key={card.id}>
