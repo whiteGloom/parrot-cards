@@ -36,11 +36,11 @@ export const HomePage: FC = () => {
         <nav className={'flex gap-3 overflow-x-auto'}>
           <LinkButton theme={LinkButtonDefaultTypes.Accent} to={'/create-cards'}>Create new cards</LinkButton>
 
-          <LinkButton to={'/import'} className={'flex gap-0.5 items-center'}>
+          <LinkButton to={'/import'}>
             <ArrowDownToLine className={'h-5'}/> Import
           </LinkButton>
 
-          <LinkButton to={'/export'} className={'flex gap-0.5 items-center'}>
+          <LinkButton to={'/export'}>
             <ArrowUpFromLine className={'h-5'}/> Export
           </LinkButton>
         </nav>

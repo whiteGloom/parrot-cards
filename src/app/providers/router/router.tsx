@@ -6,7 +6,7 @@ import {EditCardPage} from '../../../pages/editCard';
 import {RevisePage} from '../../../pages/revise';
 import {GoogleOauthPage} from '../../../pages/googleOauth';
 import {ExportPage} from '../../../pages/export';
-import {PageExportLocal} from '../../../pages/exportLocal';
+import {ExportLocalPage} from '../../../pages/exportLocal';
 import {ImportPage} from '../../../pages/import';
 import {PageImportLocal} from '../../../pages/importLocal';
 
@@ -37,7 +37,7 @@ export const appRouter = createBrowserRouter([
   },
   {
     path: '/export-local',
-    element: <PageExportLocal/>,
+    element: <ExportLocalPage/>,
   },
   {
     path: '/import',

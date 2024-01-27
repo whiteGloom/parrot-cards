@@ -1,1 +1,1 @@
-export {PageExportLocal} from './ui/PageExportLocal/PageExportLocal';
+export {ExportLocalPage} from './ui/ExportLocalPage';

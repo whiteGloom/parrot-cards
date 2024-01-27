@@ -24,7 +24,7 @@ export const ButtonDefault: FC<ButtonDefaultPropsType> = (props) => {
         'font-semibold shadow rounded px-2 py-1',
         theme === ButtonDefaultTypes.Normal && 'border text-[#2b2b2b] bg-white border-gray-200 hover:bg-[#f2f2f2] active:bg-[#E7E7E7] disabled:text-gray-500 disabled:bg-gray-200',
         theme === ButtonDefaultTypes.Accent && 'text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:text-gray-500 disabled:bg-blue-100',
-        theme === ButtonDefaultTypes.Warning && 'text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800',
+        theme === ButtonDefaultTypes.Warning && 'text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800 disabled:text-gray-500 disabled:bg-rose-100',
         className,
       ])}
       {...otherProps}
