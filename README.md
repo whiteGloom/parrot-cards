@@ -8,7 +8,7 @@
 
 ## Live preview
 
-There is a GitHub Pages preview: https://whitegloom.github.io/parrot-cards/
+There is a GitHub Pages preview: https://whitegloom.github.io/parrot-cards
 
 Keep in mind that it may be a bit outdated.
 
