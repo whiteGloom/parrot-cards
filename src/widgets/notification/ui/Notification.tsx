@@ -35,7 +35,7 @@ export const Notification: FC<NotificationPropsType> = (props) => {
   return (
     <div
       className={clsx([
-        'relative flex flex-col border border-gray-400 border-t-4 rounded shadow-xl overflow-hidden p-2.5 gap-1 bg-white w-full transition-opacity',
+        'flex flex-col border border-gray-400 border-t-4 rounded shadow-xl overflow-hidden p-2.5 gap-1 bg-white w-full transition-opacity',
         notification.type === NotificationType.Success && 'border-t-green-500 md:only-fine:opacity-50 md:hover:only-fine:opacity-100',
         notification.type === NotificationType.Error && 'border-t-rose-500',
       ])}
