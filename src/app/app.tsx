@@ -5,7 +5,7 @@ import {AppRouterProvider} from './providers/router/router';
 import {useAppDispatch} from '../shared/lib/store/useAppDispatch';
 import {REQUEST_PRELOAD_GOOGLE_OAUTH} from '../entity/google/oauth';
 import {ButtonDefault, ButtonDefaultTypes} from '../shared/ui/buttons/ButtonDefault/ButtonDefault';
-import {NotificationsContainer} from '../entity/notification';
+import {Notifications} from '../widgets/notification';
 
 function App() {
   const [isWarningVisible, setWarningVisibility] = React.useState(true);
@@ -20,7 +20,8 @@ function App() {
     <div className="w-full min-h-100% overflow-y-auto">
       <AppRouterProvider/>
 
-      <NotificationsContainer/>
+      <Notifications/>
+
       {isWarningVisible ? (
         <div className={'fixed w-full h-[100vh] bg-white flex flex-col items-center justify-center top-0 left-0 gap-3'}>
           <p className={'text-center p-3'}>

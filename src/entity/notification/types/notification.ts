@@ -16,5 +16,5 @@ export interface INotification {
     text: string;
     action: string;
     icon?: string;
-  }
+  }[],
 }

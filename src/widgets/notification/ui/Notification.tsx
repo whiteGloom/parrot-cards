@@ -1,10 +1,9 @@
 import React, {FC, useEffect} from 'react';
-import {useSelectNotification} from '../model/selectors/selectNotification';
-import {useUpdateNotificationActivity} from '../model/actions/updateNotificationActivity';
-import {useRemoveNotification} from '../model/actions/removeNotification';
+import {useSelectNotification, NotificationType} from '../../../entity/notification';
+import {useRemoveNotification} from '../../../features/notifications/removeNotification';
 import clsx from 'clsx';
-import {NotificationType} from '../types/notification';
 import {X} from 'lucide-react';
+import {useUpdateNotificationInteractions} from '../../../features/notifications/updateNotificationInteractions';
 
 export type NotificationPropsType = {
   notificationId: string;
@@ -12,7 +11,7 @@ export type NotificationPropsType = {
 
 export const Notification: FC<NotificationPropsType> = (props) => {
   const notification = useSelectNotification(props.notificationId);
-  const dispatchNotificationUpdate = useUpdateNotificationActivity();
+  const dispatchNotificationUpdate = useUpdateNotificationInteractions();
   const dispatchRemoveNotification = useRemoveNotification();
 
   const lifeTime = notification?.lifetime || Infinity;
@@ -23,7 +22,7 @@ export const Notification: FC<NotificationPropsType> = (props) => {
     if (!isFinite(lifeTime) || isUnderInteraction) return;
 
     const timeoutId = setTimeout(() => {
-      // dispatchRemoveNotification(props.notificationId);
+      dispatchRemoveNotification(props.notificationId);
     }, lifeTime);
 
     return () => clearTimeout(timeoutId);

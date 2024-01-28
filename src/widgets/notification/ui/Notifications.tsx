@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
-import {useSelectAllNotificationsIds} from '../model/selectors/selectAllNotificationsIds';
+import {useSelectAllNotificationsIds} from '../../../entity/notification';
 import {Notification} from './Notification';
 
-export const NotificationsContainer: FC = () => {
+export const Notifications: FC = () => {
   const notificationsIds = useSelectAllNotificationsIds();
 
   return (
