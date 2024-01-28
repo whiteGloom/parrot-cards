@@ -23,7 +23,8 @@ export const ImportLocalPage: FC = () => {
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         {isImporting
           ? <ButtonDefault disabled={isImporting}><ArrowLeft/></ButtonDefault>
-          :<LinkButton to={'/import'}><ArrowLeft/></LinkButton>}
+          : <LinkButton to={'/import'}><ArrowLeft/></LinkButton>
+        }
 
         <h1 className={'text-3xl font-bold'}>Import from local file</h1>
       </header>

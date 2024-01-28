@@ -10,6 +10,8 @@ import {unwrapResult} from '@reduxjs/toolkit';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {getDateStringForSave} from '../../../shared/lib/getDateStringForSave';
 import {DownloadButton} from '../../../shared/ui/buttons/DownloadButton/DownloadButton';
+import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
+import {NotificationType} from '../../../entity/notification';
 
 type DumpInfo = {
   isLoading: boolean,
@@ -18,6 +20,7 @@ type DumpInfo = {
 
 export const ExportLocalPage: FC = () => {
   const dispatchDumpData = useDumpDataThunk();
+  const addNotification = useAddNotificationThunk();
 
   const [dumpInfo, setDumpInfo] = useState<DumpInfo>({isLoading: true, dumpString: undefined});
 
@@ -28,11 +31,15 @@ export const ExportLocalPage: FC = () => {
       .then((result) => {
         setDumpInfo({isLoading: false, dumpString: JSON.stringify(unwrapResult(result))});
       })
-      .catch((error) => {
-        console.log('Export preparing error', error);
+      .catch((error: unknown) => {
         setDumpInfo({isLoading: false, dumpString: undefined});
+
+        addNotification({
+          title: `Preparing for export failed: ${error as string}`,
+          type: NotificationType.Error,
+        }).catch(null);
       });
-  }, [dispatchDumpData]);
+  }, [addNotification, dispatchDumpData]);
 
   return (
     <LayoutMain>
