@@ -12,7 +12,6 @@ import {IDumpUnknown} from '../../../entity/dump/types/dump';
 export const ImportLocalPage: FC = () => {
   const dispatchLoadDataDump = useLoadDataDumpThunk();
 
-  const fileInputRef = React.useRef<typeof FileInput>(null);
   const [fileToImport, setFileToImport] = React.useState<File>();
   const [isImporting, setIsImporting] = React.useState(false);
 
@@ -55,12 +54,12 @@ export const ImportLocalPage: FC = () => {
               .finally(() => {
                 (event.target as HTMLFormElement).reset();
                 setIsImporting(false);
+                setFileToImport(undefined);
               });
           }}
         >
           <LabelAbove label={'Select file to import'}>
             <FileInput
-              ref={fileInputRef}
               onChange={(event) => {
                 setFileToImport(event.target.files?.[0]);
               }}
