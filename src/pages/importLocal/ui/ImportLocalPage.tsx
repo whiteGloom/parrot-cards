@@ -8,9 +8,12 @@ import {loadFileFromFileSystem} from '../../../shared/lib/loadFileFromFileSystem
 import {FileInput} from '../../../shared/ui/fields/InputFile/FileInput';
 import {useLoadDataDumpThunk} from '../../../features/importData/model/actions/loadDataDump';
 import {IDumpUnknown} from '../../../entity/dump/types/dump';
+import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
+import {NotificationType} from '../../../entity/notification';
 
 export const ImportLocalPage: FC = () => {
   const dispatchLoadDataDump = useLoadDataDumpThunk();
+  const addNotification = useAddNotificationThunk();
 
   const [fileToImport, setFileToImport] = React.useState<File>();
   const [isImporting, setIsImporting] = React.useState(false);
@@ -37,20 +40,18 @@ export const ImportLocalPage: FC = () => {
 
             setIsImporting(true);
 
-            const importingPromise = loadFileFromFileSystem(fileToImport)
+            loadFileFromFileSystem(fileToImport)
               .then((fileDataRaw) => dispatchLoadDataDump({dump: JSON.parse(fileDataRaw) as IDumpUnknown}))
-              .catch((err) => {
-                // TODO: Remove
-                console.log('An error occurred while importing', err);
-              });
-
-            // Synthetic loading to prevent ui flashes
-            // TODO: Remove after implementation of notifications system
-            Promise
-              .all([
-                importingPromise,
-                new Promise(resolve => setTimeout(resolve, 750)),
-              ])
+              .then(
+                () => addNotification({
+                  type: NotificationType.Success,
+                  title: 'Imported successfully',
+                }),
+                (err: unknown) => addNotification({
+                  type: NotificationType.Error,
+                  title: `Import error: ${err as string}`,
+                })
+              )
               .finally(() => {
                 (event.target as HTMLFormElement).reset();
                 setIsImporting(false);

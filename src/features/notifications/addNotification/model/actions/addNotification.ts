@@ -12,7 +12,7 @@ type AddNotificationParamsType= {
   id?: string;
   lifetime?: number;
   description?: string;
-  buttons: {
+  buttons?: {
     text: string;
     action: string;
     icon?: string;
