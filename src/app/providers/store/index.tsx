@@ -6,6 +6,7 @@ import {tagsSliceReducer} from '../../../entity/tag';
 import createSagaMiddleware from 'redux-saga';
 import {all} from 'redux-saga/effects';
 import {googleOauthSliceReducer, watchers} from '../../../entity/google/oauth';
+import {notificationsSliceReducer} from '../../../entity/notification';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     cards: cardsSliceReducer,
     tags: tagsSliceReducer,
     googleOauth: googleOauthSliceReducer,
+    notifications: notificationsSliceReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
     .concat(sagaMiddleware),
