@@ -1,4 +1,4 @@
-<img src="/public/favicon/android-chrome-192x192.png" width=100 height=100>
+[<img src="/public/favicon/android-chrome-192x192.png" width=100 height=100>](https://whitegloom.github.io/parrot-cards/)
 
 # Parrot flash cards
 
