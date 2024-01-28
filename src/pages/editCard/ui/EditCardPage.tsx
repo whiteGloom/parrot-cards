@@ -14,6 +14,7 @@ import {ErrorLabel} from '../../../shared/ui/fields/ErrorLabel/ErrorLabel';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {TagSelectItem} from '../../../widgets/tagSelectItem';
 import {useCreateTagThunk} from '../../../features/tag/createTag';
+import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -73,6 +74,7 @@ const emptyInitialValues: ValuesType = {
 export const EditCardPage: FC = () => {
   const dispatchCreateTag = useCreateTagThunk();
   const dispatchEditCard = useEditCardThunk();
+  const addNotification = useAddNotificationThunk();
 
   const pageParams = useParams<{cardId: string}>();
 
@@ -133,6 +135,7 @@ export const EditCardPage: FC = () => {
               },
             });
 
+            await addNotification({title: 'Card updated successfully'});
             control.setSubmitting(false);
           }}
         >

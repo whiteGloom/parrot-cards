@@ -12,6 +12,7 @@ import {ErrorLabel} from '../../../shared/ui/fields/ErrorLabel/ErrorLabel';
 import {Fieldset} from '../../../shared/ui/fields/Fieldset/Fieldset';
 import {TagSelectItem} from '../../../widgets/tagSelectItem';
 import {useCreateTagThunk} from '../../../features/tag/createTag';
+import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -69,6 +70,7 @@ const emptyInitialValues: ValuesType = {
 };
 
 export const CreateCardsPage: FC = () => {
+  const addNotification = useAddNotificationThunk();
   const dispatchCreateTagThunk = useCreateTagThunk();
   const dispatchCreateCardThunk = useCreateCardThunk();
 
@@ -116,6 +118,7 @@ export const CreateCardsPage: FC = () => {
             control.resetForm();
             firstFieldRef.current?.focus();
 
+            await addNotification({title: 'Card created successfully'});
             control.setSubmitting(false);
           }}
         >

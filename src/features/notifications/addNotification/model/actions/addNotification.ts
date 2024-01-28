@@ -8,7 +8,7 @@ import {UniqueIdGenerator} from '../../../../../shared/lib/UniqueIdGenerator/Uni
 
 type AddNotificationParamsType= {
   title: string;
-  type: NotificationType;
+  type?: NotificationType;
   id?: string;
   lifetime?: number;
   description?: string;
@@ -31,7 +31,7 @@ export const addNotificationThunk = createAsyncThunk<INotification | undefined, 
       lifetime: data.lifetime || 5000,
       createdAt: Date.now(),
       buttons: [],
-      type: data.type,
+      type: data.type || NotificationType.Success,
       isUnderInteraction: false,
       lastInteractionAt: Date.now(),
     }));
