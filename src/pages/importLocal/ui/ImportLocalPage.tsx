@@ -10,8 +10,11 @@ import {useLoadDataDumpThunk} from '../../../features/importData/model/actions/l
 import {IDumpUnknown} from '../../../entity/dump/types/dump';
 import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
 import {NotificationType} from '../../../entity/notification';
+import {usePageTitle} from '../../../shared/lib/usePageTitle';
 
 export const ImportLocalPage: FC = () => {
+  usePageTitle('Import from local file');
+
   const dispatchLoadDataDump = useLoadDataDumpThunk();
   const addNotification = useAddNotificationThunk();
 

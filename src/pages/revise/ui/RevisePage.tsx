@@ -5,8 +5,11 @@ import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../shared/ui/links/LinkButton/LinkButton';
 import {ArrowLeft} from 'lucide-react';
 import {CardReviseItem} from '../../../widgets/card/cardReviseItem';
+import {usePageTitle} from '../../../shared/lib/usePageTitle';
 
 export const RevisePage: FC = () => {
+  usePageTitle('Revise cards');
+
   const [searchParams] = useSearchParams();
 
   const cardsIds = useSelectCardsIdsByFilters({tagsIds: searchParams.get('tags')?.split(',').filter(t => t.length) || []});

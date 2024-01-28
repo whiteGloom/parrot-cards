@@ -12,6 +12,7 @@ import {getDateStringForSave} from '../../../shared/lib/getDateStringForSave';
 import {DownloadButton} from '../../../shared/ui/buttons/DownloadButton/DownloadButton';
 import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
 import {NotificationType} from '../../../entity/notification';
+import {usePageTitle} from '../../../shared/lib/usePageTitle';
 
 type DumpInfo = {
   isLoading: boolean,
@@ -19,6 +20,8 @@ type DumpInfo = {
 }
 
 export const ExportLocalPage: FC = () => {
+  usePageTitle('Export to as file');
+
   const dispatchDumpData = useDumpDataThunk();
   const addNotification = useAddNotificationThunk();
 

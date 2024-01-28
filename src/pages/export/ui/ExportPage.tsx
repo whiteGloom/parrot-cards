@@ -3,8 +3,11 @@ import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton} from '../../../shared/ui/links/LinkButton/LinkButton';
 import {ButtonDefault} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {ArrowLeft} from 'lucide-react';
+import {usePageTitle} from '../../../shared/lib/usePageTitle';
 
 export const ExportPage: FC = () => {
+  usePageTitle('Export methods');
+
   return (
     <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>

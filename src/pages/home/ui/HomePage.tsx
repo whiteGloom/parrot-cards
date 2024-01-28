@@ -10,12 +10,15 @@ import {LinkButton, LinkButtonDefaultTypes} from '../../../shared/ui/links/LinkB
 import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
 import {Fieldset} from '../../../shared/ui/fields/Fieldset/Fieldset';
 import {TagSelectItem} from '../../../widgets/tagSelectItem';
+import {usePageTitle} from '../../../shared/lib/usePageTitle';
 
 type ValuesType = {
   tags: string[],
 };
 
 export const HomePage: FC = () => {
+  usePageTitle('Home');
+
   const tags = useSelectAllTags();
 
   const [searchParams, setSearchParams] = useSearchParams();

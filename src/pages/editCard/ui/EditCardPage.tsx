@@ -15,6 +15,7 @@ import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/Butt
 import {TagSelectItem} from '../../../widgets/tagSelectItem';
 import {useCreateTagThunk} from '../../../features/tag/createTag';
 import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
+import {usePageTitle} from '../../../shared/lib/usePageTitle';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -72,6 +73,8 @@ const emptyInitialValues: ValuesType = {
 };
 
 export const EditCardPage: FC = () => {
+  usePageTitle('Edit card');
+
   const dispatchCreateTag = useCreateTagThunk();
   const dispatchEditCard = useEditCardThunk();
   const addNotification = useAddNotificationThunk();

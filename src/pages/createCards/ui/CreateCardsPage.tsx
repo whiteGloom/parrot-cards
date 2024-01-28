@@ -13,6 +13,7 @@ import {Fieldset} from '../../../shared/ui/fields/Fieldset/Fieldset';
 import {TagSelectItem} from '../../../widgets/tagSelectItem';
 import {useCreateTagThunk} from '../../../features/tag/createTag';
 import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
+import {usePageTitle} from '../../../shared/lib/usePageTitle';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -70,6 +71,8 @@ const emptyInitialValues: ValuesType = {
 };
 
 export const CreateCardsPage: FC = () => {
+  usePageTitle('Create cards');
+
   const addNotification = useAddNotificationThunk();
   const dispatchCreateTagThunk = useCreateTagThunk();
   const dispatchCreateCardThunk = useCreateCardThunk();
