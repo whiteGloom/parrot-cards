@@ -6,6 +6,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "react-app",
     "react-app/jest",
+    "plugin:storybook/recommended"
   ],
   "plugins": ["react","@typescript-eslint"],
   "rules": {
