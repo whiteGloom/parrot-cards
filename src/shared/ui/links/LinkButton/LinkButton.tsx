@@ -24,8 +24,8 @@ export const LinkButton: FC<LinkButtonPropsType> = (props) => {
       className={clsx([
         'flex justify-center items-center gap-0.5 font-semibold shadow rounded px-2 py-1',
         theme === LinkButtonDefaultTypes.Normal && 'border text-[#2b2b2b] bg-white border-gray-200 hover:bg-[#f2f2f2] active:bg-[#E7E7E7]',
-        theme === LinkButtonDefaultTypes.Accent && 'text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800',
-        theme === LinkButtonDefaultTypes.Warning && 'text-white bg-rose-600 hover:bg-rose-700 active:bg-rose-800',
+        theme === LinkButtonDefaultTypes.Accent && 'border text-white bg-blue-600 border-blue-600 hover:bg-blue-700 hover:border-blue-700 active:bg-blue-800 active:border--blue-800',
+        theme === LinkButtonDefaultTypes.Warning && 'border text-white bg-rose-600 border-rose-600 hover:bg-rose-700 hover:border-rose-700 active:bg-rose-800 active:border--rose-800',
         className,
       ])}
       {...otherProps}
