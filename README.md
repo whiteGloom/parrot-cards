@@ -6,6 +6,8 @@
 
 **Draft stage.**
 
+This application is completely client-side.
+
 ## Live preview
 
 There is a GitHub Pages preview: https://whitegloom.github.io/parrot-cards
