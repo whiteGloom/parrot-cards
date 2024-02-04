@@ -1,6 +1,6 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const EditCardScheme = '/edit-card/:cardId';
+export const EditCardPath = '/edit-card/:cardId';
 
 export type EditCardParameters = {
   cardId: string;
@@ -9,7 +9,7 @@ export type EditCardParameters = {
 export function createEditCardPagePath(params: EditCardParameters) {
   return generateFullPath({
     routeData: {
-      scheme: EditCardScheme,
+      scheme: EditCardPath,
       placeholders: {
         cardId: params.cardId,
       },

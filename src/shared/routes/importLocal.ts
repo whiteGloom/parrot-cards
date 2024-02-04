@@ -1,7 +1,7 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const ImportLocalScheme = '/import-local';
+export const ImportLocalPath = '/import-local';
 
 export function createImportLocalPagePath() {
-  return generateFullPath({routeData: {scheme: ImportLocalScheme}});
+  return generateFullPath({routeData: {scheme: ImportLocalPath}});
 }

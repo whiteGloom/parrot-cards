@@ -1,7 +1,7 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const ExportLocalScheme = '/export-local';
+export const ExportLocalPath = '/export-local';
 
 export function createExportLocalPagePath() {
-  return generateFullPath({routeData: {scheme: ExportLocalScheme}});
+  return generateFullPath({routeData: {scheme: ExportLocalPath}});
 }

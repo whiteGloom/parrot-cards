@@ -1,6 +1,6 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const ReviseScheme = '/revise/:cardId';
+export const RevisePath = '/revise/:cardId';
 
 export type ReviseParameters = {
   cardId: string,
@@ -10,7 +10,7 @@ export type ReviseParameters = {
 export function createRevisePagePath(params: ReviseParameters) {
   return generateFullPath({
     routeData: {
-      scheme: ReviseScheme,
+      scheme: RevisePath,
       placeholders: {
         cardId: params.cardId,
       },

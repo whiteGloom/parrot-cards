@@ -9,42 +9,51 @@ import {ExportPage} from '../../../pages/export';
 import {ExportLocalPage} from '../../../pages/exportLocal';
 import {ImportPage} from '../../../pages/import';
 import {ImportLocalPage} from '../../../pages/importLocal';
+import {HomePath} from '../../../shared/routes/home';
+import {CreateCardsPath} from '../../../shared/routes/createCards';
+import {RevisePath} from '../../../shared/routes/revise';
+import {EditCardPath} from '../../../shared/routes/editCard';
+import {GoogleOauthPath} from '../../../shared/routes/googleOauth';
+import {ExportPath} from '../../../shared/routes/export';
+import {ExportLocalPath} from '../../../shared/routes/exportLocal';
+import {ImportLocalPath} from '../../../shared/routes/importLocal';
+import {ImportPath} from '../../../shared/routes/import';
 
 export const appRouter = createBrowserRouter([
   {
-    path: '/',
+    path: HomePath,
     element: <HomePage/>,
   },
   {
-    path: '/create-cards',
+    path: CreateCardsPath,
     element: <CreateCardsPage/>,
   },
   {
-    path: '/revise/:cardId',
+    path: RevisePath,
     element: <RevisePage/>,
   },
   {
-    path: '/edit-card/:cardId',
+    path: EditCardPath,
     element: <EditCardPage/>,
   },
   {
-    path: '/google-oauth',
+    path: GoogleOauthPath,
     element: <GoogleOauthPage/>,
   },
   {
-    path: '/export',
+    path: ExportPath,
     element: <ExportPage/>,
   },
   {
-    path: '/export-local',
+    path: ExportLocalPath,
     element: <ExportLocalPage/>,
   },
   {
-    path: '/import',
+    path: ImportPath,
     element: <ImportPage/>,
   },
   {
-    path: '/import-local',
+    path: ImportLocalPath,
     element: <ImportLocalPage/>,
   },
 ], {

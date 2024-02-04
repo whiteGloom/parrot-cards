@@ -1,7 +1,7 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const CreateCardsScheme = '/create-cards';
+export const CreateCardsPath = '/create-cards';
 
 export function createCreateCardsPagePath() {
-  return generateFullPath({routeData: {scheme: CreateCardsScheme}});
+  return generateFullPath({routeData: {scheme: CreateCardsPath}});
 }

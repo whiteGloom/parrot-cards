@@ -1,7 +1,7 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const ExportScheme = '/export';
+export const ExportPath = '/export';
 
 export function createExportPagePath() {
-  return generateFullPath({routeData: {scheme: ExportScheme}});
+  return generateFullPath({routeData: {scheme: ExportPath}});
 }

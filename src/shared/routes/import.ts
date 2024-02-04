@@ -1,7 +1,7 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const ImportScheme = '/import';
+export const ImportPath = '/import';
 
 export function createImportPagePath() {
-  return generateFullPath({routeData: {scheme: ImportScheme}});
+  return generateFullPath({routeData: {scheme: ImportPath}});
 }

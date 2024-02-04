@@ -1,7 +1,7 @@
 import {generateFullPath} from '../lib/generateFullPath';
 
-export const HomeScheme = '/';
+export const HomePath = '/';
 
 export function createHomePagePath() {
-  return generateFullPath({routeData: {scheme: HomeScheme}});
+  return generateFullPath({routeData: {scheme: HomePath}});
 }
