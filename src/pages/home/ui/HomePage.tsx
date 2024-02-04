@@ -53,7 +53,12 @@ export const HomePage: FC = () => {
         <Formik
           initialValues={{tags: selectedTags}}
           onSubmit={(values: ValuesType, control) => {
-            searchParams.set('tags', values.tags.length ? values.tags.join(',') : '');
+            if (values.tags.length) {
+              searchParams.set('tags', values.tags.join(','));
+            } else {
+              searchParams.delete('tags');
+            }
+
             setSearchParams(searchParams);
 
             control.setSubmitting(false);
