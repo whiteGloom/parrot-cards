@@ -64,7 +64,7 @@ export const HomePage: FC = () => {
 
             <Fieldset className={'max-h-64 overflow-auto'} legend={'Tags'}>
               <ul className={'flex flex-col gap-1'}>
-                {!cards.length && 'No tags available yet'}
+                {!tags.length && 'No tags available yet'}
 
                 {tags.map((tag) => (
                   <li key={tag.id}>
