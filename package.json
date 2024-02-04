@@ -12,6 +12,7 @@
     "build": "react-scripts build",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
+    "lint:noCache": "eslint src --cache-location node_modules/.cache/.eslintcache",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "cross-env GENERATE_SOURCEMAP=false npm run build",
