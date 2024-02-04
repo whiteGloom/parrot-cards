@@ -24,7 +24,7 @@ type CreateCardParamsType = {
 export const createCardThunk = createAsyncThunk<ICard, CreateCardParamsType, {state: AppState}>(
   'createCard',
   function(data, thunkApi) {
-    const id = data.id || UniqueIdGenerator.generateSimpleUniqueId();
+    const id = data.id || UniqueIdGenerator.generateUUID();
 
     thunkApi.dispatch(addOne({
       id,

@@ -22,7 +22,7 @@ type AddNotificationParamsType= {
 export const addNotificationThunk = createAsyncThunk<INotification | undefined, AddNotificationParamsType, {state: AppState}>(
   'addNotification',
   function (data, thunkAPI) {
-    const id = data.id || UniqueIdGenerator.generateSimpleUniqueId();
+    const id = data.id || UniqueIdGenerator.generateUID();
 
     thunkAPI.dispatch(addNotification({
       id,

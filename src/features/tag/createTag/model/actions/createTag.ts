@@ -15,7 +15,7 @@ type CreateTagParamsType = {
 export const createTagThunk = createAsyncThunk<ITag, CreateTagParamsType, {state: AppState}>(
   'createCard',
   function(data, thunkApi) {
-    const id = data.id || UniqueIdGenerator.generateSimpleUniqueId();
+    const id = data.id || UniqueIdGenerator.generateUID();
 
     thunkApi.dispatch(addOneTag({
       id,
