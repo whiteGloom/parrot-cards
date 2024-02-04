@@ -11,6 +11,10 @@ import {ArrowDownToLine, ArrowUpFromLine} from 'lucide-react';
 import {Fieldset} from '../../../shared/ui/fields/Fieldset/Fieldset';
 import {TagSelectItem} from '../../../widgets/tagSelectItem';
 import {usePageTitle} from '../../../shared/lib/usePageTitle';
+import {createRevisePagePath} from '../../../shared/routes/revise';
+import {createCreateCardsPagePath} from '../../../shared/routes/createCards';
+import {createImportPagePath} from '../../../shared/routes/import';
+import {createExportPagePath} from '../../../shared/routes/export';
 
 type ValuesType = {
   tags: string[],
@@ -37,13 +41,13 @@ export const HomePage: FC = () => {
         <h1 className={'text-3xl font-bold'}>Cards List</h1>
 
         <nav className={'flex gap-3 overflow-x-auto'}>
-          <LinkButton theme={LinkButtonDefaultTypes.Accent} to={'/create-cards'}>Create new cards</LinkButton>
+          <LinkButton theme={LinkButtonDefaultTypes.Accent} to={createCreateCardsPagePath()}>Create new cards</LinkButton>
 
-          <LinkButton to={'/import'}>
+          <LinkButton to={createImportPagePath()}>
             <ArrowDownToLine className={'h-5'}/> Import
           </LinkButton>
 
-          <LinkButton to={'/export'}>
+          <LinkButton to={createExportPagePath()}>
             <ArrowUpFromLine className={'h-5'}/> Export
           </LinkButton>
         </nav>
@@ -90,10 +94,9 @@ export const HomePage: FC = () => {
         {!!cards.length && (
           <LinkButton
             theme={LinkButtonDefaultTypes.Accent}
-            to={`/revise/${cards[0].id}`}
-            className={'flex gap-0.5 justify-center self-start'}>
-            Revise from start
-          </LinkButton>
+            to={createRevisePagePath({cardId: cards[0].id, tags: selectedTags.join(',')})}
+            className={'flex gap-0.5 justify-center self-start'}
+          >Revise from start</LinkButton>
         )}
 
         <ul className={'flex flex-col gap-3'}>
@@ -101,7 +104,10 @@ export const HomePage: FC = () => {
 
           {cards.map((card) => (
             <li key={card.id}>
-              <CardListItem cardData={card}/>
+              <CardListItem
+                cardData={card}
+                filters={{tags: selectedTags}}
+              />
             </li>
           ))}
         </ul>

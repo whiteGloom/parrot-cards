@@ -5,9 +5,14 @@ import {useDeleteCardThunk} from '../../../../features/card/deleteCard';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {PencilLine, Trash2, X} from 'lucide-react';
+import {createEditCardPagePath} from '../../../../shared/routes/editCard';
+import {createRevisePagePath} from '../../../../shared/routes/revise';
 
 export interface CardProps {
   cardData: ICard;
+  filters?: {
+    tags?: string[];
+  };
 }
 
 export const CardListItem: FC<CardProps> = (props) => {
@@ -29,9 +34,16 @@ export const CardListItem: FC<CardProps> = (props) => {
         </div>
 
         {!isDeleteConfirmation && <div className={'flex gap-2 items-center flex-wrap'}>
-          <LinkButton to={`/revise/${props.cardData.id}${window.location.search}`}>Revise</LinkButton>
+          <LinkButton
+            to={createRevisePagePath({
+              cardId: props.cardData.id,
+              ...(props.filters?.tags && {tags: props.filters?.tags?.join(',')}),
+            })}
+          >Revise</LinkButton>
 
-          <LinkButton to={`/edit-card/${props.cardData.id}`}><PencilLine/></LinkButton>
+          <LinkButton
+            to={createEditCardPagePath({cardId: props.cardData.id})}
+          ><PencilLine/></LinkButton>
 
           <ButtonDefault
             theme={ButtonDefaultTypes.Warning}
