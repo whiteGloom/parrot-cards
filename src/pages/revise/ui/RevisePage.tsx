@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {Navigate, useLocation, useParams, useSearchParams} from 'react-router-dom';
+import {Navigate, useParams, useSearchParams} from 'react-router-dom';
 import {useSelectCardsIdsByFilters} from '../../../entity/card';
 import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../shared/ui/links/LinkButton/LinkButton';
