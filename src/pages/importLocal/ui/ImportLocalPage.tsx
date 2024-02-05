@@ -11,6 +11,7 @@ import {IDumpUnknown} from '../../../entity/dump/types/dump';
 import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
 import {NotificationType} from '../../../entity/notification';
 import {usePageTitle} from '../../../shared/lib/usePageTitle';
+import {createImportPagePath} from '../../../shared/routes/import';
 
 export const ImportLocalPage: FC = () => {
   usePageTitle('Import from local file');
@@ -26,7 +27,7 @@ export const ImportLocalPage: FC = () => {
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
         {isImporting
           ? <ButtonDefault disabled={isImporting}><ArrowLeft/></ButtonDefault>
-          : <LinkButton to={'/import'}><ArrowLeft/></LinkButton>
+          : <LinkButton to={createImportPagePath()}><ArrowLeft/></LinkButton>
         }
 
         <h1 className={'text-3xl font-bold'}>Import from local file</h1>

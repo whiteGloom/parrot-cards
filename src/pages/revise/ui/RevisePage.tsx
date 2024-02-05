@@ -6,14 +6,17 @@ import {LinkButton, LinkButtonDefaultTypes} from '../../../shared/ui/links/LinkB
 import {ArrowLeft} from 'lucide-react';
 import {CardReviseItem} from '../../../widgets/card/cardReviseItem';
 import {usePageTitle} from '../../../shared/lib/usePageTitle';
+import {createHomePagePath} from '../../../shared/routes/home';
+import {createRevisePagePath} from '../../../shared/routes/revise';
 
 export const RevisePage: FC = () => {
   usePageTitle('Revise cards');
 
   const [searchParams] = useSearchParams();
 
-  const cardsIds = useSelectCardsIdsByFilters({tagsIds: searchParams.get('tags')?.split(',').filter(t => t.length) || []});
-  const location = useLocation();
+  const tagsIds = searchParams.get('tags')?.split(',').filter(t => t.length) || [];
+
+  const cardsIds = useSelectCardsIdsByFilters({tagsIds});
 
   const cardId = useParams().cardId;
   const cardIndex = cardId ? cardsIds.indexOf(cardId) : -1;
@@ -21,14 +24,14 @@ export const RevisePage: FC = () => {
 
   if (!cardId) {
     return (
-      <Navigate to={'/'}/>
+      <Navigate to={createHomePagePath()}/>
     );
   }
 
   return (
     <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border'}>
-        <LinkButton to={'/'}><ArrowLeft/></LinkButton>
+        <LinkButton to={createHomePagePath()}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Revise</h1>
       </header>
 
@@ -36,7 +39,7 @@ export const RevisePage: FC = () => {
         <div className={'flex flex-col gap-3 items-center'}>
           {nextCardIndex !== cardIndex ? (
             <LinkButton
-              to={`/revise/${cardsIds[nextCardIndex]}${location.search}`}
+              to={createRevisePagePath({cardId: cardsIds[nextCardIndex], tags: tagsIds.join(',')})}
               theme={LinkButtonDefaultTypes.Accent}
             >
               Next Card

@@ -13,6 +13,7 @@ import {DownloadButton} from '../../../shared/ui/buttons/DownloadButton/Download
 import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
 import {NotificationType} from '../../../entity/notification';
 import {usePageTitle} from '../../../shared/lib/usePageTitle';
+import {createExportPagePath} from '../../../shared/routes/export';
 
 type DumpInfo = {
   isLoading: boolean,
@@ -47,7 +48,7 @@ export const ExportLocalPage: FC = () => {
   return (
     <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
-        <LinkButton to={'/export'}><ArrowLeft/></LinkButton>
+        <LinkButton to={createExportPagePath()}><ArrowLeft/></LinkButton>
 
         <h1 className={'text-3xl font-bold'}>Export to local file</h1>
       </header>

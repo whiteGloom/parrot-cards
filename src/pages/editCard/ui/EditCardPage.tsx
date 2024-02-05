@@ -16,6 +16,7 @@ import {TagSelectItem} from '../../../widgets/tagSelectItem';
 import {useCreateTagThunk} from '../../../features/tag/createTag';
 import {useAddNotificationThunk} from '../../../features/notifications/addNotification';
 import {usePageTitle} from '../../../shared/lib/usePageTitle';
+import {createHomePagePath} from '../../../shared/routes/home';
 
 enum GroupNames {
   FrontSide='frontSide',
@@ -108,7 +109,7 @@ export const EditCardPage: FC = () => {
   return (
     <LayoutMain>
       <header className={'flex gap-3 p-3 bg-gray-50 rounded border items-center'}>
-        <LinkButton to={'/'}><ArrowLeft/></LinkButton>
+        <LinkButton to={createHomePagePath()}><ArrowLeft/></LinkButton>
         <h1 className={'text-3xl font-bold'}>Edit card</h1>
       </header>
 
