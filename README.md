@@ -14,6 +14,8 @@ There is a GitHub Pages preview: https://whitegloom.github.io/parrot-cards
 
 Keep in mind that it may be a bit outdated.
 
+I'm planning to use this tool for education and I share my personal [dataset of cards](./dataset-examples/personal.json) (it may be outdated).
+
 ## Tools and notes
 
 ### Beautiful
