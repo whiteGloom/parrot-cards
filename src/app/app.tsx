@@ -14,6 +14,8 @@ function App() {
 
   React.useEffect(() => {
     dispatch({type: REQUEST_PRELOAD_GOOGLE_OAUTH});
+
+    window.onbeforeunload = () => true;
   });
 
   return (
