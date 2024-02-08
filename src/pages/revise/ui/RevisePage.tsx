@@ -8,6 +8,7 @@ import {CardReviseItem} from '../../../widgets/card/cardReviseItem';
 import {usePageTitle} from '../../../shared/lib/usePageTitle';
 import {createHomePagePath} from '../../../shared/routes/home';
 import {createRevisePagePath} from '../../../shared/routes/revise';
+import {ButtonDefault, ButtonDefaultTypes} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 
 export const RevisePage: FC = () => {
   usePageTitle('Revise cards');
@@ -37,14 +38,23 @@ export const RevisePage: FC = () => {
 
       <section className={'flex flex-col p-3 gap-3 border rounded bg-gray-50'}>
         <div className={'flex flex-col gap-3 items-center'}>
-          {nextCardIndex !== cardIndex ? (
-            <LinkButton
-              to={createRevisePagePath({cardId: cardsIds[nextCardIndex], tags: tagsIds.join(',')})}
-              theme={LinkButtonDefaultTypes.Accent}
-            >
-              Next Card
-            </LinkButton>
-          ) : undefined}
+          <div className={'flex gap-3'}>
+            {cardIndex
+              ? <LinkButton
+                to={createRevisePagePath({cardId: cardsIds[cardIndex - 1], tags: tagsIds.join(',')})}
+                theme={LinkButtonDefaultTypes.Accent}
+              >Previous Card</LinkButton>
+              : <ButtonDefault disabled theme={ButtonDefaultTypes.Accent}>Previous Card</ButtonDefault>
+            }
+
+            {nextCardIndex !== cardIndex
+              ? <LinkButton
+                to={createRevisePagePath({cardId: cardsIds[nextCardIndex], tags: tagsIds.join(',')})}
+                theme={LinkButtonDefaultTypes.Accent}
+              >{!nextCardIndex ? 'Again' : 'Next Card'}</LinkButton>
+              : <ButtonDefault disabled theme={ButtonDefaultTypes.Accent}>Next Card</ButtonDefault>
+            }
+          </div>
 
           {cardsIds.includes(cardId) ? (
             <CardReviseItem cardId={cardId} key={cardId}/>
