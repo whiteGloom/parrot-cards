@@ -1,11 +1,11 @@
 {
   "files": {
     "main.css": "/parrot-cards/static/css/main.30888241.css",
-    "main.js": "/parrot-cards/static/js/main.17e19196.js",
+    "main.js": "/parrot-cards/static/js/main.14e5b82e.js",
     "index.html": "/parrot-cards/index.html"
   },
   "entrypoints": [
     "static/css/main.30888241.css",
-    "static/js/main.17e19196.js"
+    "static/js/main.14e5b82e.js"
   ]
 }
