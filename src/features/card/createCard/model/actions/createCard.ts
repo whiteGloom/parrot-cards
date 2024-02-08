@@ -32,7 +32,7 @@ export const createCardThunk = createAsyncThunk<ICard, CreateCardParamsType, {st
       tagsIds: data.tagsIds || [],
       frontSide: {
         title: data.frontSide.title,
-        description: data.backSide.description || '',
+        description: data.frontSide.description || '',
         hints: data.frontSide.hints || [],
       },
       backSide: {
