@@ -38,6 +38,8 @@ export const RevisePage: FC = () => {
 
       <section className={'flex flex-col p-3 gap-3 border rounded bg-gray-50'}>
         <div className={'flex flex-col gap-3 items-center'}>
+          <p className={'font-bold text-xl'}>{cardIndex + 1} of {cardsIds.length}</p>
+
           <div className={'flex gap-3'}>
             {cardIndex
               ? <LinkButton

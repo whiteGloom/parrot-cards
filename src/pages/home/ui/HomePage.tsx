@@ -89,7 +89,7 @@ export const HomePage: FC = () => {
       </section>
 
       <section className={'flex flex-col p-3 gap-3 border rounded bg-gray-50'}>
-        <h2 className={'text-xl font-bold'}>Result</h2>
+        <h2 className={'text-xl font-bold'}>Result: {cards.length} items</h2>
 
         {!!cards.length && (
           <LinkButton
