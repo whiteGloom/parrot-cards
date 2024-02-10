@@ -144,8 +144,8 @@ export const EditCardPage: FC = () => {
           }}
         >
           {(formState) => (
-            <Form className={'flex flex-col gap-3'}>
-              <div className={'flex gap-7 flex-wrap'}>
+            <Form className={'grid grid-cols-[3fr_2fr] gap-3'}>
+              <div className={'flex flex-col gap-3'}>
                 {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {
                   groupName: GroupNames.BackSide,
                   title: 'Back side',
@@ -200,52 +200,50 @@ export const EditCardPage: FC = () => {
                     );
                   })
                 }
-              </div>
-
-              <ButtonDefault
-                type={'submit'}
-                theme={ButtonDefaultTypes.Accent}
-                disabled={formState.isSubmitting || formState.isValidating || !formState.isValid}
-              >
-                Save changes
-              </ButtonDefault>
-
-              <Fieldset legend={'Tags'}>
-                <ul className={'flex flex-col gap-1 max-h-64 overflow-auto'}>
-                  {tags.map((tag) => (
-                    <li key={tag.id}>
-                      <TagSelectItem tagId={tag.id} name={'tags'}/>
-                    </li>
-                  ))}
-                </ul>
-
-                <LabelAbove label={'Title for a new tag'} required>
-                  <InputDefault
-                    name={'newTagTitle'}
-                    onKeyDown={(event: React.KeyboardEvent) => {
-                      if (event.key === 'Enter') {
-                        event.preventDefault();
-
-                        if (formState.values.newTagTitle.trim()) {
-                          createNewTag(formState.values, formState).catch(null);
-                        }
-                      }
-                    }}
-                    innerRef={newTagTitleInputRef}
-                    placeholder={'Enter title of new tag'}
-                  />
-                </LabelAbove>
 
                 <ButtonDefault
-                  type={'button'}
-                  disabled={!formState.values.newTagTitle.trim() || formState.isSubmitting}
-                  onClick={() => {
-                    createNewTag(formState.values, formState).catch(null);
-                  }}
-                >
-                  Create new Tag
-                </ButtonDefault>
-              </Fieldset>
+                  type={'submit'}
+                  theme={ButtonDefaultTypes.Accent}
+                  disabled={formState.isSubmitting || formState.isValidating || !formState.isValid}
+                >Save changes</ButtonDefault>
+              </div>
+
+              <div className={'relative'}>
+                <Fieldset legend={'Tags'} className={'absolute w-full h-full left-0 top-0'}>
+                  <ul className={'flex flex-col gap-1 overflow-auto'}>
+                    {tags.map((tag) => (
+                      <li key={tag.id}>
+                        <TagSelectItem tagId={tag.id} name={'tags'}/>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <LabelAbove label={'Title for a new tag'} required>
+                    <InputDefault
+                      name={'newTagTitle'}
+                      onKeyDown={(event: React.KeyboardEvent) => {
+                        if (event.key === 'Enter') {
+                          event.preventDefault();
+
+                          if (formState.values.newTagTitle.trim()) {
+                            createNewTag(formState.values, formState).catch(null);
+                          }
+                        }
+                      }}
+                      innerRef={newTagTitleInputRef}
+                      placeholder={'Enter title of new tag'}
+                    />
+                  </LabelAbove>
+
+                  <ButtonDefault
+                    type={'button'}
+                    disabled={!formState.values.newTagTitle.trim() || formState.isSubmitting}
+                    onClick={() => {
+                      createNewTag(formState.values, formState).catch(null);
+                    }}
+                  >Create new Tag</ButtonDefault>
+                </Fieldset>
+              </div>
             </Form>
           )}
         </Formik> : 'Error. No card with such ID'}

@@ -20,6 +20,7 @@ export const InputDefault: FC<InputDefaultPropsType> = (props) => {
         errorString && 'border-red-500',
         className,
       ])}
+      size={1}
       {...otherProps}
     />
   );
