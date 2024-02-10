@@ -5,6 +5,7 @@ import {migrateDump} from '../migrations/migrations';
 import {setAllCards} from '../../../../entity/card';
 import {setAllTags} from '../../../../entity/tag';
 import {IDumpUnknown} from '../../../../entity/dump/types/dump';
+import {ActualDumpVersion} from '../../../../entity/dump';
 
 type LoadDataDumpPayloadType = {
   dump: IDumpUnknown;
@@ -13,6 +14,10 @@ type LoadDataDumpPayloadType = {
 export const loadDataDumpThunk = createAsyncThunk<void, LoadDataDumpPayloadType, {state: AppState}>(
   'loadDataDump',
   (data, thunkAPI) => {
+    if (data.dump.version > ActualDumpVersion) {
+      return thunkAPI.rejectWithValue('Version of the dump is too high. Unable to migrate dump');
+    }
+
     const actualizedDump = migrateDump(data.dump);
 
     thunkAPI.dispatch(setAllCards(actualizedDump.cards));

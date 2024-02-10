@@ -1,3 +1,5 @@
+import {ActualDumpVersion} from '../actualDumpConsts';
+
 type Card = {
   id: string;
   createdAt: number;
@@ -23,7 +25,7 @@ type Tag = {
 }
 
 export interface IDumpActual {
-  version: 1;
+  version: typeof ActualDumpVersion;
   cards: Card[];
   tags: Tag[];
 }

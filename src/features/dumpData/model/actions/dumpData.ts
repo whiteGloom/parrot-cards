@@ -4,7 +4,7 @@ import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
 import {ICard} from '../../../../entity/card';
 import {ITag} from '../../../../entity/tag';
 import {useRef} from 'react';
-import {IDumpActual} from '../../../../entity/dump';
+import {ActualDumpVersion, IDumpActual} from '../../../../entity/dump';
 
 export const dumpDataThunk = createAsyncThunk<IDumpActual, void, {state: AppState}>(
   'dumpState',
@@ -14,7 +14,7 @@ export const dumpDataThunk = createAsyncThunk<IDumpActual, void, {state: AppStat
     return {
       cards: Object.values(state.cards.entities) as ICard[],
       tags: Object.values(state.tags.entities) as ITag[],
-      version: 1,
+      version: ActualDumpVersion,
     };
   }
 );

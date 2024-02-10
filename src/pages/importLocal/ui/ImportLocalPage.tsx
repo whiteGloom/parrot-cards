@@ -46,14 +46,12 @@ export const ImportLocalPage: FC = () => {
             setIsImporting(true);
 
             loadFileFromFileSystem(fileToImport)
-              .then((fileDataRaw) => dispatchLoadDataDump({dump: JSON.parse(fileDataRaw) as IDumpUnknown}))
-              .then(
-                () => addNotification({title: 'Imported successfully'}),
-                (err: unknown) => addNotification({
-                  type: NotificationType.Error,
-                  title: `Import error: ${err as string}`,
-                })
-              )
+              .then((fileDataRaw) => dispatchLoadDataDump({dump: JSON.parse(fileDataRaw) as IDumpUnknown}).unwrap())
+              .then(() => addNotification({title: 'Imported successfully'}))
+              .catch((err: unknown) => addNotification({
+                type: NotificationType.Error,
+                title: `Import error: ${err as string}`,
+              }))
               .finally(() => {
                 (event.target as HTMLFormElement).reset();
 
