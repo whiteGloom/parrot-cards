@@ -120,12 +120,12 @@ export const EditCardPage: FC = () => {
             frontSide: {
               title: card?.frontSide.title || emptyInitialValues.frontSide.title,
               description: card?.frontSide.description || emptyInitialValues.frontSide.description,
-              hints: card?.frontSide.hints.length ? [...card.frontSide.hints] : emptyInitialValues.frontSide.hints,
+              hints: card?.frontSide.hints.length ? [...card.frontSide.hints, ''] : emptyInitialValues.frontSide.hints,
             },
             backSide: {
               title: card?.backSide.title || emptyInitialValues.backSide.title,
               description: card?.backSide.description || emptyInitialValues.backSide.description,
-              hints: card?.backSide.hints.length ? [...card.backSide.hints] : emptyInitialValues.backSide.hints,
+              hints: card?.backSide.hints.length ? [...card.backSide.hints, ''] : emptyInitialValues.backSide.hints,
             },
             tags: card?.tagsIds.length ? [...card.tagsIds] : emptyInitialValues.tags,
           }}
