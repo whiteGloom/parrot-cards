@@ -127,7 +127,7 @@ export const CreateCardsPage: FC = () => {
           }}
         >
           {(formState) => (
-            <Form className={'grid grid-cols-[3fr_2fr] gap-3'}>
+            <Form className={'grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-3'}>
               <div className={'flex flex-col gap-3'}>
                 {[{groupName: GroupNames.FrontSide, title: 'Front side'}, {groupName: GroupNames.BackSide, title: 'Back side'}]
                   .map((sideGroupParams, groupIndex) => {
@@ -189,8 +189,8 @@ export const CreateCardsPage: FC = () => {
               </div>
 
               <div className={'relative'}>
-                <Fieldset legend={'Tags'} className={'absolute w-full h-full left-0 top-0'}>
-                  <ul className={'flex flex-col gap-1 overflow-auto'}>
+                <Fieldset legend={'Tags'} className={'w-full h-full left-0 top-0 md:absolute'}>
+                  <ul className={'flex flex-col gap-1 max-h-64 overflow-auto md:max-h-none'}>
                     {tags.map((tag) => (
                       <li key={tag.id}>
                         <TagSelectItem tagId={tag.id} name={'tags'}/>
