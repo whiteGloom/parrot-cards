@@ -18,12 +18,21 @@ export function makeSelectCardsByFilters() {
       let result: ICard[] = [];
 
       if (filters.tagsIds.length) {
-        const cardsIdsToSelect = new Set<string>();
+        let isBasicDataSelected = false;
+        let cardsIdsToSelect: string[] = [];
 
         filters.tagsIds.forEach(tagId => {
           if (!tags[tagId]) return;
 
-          tags[tagId].connectedCardsIds.forEach((id) => cardsIdsToSelect.add(id));
+          const tagConnectedCardsIds = tags[tagId].connectedCardsIds;
+
+          if (!isBasicDataSelected) {
+            cardsIdsToSelect = [...tagConnectedCardsIds];
+            isBasicDataSelected = true;
+            return;
+          }
+
+          cardsIdsToSelect = cardsIdsToSelect.filter((id) => tagConnectedCardsIds.includes(id));
         });
 
         cardsIdsToSelect.forEach(id => result.push(cards[id]));

@@ -14,12 +14,21 @@ export function makeSelectCardsIdsByFilters() {
     (state: AppState) => state.cards.ids,
     (filters, tags, cardsIds) => {
       if (filters.tagsIds.length) {
-        const cardsIdsToSelect = new Set<string>();
+        let isBasicDataSelected = false;
+        let cardsIdsToSelect: string[] = [];
 
         filters.tagsIds.forEach(tagId => {
           if (!tags[tagId]) return;
 
-          tags[tagId].connectedCardsIds.forEach((id) => cardsIdsToSelect.add(id));
+          const tagConnectedCardsIds = tags[tagId].connectedCardsIds;
+
+          if (!isBasicDataSelected) {
+            cardsIdsToSelect = [...tagConnectedCardsIds];
+            isBasicDataSelected = true;
+            return;
+          }
+
+          cardsIdsToSelect = cardsIdsToSelect.filter((id) => tagConnectedCardsIds.includes(id));
         });
 
         return Array.from(cardsIdsToSelect);
