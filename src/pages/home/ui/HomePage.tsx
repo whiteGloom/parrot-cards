@@ -3,7 +3,7 @@ import {useSearchParams} from 'react-router-dom';
 import {Form, Formik} from 'formik';
 import {useSelectAllTags} from '../../../entity/tag';
 import {CardListItem} from '../../../widgets/card/cardListItem';
-import {useSelectCardsByFilters} from '../../../entity/card';
+import {useSelectCardsIdsByFilters} from '../../../entity/card';
 import {LayoutMain} from '../../../shared/ui/layouts/LayoutMain/LayoutMain';
 import {ButtonDefault} from '../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
 import {LinkButton, LinkButtonDefaultTypes} from '../../../shared/ui/links/LinkButton/LinkButton';
@@ -31,7 +31,7 @@ export const HomePage: FC = () => {
     return searchParams.get('tags')?.split(',').filter(t => t.length) || [];
   }, [searchParams]);
 
-  const cards = useSelectCardsByFilters(
+  const cardsIds = useSelectCardsIdsByFilters(
     React.useMemo(() => ({tagsIds: selectedTags}), [selectedTags])
   );
 
@@ -89,23 +89,23 @@ export const HomePage: FC = () => {
       </section>
 
       <section className={'flex flex-col p-3 gap-3 border rounded bg-gray-50'}>
-        <h2 className={'text-xl font-bold'}>Result: {cards.length} items</h2>
+        <h2 className={'text-xl font-bold'}>Result: {cardsIds.length} items</h2>
 
-        {!!cards.length && (
+        {!!cardsIds.length && (
           <LinkButton
             theme={LinkButtonDefaultTypes.Accent}
-            to={createRevisePagePath({cardId: cards[0].id, tags: selectedTags.join(',')})}
+            to={createRevisePagePath({cardId: cardsIds[0], tags: selectedTags.join(',')})}
             className={'flex gap-0.5 justify-center self-start'}
           >Revise from start</LinkButton>
         )}
 
         <ul className={'flex flex-col gap-3'}>
-          {!cards.length && 'No cards available yet'}
+          {!cardsIds.length && 'No cards available yet'}
 
-          {cards.map((card) => (
-            <li key={card.id}>
+          {cardsIds.map((cardId) => (
+            <li key={cardId}>
               <CardListItem
-                cardData={card}
+                cardId={cardId}
                 filters={{tags: selectedTags}}
               />
             </li>

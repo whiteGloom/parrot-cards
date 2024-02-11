@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import {ICard} from '../../../../entity/card';
+import {useSelectCardById} from '../../../../entity/card';
 import {useSelectTagsByIds} from '../../../../entity/tag';
 import {useDeleteCardThunk} from '../../../../features/card/deleteCard';
 import {ButtonDefault, ButtonDefaultTypes} from '../../../../shared/ui/buttons/ButtonDefault/ButtonDefault';
@@ -9,40 +9,46 @@ import {createEditCardPagePath} from '../../../../shared/routes/editCard';
 import {createRevisePagePath} from '../../../../shared/routes/revise';
 
 export interface CardProps {
-  cardData: ICard;
+  cardId: string;
   filters?: {
     tags?: string[];
   };
 }
 
 export const CardListItem: FC<CardProps> = (props) => {
-  const tags = useSelectTagsByIds(props.cardData.tagsIds);
+  const cardData = useSelectCardById(props.cardId);
+
+  const tags = useSelectTagsByIds(cardData?.tagsIds || []);
 
   const deleteCard = useDeleteCardThunk();
 
   const [isDeleteConfirmation, setDeleteConfirmation] = useState(false);
 
+  if (!cardData) {
+    return <div className={'bg-white rounded p-3 flex shadow flex-col gap-3'}>No card with id: {props.cardId}</div>;
+  }
+
   return (
     <div className={'bg-white rounded p-3 flex shadow flex-col gap-3'}>
       <div className={'flex gap-3 flex-col md:flex-row md:justify-between'}>
         <div className={'flex flex-col gap-1'}>
-          <p className={'font-semibold'}>{props.cardData.frontSide.title}</p>
+          <p className={'font-semibold'}>{cardData.frontSide.title}</p>
 
           <div className={'w-full border-t-2 border-dashed border-[#e5e7eb]'}/>
 
-          <p className={'font-semibold'}>{props.cardData.backSide.title}</p>
+          <p className={'font-semibold'}>{cardData.backSide.title}</p>
         </div>
 
         {!isDeleteConfirmation && <div className={'flex gap-2 items-center flex-wrap'}>
           <LinkButton
             to={createRevisePagePath({
-              cardId: props.cardData.id,
+              cardId: cardData.id,
               ...(props.filters?.tags && {tags: props.filters?.tags?.join(',')}),
             })}
           >Revise</LinkButton>
 
           <LinkButton
-            to={createEditCardPagePath({cardId: props.cardData.id})}
+            to={createEditCardPagePath({cardId: cardData.id})}
           ><PencilLine/></LinkButton>
 
           <ButtonDefault
@@ -59,7 +65,7 @@ export const CardListItem: FC<CardProps> = (props) => {
           <ButtonDefault
             theme={ButtonDefaultTypes.Warning}
             onClick={() => {
-              deleteCard({cardId: props.cardData.id}).catch(null);
+              deleteCard({cardId: cardData.id}).catch(null);
             }}
           ><Trash2/></ButtonDefault>
 
