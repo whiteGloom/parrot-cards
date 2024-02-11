@@ -7,7 +7,7 @@ export const initialTags: ITag[] = [
     title: 'Bird',
     color: 'hsl(248, 100%, 16%)',
     connectedCardsIds: [
-      '44dc7f34-8f57-42f0-9065-c3a14abc77d5',
+      'c30db12cb0f988a0',
     ],
   },
   {
@@ -16,8 +16,8 @@ export const initialTags: ITag[] = [
     title: 'Animal',
     color: 'hsl(41, 100%, 16%)',
     connectedCardsIds: [
-      '44dc7f34-8f57-42f0-9065-c3a14abc77d5',
-      '6a3d7754-7b95-498d-91f0-adab23ebd10f',
+      'c30db12cb0f988a0',
+      '30db12cb0f988a0c',
     ],
   },
   {
@@ -26,8 +26,8 @@ export const initialTags: ITag[] = [
     title: 'Noun',
     color: 'hsl(120, 100%, 16%)',
     connectedCardsIds: [
-      '44dc7f34-8f57-42f0-9065-c3a14abc77d5',
-      '6a3d7754-7b95-498d-91f0-adab23ebd10f',
+      'c30db12cb0f988a0',
+      '30db12cb0f988a0c',
     ],
   },
   {
@@ -36,7 +36,7 @@ export const initialTags: ITag[] = [
     title: 'Mammal',
     color: 'hsl(292, 100%, 16%)',
     connectedCardsIds: [
-      '6a3d7754-7b95-498d-91f0-adab23ebd10f',
+      '30db12cb0f988a0c',
     ],
   },
 ];

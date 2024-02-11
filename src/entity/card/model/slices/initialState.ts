@@ -3,7 +3,7 @@ import {ICard} from '../../types/Card';
 export const cards: ICard[] = [
   {
     createdAt: 1703337625000,
-    id: '44dc7f34-8f57-42f0-9065-c3a14abc77d5',
+    id: 'c30db12cb0f988a0',
     frontSide: {
       title: 'Parrot',
       description: 'Parrot was sitting on captain\'s shoulder',
@@ -25,7 +25,7 @@ export const cards: ICard[] = [
   },
   {
     createdAt: 1703338029159,
-    id: '6a3d7754-7b95-498d-91f0-adab23ebd10f',
+    id: '30db12cb0f988a0c',
     frontSide: {
       title: 'Fox',
       description: 'There is a cartoon named "The Fox and the Hound"',
