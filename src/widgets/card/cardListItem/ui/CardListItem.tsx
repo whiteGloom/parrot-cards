@@ -7,7 +7,6 @@ import {LinkButton} from '../../../../shared/ui/links/LinkButton/LinkButton';
 import {PencilLine, Trash2, X} from 'lucide-react';
 import {createEditCardPagePath} from '../../../../shared/routes/editCard';
 import {createRevisePagePath} from '../../../../shared/routes/revise';
-import {useUnlinkCardAndTagThunk} from '../../../../features/tag/unlinkCardAndTag';
 
 export interface CardProps {
   cardData: ICard;
@@ -20,7 +19,6 @@ export const CardListItem: FC<CardProps> = (props) => {
   const tags = useSelectTagsByIds(props.cardData.tagsIds);
 
   const deleteCard = useDeleteCardThunk();
-  const dispatchUnlinkTag = useUnlinkCardAndTagThunk();
 
   const [isDeleteConfirmation, setDeleteConfirmation] = useState(false);
 
@@ -77,16 +75,11 @@ export const CardListItem: FC<CardProps> = (props) => {
       <ul className={'flex gap-x-3 gap-y-0.5 flex-wrap'}>
         {tags.map(tag => {
           return (
-            <li key={tag.id} style={{color: tag.color}}>
-              <button
-                className={'hover:line-through'}
-                onClick={() => {
-                  dispatchUnlinkTag({
-                    cardId: props.cardData.id,
-                    tagId: tag.id,
-                  }).catch(null);
-                }}
-              >#{tag.title}</button>
+            <li
+              key={tag.id}
+              style={{color: tag.color}}
+            >
+              #{tag.title}
             </li>
           );
         })}
