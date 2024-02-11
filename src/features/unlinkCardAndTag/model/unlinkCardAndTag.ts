@@ -1,8 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AppState} from '../../../../shared/lib/store/appState';
-import {disconnectCardsFromTag} from '../../../../entity/card';
-import {disconnectTagsFromCard} from '../../../../entity/tag';
-import {useAppDispatch} from '../../../../shared/lib/store/useAppDispatch';
+import {AppState} from '../../../shared/lib/store/appState';
+import {disconnectCardsFromTag} from '../../../entity/card';
+import {disconnectTagsFromCard} from '../../../entity/tag';
+import {useAppDispatch} from '../../../shared/lib/store/useAppDispatch';
 
 export type UnlinkCardAndTagParamsType = {
   tagId: string;
