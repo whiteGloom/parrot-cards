@@ -1,1 +1,0 @@
-export {createTagThunk, useCreateTagThunk} from './model/actions/createTag';

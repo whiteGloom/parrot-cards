@@ -1,1 +1,0 @@
-export {useRenameTag} from './model/actions/renameTag';

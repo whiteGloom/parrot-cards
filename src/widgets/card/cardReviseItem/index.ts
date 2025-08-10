@@ -1,1 +1,0 @@
-export {CardReviseItem} from './ui/CardReviseItem';

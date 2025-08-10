@@ -1,1 +1,0 @@
-export {useUpdateNotificationInteractions} from './model/actions/updateNotificationActivity';
