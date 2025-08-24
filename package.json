@@ -10,8 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.2",
     "@stylistic/eslint-plugin": "^5.2.3",
     "@tailwindcss/vite": "^4.1.11",
+    "@tanstack/react-router": "^1.131.2",
+    "@tanstack/react-router-devtools": "^1.131.2",
+    "@tanstack/router-plugin": "^1.131.2",
+    "@types/gapi": "^0.0.47",
+    "@types/gapi.client.drive-v3": "^0.0.5",
+    "@types/google.accounts": "^0.0.17",
+    "clsx": "^2.1.1",
+    "formik": "^2.4.6",
+    "immer": "^10.1.1",
     "lucide-react": "^0.539.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

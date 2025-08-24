@@ -19,6 +19,7 @@ export default tseslint.config([globalIgnores(['dist']), {
     reactRefresh.configs.vite,
   ],
   rules: {
+    'react-refresh/only-export-components': 'off',
     '@stylistic/semi': ['error', 'always'],
   },
   languageOptions: {
