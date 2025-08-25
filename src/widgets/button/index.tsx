@@ -5,6 +5,7 @@ import clsx from 'clsx';
 export const ButtonTheme = {
   primary: 'primary',
   secondary: 'secondary',
+  warning: 'warning',
 };
 
 export type ButtonThemeType = typeof ButtonTheme[keyof typeof ButtonTheme];
@@ -22,6 +23,7 @@ export interface ButtonProps extends PropsWithChildren {
   disabled?: boolean
   isLoading?: boolean
   className?: string
+  hint?: string
   type?: 'button' | 'submit' | 'reset'
   contentBuilder?: (params: ContentBuilderParms) => React.ReactNode
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -54,11 +56,13 @@ export function Button(props: ButtonProps) {
       type={props.type || 'button'}
       disabled={props.disabled || props.isLoading}
       onClick={props.onClick}
+      title={props.hint}
       className={clsx([
         'rounded cursor-pointer disabled:cursor-not-allowed p-2 shadow',
         props.isLoading && 'cursor-wait disabled:cursor-wait',
         theme === ButtonTheme.primary && 'bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 disabled:bg-blue-300',
-        theme === ButtonTheme.secondary && 'bg-white border border-gray-200 text-gray-800 hover:bg-blue-100 active:bg-blue-200 disabled:bg-gray-100',
+        theme === ButtonTheme.secondary && 'bg-white border border-gray-200 text-gray-800 hover:bg-blue-100 active:bg-blue-200 disable',
+        theme === ButtonTheme.warning && 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 disabled:bg-red-300',
         props.className,
       ])}
     >

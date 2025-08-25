@@ -70,7 +70,7 @@ function Welcome() {
         <p className="text-gray-800">
           Loaded:
           {' '}
-          {cardsStore.ids.length}
+          {cardsStore.cardsIds.length}
           {' '}
           cards
         </p>

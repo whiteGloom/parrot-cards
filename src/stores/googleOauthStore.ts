@@ -1,5 +1,6 @@
 import { createStore, useStore } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { createContext, useContext } from 'react';
 
 interface UnauthorizedState {
   state: 'unauthorized'
@@ -78,131 +79,147 @@ function loadSavedSettings() {
   };
 }
 
-export const googleOauthStore = createStore<GoogleOauthStoreContent>()(
-  immer((set, getState): GoogleOauthStoreContent => {
-    function createTokenClient(clientId: string) {
-      return window.google.accounts.oauth2.initTokenClient({
-        client_id: clientId,
-        scope: 'https://www.googleapis.com/auth/drive',
-        callback: (response) => {
-          if (getState().oauthSettings?.clientId !== oauthSettings.clientId) {
-            return;
-          }
-
-          if (response.error) {
-            set({
-              authorizationData: {
-                state: 'error', errorInfo: { error: response.error! },
-              },
-            });
-
-            return;
-          }
-
-          set({
-            authorizationData: {
-              state: 'authorized', tokenInfo: {
-                accessToken: response.access_token,
-                expiresAt: +response.expires_in * 1000 + Date.now(),
-              },
-            },
-          });
-        },
-      });
-    }
-
-    const oauthSettings = loadSavedSettings();
-
-    return {
-      oauthSettings,
-      authorizationData: { state: 'unauthorized' },
-      oauthClient: oauthSettings.clientId ? createTokenClient(oauthSettings.clientId) : undefined,
-      setOauthSettings: (oauthSettings: OauthSettings) => {
-        set({
-          oauthSettings: oauthSettings,
-          oauthClient: createTokenClient(oauthSettings.clientId!),
-        });
-      },
-      prolongateToken() {
-        if (getState().authorizationData.state === 'authorized') {
-          googleOauthStore.getState().oauthClient?.requestAccessToken();
-        }
-      },
-      authorize() {
-        return new Promise<void>((resolve, reject) => {
-          if (getState().authorizationData.state === 'authorized') {
-            return resolve();
-          }
-
-          if (getState().authorizationData.state !== 'inProgress') {
-            googleOauthStore.getState().oauthClient?.requestAccessToken();
-
-            set({
-              authorizationData: { state: 'inProgress' },
-            });
-          }
-
-          const unsubscribe = googleOauthStore.subscribe((state, oldState) => {
-            if (state.authorizationData === oldState.authorizationData) {
+export function createGoogleOauthStore() {
+  const googleOauthStore = createStore<GoogleOauthStoreContent>()(
+    immer((set, getState): GoogleOauthStoreContent => {
+      function createTokenClient(clientId: string) {
+        return window.google.accounts.oauth2.initTokenClient({
+          client_id: clientId,
+          scope: 'https://www.googleapis.com/auth/drive',
+          callback: (response) => {
+            if (getState().oauthSettings?.clientId !== oauthSettings.clientId) {
               return;
             }
 
-            unsubscribe();
+            if (response.error) {
+              set({
+                authorizationData: {
+                  state: 'error', errorInfo: { error: response.error! },
+                },
+              });
 
-            if (state.authorizationData.state === 'authorized') {
-              resolve();
+              return;
             }
-            else if (state.authorizationData.state === 'error') {
-              reject(state.authorizationData.errorInfo);
-            }
+
+            set({
+              authorizationData: {
+                state: 'authorized', tokenInfo: {
+                  accessToken: response.access_token,
+                  expiresAt: +response.expires_in * 1000 + Date.now(),
+                },
+              },
+            });
+          },
+        });
+      }
+
+      const oauthSettings = loadSavedSettings();
+
+      return {
+        oauthSettings,
+        authorizationData: { state: 'unauthorized' },
+        oauthClient: oauthSettings.clientId ? createTokenClient(oauthSettings.clientId) : undefined,
+        setOauthSettings: (oauthSettings: OauthSettings) => {
+          set({
+            oauthSettings: oauthSettings,
+            oauthClient: createTokenClient(oauthSettings.clientId!),
           });
-        });
-      },
-      expireToken() {
-        set({
-          authorizationData: { state: 'unauthorized' },
-        });
-      },
-    };
-  }),
-);
+        },
+        prolongateToken() {
+          if (getState().authorizationData.state === 'authorized') {
+            googleOauthStore.getState().oauthClient?.requestAccessToken();
+          }
+        },
+        authorize() {
+          return new Promise<void>((resolve, reject) => {
+            if (getState().authorizationData.state === 'authorized') {
+              return resolve();
+            }
 
-let tokenExpirationWaiterId: number | undefined;
+            if (getState().authorizationData.state !== 'inProgress') {
+              googleOauthStore.getState().oauthClient?.requestAccessToken();
 
-googleOauthStore.subscribe((state, prevState) => {
-  if (state.oauthSettings !== prevState.oauthSettings) {
-    localStorage.setItem('app-identities', JSON.stringify(state.oauthSettings));
-  }
+              set({
+                authorizationData: { state: 'inProgress' },
+              });
+            }
 
-  const maybeClearTokenExpirationWaiter = () => {
-    if (tokenExpirationWaiterId) {
-      clearTimeout(tokenExpirationWaiterId);
-      tokenExpirationWaiterId = undefined;
+            const unsubscribe = googleOauthStore.subscribe((state, oldState) => {
+              if (state.authorizationData === oldState.authorizationData) {
+                return;
+              }
+
+              unsubscribe();
+
+              if (state.authorizationData.state === 'authorized') {
+                resolve();
+              }
+              else if (state.authorizationData.state === 'error') {
+                reject(state.authorizationData.errorInfo);
+              }
+            });
+          });
+        },
+        expireToken() {
+          set({
+            authorizationData: { state: 'unauthorized' },
+          });
+        },
+      };
+    }),
+  );
+
+  let tokenExpirationWaiterId: number | undefined;
+
+  googleOauthStore.subscribe((state, prevState) => {
+    if (state.oauthSettings !== prevState.oauthSettings) {
+      localStorage.setItem('app-identities', JSON.stringify(state.oauthSettings));
     }
-  };
 
-  if (state.oauthSettings?.clientId !== prevState.oauthSettings?.clientId) {
-    maybeClearTokenExpirationWaiter();
-  }
+    const maybeClearTokenExpirationWaiter = () => {
+      if (tokenExpirationWaiterId) {
+        clearTimeout(tokenExpirationWaiterId);
+        tokenExpirationWaiterId = undefined;
+      }
+    };
 
-  if (state.authorizationData !== prevState.authorizationData) {
-    maybeClearTokenExpirationWaiter();
+    if (state.oauthSettings?.clientId !== prevState.oauthSettings?.clientId) {
+      maybeClearTokenExpirationWaiter();
+    }
 
-    if (state.authorizationData.state === 'authorized') {
-      const expiresIn = state.authorizationData.tokenInfo.expiresAt - Date.now();
-      if (expiresIn > 0) {
-        tokenExpirationWaiterId = window.setTimeout(() => {
-          if (state.oauthSettings?.keepMeLoggedIn) {
-            googleOauthStore.getState().prolongateToken();
-          }
-          else {
-            googleOauthStore.getState().expireToken();
-            maybeClearTokenExpirationWaiter();
-          }
-        }, expiresIn - 1000 * 60);
+    if (state.authorizationData !== prevState.authorizationData) {
+      maybeClearTokenExpirationWaiter();
+
+      if (state.authorizationData.state === 'authorized') {
+        const expiresIn = state.authorizationData.tokenInfo.expiresAt - Date.now();
+        if (expiresIn > 0) {
+          tokenExpirationWaiterId = window.setTimeout(() => {
+            if (state.oauthSettings?.keepMeLoggedIn) {
+              googleOauthStore.getState().prolongateToken();
+            }
+            else {
+              googleOauthStore.getState().expireToken();
+              maybeClearTokenExpirationWaiter();
+            }
+          }, expiresIn - 1000 * 60);
+        }
       }
     }
-  }
-});
+  });
 
-export const useGoogleOauthStore = () => useStore(googleOauthStore);
+  return googleOauthStore;
+}
+
+export type GoogleOauthStore = ReturnType<typeof createGoogleOauthStore>;
+
+export const GoogleOauthStoreContext = createContext<GoogleOauthStore | null>(null);
+
+export const useGoogleOauthStore = () => {
+  const storeFromContext = useContext(GoogleOauthStoreContext);
+
+  if (!storeFromContext) {
+    throw new Error('useGoogleOauthStore must be used within a GoogleOauthStoreProvider');
+  }
+
+  return useStore(storeFromContext);
+};

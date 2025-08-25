@@ -1,14 +1,15 @@
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { Button, ButtonTheme } from '../widgets/button';
-import { useEffect, useRef, useState } from 'react';
-import { useCardsStore } from '../stores/cardsStore.ts';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
 import { ArrowLeft, RotateCw } from 'lucide-react';
-import { googleOauthStore } from '../stores/googleOauthStore.ts';
+import { LoadingIndicator } from '../widgets/loading-indicator';
+import { parseAndImportSavedFile } from '../features/persistence/savedFileImporter.ts';
 
 export const Route = createFileRoute('/import-from-google-drive')({
   component: ImportFromGoogleDrive,
-  beforeLoad: async () => {
-    if (googleOauthStore.getState().authorizationData.state !== 'authorized') {
+  beforeLoad: async ({ context }) => {
+    if (context.googleOauthStore.getState().authorizationData.state !== 'authorized') {
       throw redirect({ to: '/' });
     }
   },
@@ -91,7 +92,7 @@ function ImportFromGoogleDrive() {
           >
             <ArrowLeft />
           </Button>
-          <h1 className="text-2xl text-purple-800">Google OAuth Settings</h1>
+          <h1 className="text-2xl text-purple-800">Import from Google Drive</h1>
         </div>
         <div className="flex row gap-2">
           <Button isLoading={isLoadingFiles} onClick={startLoadingFunc}>
@@ -106,31 +107,7 @@ function ImportFromGoogleDrive() {
         {!isLoadingFiles && files.length > 0 && (
           <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
             {files.map(file => (
-              <div
-                key={file.id}
-                className="flex flex-col border border-gray-200 rounded p-3 bg-white hover:bg-blue-50 cursor-pointer"
-                onClick={async () => {
-                  let response;
-                  try {
-                    response = await gapi.client.drive.files.get({
-                      fileId: file.id,
-                      alt: 'media',
-                    });
-                  }
-                  catch (err) {
-                    console.error('Error fetching file:', err);
-                    return;
-                  }
-                  if (response.status !== 200) {
-                    console.error('Error fetching file, status:', response.status);
-                    return;
-                  }
-
-                  console.log('Loaded files:', response);
-                }}
-              >
-                <p className="font-medium text-gray-800">{file.name}</p>
-              </div>
+              <FileCard file={file} key={file.id} />
             ))}
           </div>
         )}
@@ -138,11 +115,69 @@ function ImportFromGoogleDrive() {
         <p className="text-gray-800">
           Loaded:
           {' '}
-          {cardsStore.ids.length}
+          {cardsStore.cardsIds.length}
           {' '}
           cards
         </p>
       </div>
     </div>
+  );
+}
+
+function FileCard(props: { file: File }) {
+  const [isImported, setIsImported] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const cardsStore = useContext(CardsStoreContext);
+
+  const { file } = props;
+
+  return (
+    <Button
+      key={file.id}
+      isLoading={isImporting}
+      disabled={isImported}
+      theme={ButtonTheme.secondary}
+      onClick={async () => {
+        if (isImporting || isImported) return;
+
+        setIsImporting(true);
+        setImportError(null);
+
+        let response;
+        try {
+          response = await gapi.client.drive.files.get({
+            fileId: file.id,
+            alt: 'media',
+          });
+
+          if (response.status !== 200) {
+            setImportError(`Error fetching file, status: ${response.status}`);
+            setIsImporting(false);
+            return;
+          }
+
+          await parseAndImportSavedFile(cardsStore!, response.body);
+          setIsImported(true);
+        }
+        catch (err) {
+          setIsImporting(false);
+          setImportError(`Error fetching file ${err}`);
+          return;
+        }
+
+        setIsImporting(false);
+      }}
+      contentBuilder={(params) => {
+        return (
+          <>
+            <p className="font-medium" style={{ color: params.textColor }}>{file.name}</p>
+            {importError && <p className="text-red-500">{importError}</p>}
+            {isImported && <p className="text-green-500">Imported!</p>}
+            {isImporting && <LoadingIndicator />}
+          </>
+        );
+      }}
+    />
   );
 }
