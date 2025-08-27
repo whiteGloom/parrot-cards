@@ -17,6 +17,5 @@ function parseSavedFile(fileContent: string): FileVersion_1 {
 
 export async function parseAndImportSavedFile(cardsStore: CardsStore, fileContent: string) {
   const fileData = parseSavedFile(fileContent);
-
   cardsStore.getState().addCards(fileData.content.cards);
 }

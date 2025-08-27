@@ -21,6 +21,12 @@ export default tseslint.config([globalIgnores(['dist']), {
   rules: {
     'react-refresh/only-export-components': 'off',
     '@stylistic/semi': ['error', 'always'],
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        caughtErrors: 'none',
+      },
+    ],
   },
   languageOptions: {
     ecmaVersion: 2020, globals: globals.browser,

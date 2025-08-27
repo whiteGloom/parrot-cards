@@ -5,6 +5,7 @@ import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
 import { ArrowLeft, RotateCw } from 'lucide-react';
 import { LoadingIndicator } from '../widgets/loading-indicator';
 import { parseAndImportSavedFile } from '../features/persistence/savedFileImporter.ts';
+import { type FileToLoadRecords, useGoogleDriveStore } from '../stores/googleDrive.ts';
 
 export const Route = createFileRoute('/import-from-google-drive')({
   component: ImportFromGoogleDrive,
@@ -25,10 +26,12 @@ type File = {
 function ImportFromGoogleDrive() {
   const navigate = useNavigate();
   const cardsStore = useCardsStore();
+  const googleDriveStore = useGoogleDriveStore();
   const [isLoadingFiles, setLoadingFiles] = useState<boolean>(true);
   const [files, setFiles] = useState<File[]>([]);
+  const [missingFiles, setMissingFiles] = useState<FileToLoadRecords[]>([]);
 
-  const startLoadingFunc = useRef(async () => {
+  const startLoadingFunc = async () => {
     setLoadingFiles(true);
 
     let parentFolderId: string | undefined;
@@ -57,21 +60,36 @@ function ImportFromGoogleDrive() {
       pageSize: 50,
     });
 
-    setFiles((response.result.files || []).map((file): File => {
+    const files = (response.result.files || []).map((file): File => {
       return {
         name: file.name!,
         id: file.id!,
         mimeType: file.mimeType!,
         parents: file.parents,
       };
-    }));
+    });
+
+    const filesIds = files.map(file => file.id);
+
+    const missingFiles = [];
+
+    for (const fileId in googleDriveStore.fileToLoadRecords) {
+      if (!filesIds.includes(fileId)) {
+        missingFiles.push(googleDriveStore.fileToLoadRecords[fileId]);
+      }
+    }
+
+    setFiles(files);
+    setMissingFiles(missingFiles);
 
     setLoadingFiles(false);
-  }).current;
+  };
+
+  const startLoadingFuncForMount = useRef(startLoadingFunc).current;
 
   useEffect(() => {
-    startLoadingFunc().catch(null);
-  }, [startLoadingFunc]);
+    startLoadingFuncForMount().catch(null);
+  }, [startLoadingFuncForMount]);
 
   return (
     <div
@@ -101,15 +119,39 @@ function ImportFromGoogleDrive() {
           <p className="self-center text-gray-800">Existing files with data:</p>
         </div>
         {isLoadingFiles
-          && <div className="border border-gray-200 bg-white rounded p-3 flex flex-col gap-3"><p>Loading files...</p></div>}
+          && <div className="border border-gray-200 bg-white rounded p-2 flex flex-col gap-3"><p>Loading files...</p></div>}
         {!isLoadingFiles && files.length === 0
-          && <div className="border border-gray-200 bg-white rounded p-3 flex flex-col gap-3"><p className="text-gray-600">No files found in &quot;Parrot Cards&quot; folder</p></div>}
+          && <div className="border border-gray-200 bg-white rounded p-2 flex flex-col gap-3"><p className="text-gray-600">No files found in &quot;Parrot Cards&quot; folder</p></div>}
         {!isLoadingFiles && files.length > 0 && (
           <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
             {files.map(file => (
               <FileCard file={file} key={file.id} />
             ))}
           </div>
+        )}
+        {!!missingFiles.length && (
+          <>
+            <p className="text-red-800">Some of one-click import files are missing!</p>
+            <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
+              {missingFiles.map(file => (
+                <Button
+                  key={file.fileId}
+                  theme={ButtonTheme.warning}
+                  hint="Remove from one-click import list"
+                  onClick={() => {
+                    setMissingFiles(missingFiles.filter(f => f.fileId !== file.fileId));
+                    googleDriveStore.removeFileToLoad(file.fileId);
+                  }}
+                >
+                  {file.fileName}
+                  {' '}
+                  (ID:
+                  {file.fileId}
+                  )
+                </Button>
+              ))}
+            </div>
+          </>
         )}
         <hr className="border-gray-200" />
         <p className="text-gray-800">
@@ -129,8 +171,11 @@ function FileCard(props: { file: File }) {
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const cardsStore = useContext(CardsStoreContext);
+  const googleDriveStore = useGoogleDriveStore();
 
   const { file } = props;
+
+  const isChecked = !!googleDriveStore.fileToLoadRecords[file.id];
 
   return (
     <Button
@@ -171,7 +216,30 @@ function FileCard(props: { file: File }) {
       contentBuilder={(params) => {
         return (
           <>
-            <p className="font-medium" style={{ color: params.textColor }}>{file.name}</p>
+            <div className="flex">
+              <p title={file.id} className="font-medium grow text-start" style={{ color: params.textColor }}>{file.name}</p>
+              <input
+                title="Mark the file to add it to one-click import list"
+                type="checkbox"
+                checked={isChecked}
+                onClick={(event) => {
+                  event.stopPropagation();
+                }}
+                onChange={(e) => {
+                  e.stopPropagation();
+
+                  if (isChecked) {
+                    googleDriveStore.removeFileToLoad(file.id);
+                  }
+                  else {
+                    googleDriveStore.addFileToLoad({
+                      fileId: file.id,
+                      fileName: file.name,
+                    });
+                  }
+                }}
+              />
+            </div>
             {importError && <p className="text-red-500">{importError}</p>}
             {isImported && <p className="text-green-500">Imported!</p>}
             {isImporting && <LoadingIndicator />}

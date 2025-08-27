@@ -216,10 +216,5 @@ export const GoogleOauthStoreContext = createContext<GoogleOauthStore | null>(nu
 
 export const useGoogleOauthStore = () => {
   const storeFromContext = useContext(GoogleOauthStoreContext);
-
-  if (!storeFromContext) {
-    throw new Error('useGoogleOauthStore must be used within a GoogleOauthStoreProvider');
-  }
-
-  return useStore(storeFromContext);
+  return useStore(storeFromContext!);
 };

@@ -13,20 +13,29 @@ export interface Card {
   knownLanguageSide: CardSide
   targetLanguageSide: CardSide
   tags: string[]
+  createdAt: number
+  updatedAt: number
 }
 
-export interface CadsStoreState {
+export interface CardDraft {
+  knownLanguageSide: CardSide
+  targetLanguageSide: CardSide
+  tags: string[]
+}
+
+export interface CardsStoreFields {
   cards: Record<string, Card>
   cardsIds: string[]
 }
 
 export interface CardsStoreActions {
   removeCards: (ids: string[]) => void
+  createCard: (card: CardDraft) => Card
   addCards: (cards: Card[]) => void
   updateCard: (id: string, updatedCard: Partial<Card>) => void
 }
 
-export interface CardsStoreState extends CadsStoreState, CardsStoreActions {
+export interface CardsStoreState extends CardsStoreFields, CardsStoreActions {
 }
 
 export function createCardsStore() {
@@ -35,6 +44,23 @@ export function createCardsStore() {
       return {
         cards: {},
         cardsIds: [],
+        createCard: (card: CardDraft) => {
+          const newCard: Card = {
+            id: crypto.randomUUID(),
+            knownLanguageSide: card.knownLanguageSide,
+            targetLanguageSide: card.targetLanguageSide,
+            tags: card.tags,
+            createdAt: Date.now(),
+            updatedAt: Date.now(),
+          };
+
+          set((state) => {
+            state.cards[newCard.id] = newCard;
+            state.cardsIds.push(newCard.id);
+          });
+
+          return newCard;
+        },
         removeCards: (ids: string[]) => {
           set((state) => {
             for (const id of ids) {
@@ -59,6 +85,10 @@ export function createCardsStore() {
                 state.cardsIds.push(card.id);
               }
             }
+
+            state.cardsIds.sort((a, b) => {
+              return state.cards[a].updatedAt - state.cards[b].updatedAt;
+            });
           });
         },
         updateCard: (id: string, updatedCard: Partial<Card>) => {
@@ -67,6 +97,7 @@ export function createCardsStore() {
               state.cards[id] = {
                 ...state.cards[id],
                 ...updatedCard,
+                updatedAt: Date.now(),
               };
             }
           });
@@ -82,10 +113,5 @@ export const CardsStoreContext = createContext<CardsStore | null>(null);
 
 export const useCardsStore = () => {
   const cardsStoreFromContext = useContext(CardsStoreContext);
-
-  if (!cardsStoreFromContext) {
-    throw new Error('useCardsStore must be used within a CardsStoreProvider');
-  }
-
-  return useStore(cardsStoreFromContext);
+  return useStore(cardsStoreFromContext!);
 };
