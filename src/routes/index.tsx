@@ -6,7 +6,8 @@ import { Brain, Download, Eraser, Plus, Trash, Upload, X } from 'lucide-react';
 import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
 import type { Tag } from '../entities/tags.ts';
 import { hueColorConfigToColorString } from '../utils/color.ts';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { type RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Dropdown, type DropdownImperativeControls } from '../widgets/dropdowns';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -19,6 +20,8 @@ function Index() {
   const cardsStoreState = useCardsStore();
   const tagsStoreState = useTagsStore();
 
+  const removeTagsDropdownRef = useRef<DropdownImperativeControls | null>(null);
+
   const [tempSelectedTags, setTempSelectedTags] = useState<Set<string>>(new Set<string>());
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set<string>());
 
@@ -29,6 +32,10 @@ function Index() {
   if (oldSelectedCards.current !== selectedCards) {
     if (isDeletingSelectedCards) {
       setIsDeletingSelectedCards(false);
+    }
+
+    if (removeTagsDropdownRef.current?.isOpened) {
+      removeTagsDropdownRef.current.setIsOpened(false);
     }
 
     oldSelectedCards.current = selectedCards;
@@ -134,6 +141,7 @@ function Index() {
             )}
           </div>
           <Button onClick={() => {
+            setSelectedCards(new Set());
             setSelectedTags(new Set(tempSelectedTags));
           }}
           >
@@ -155,7 +163,9 @@ function Index() {
                     </>
                   </Button>
                   <Button
-                    onClick={() => { setIsDeletingSelectedCards(true); }}
+                    onClick={() => {
+                      setIsDeletingSelectedCards(true);
+                    }}
                     theme={ButtonTheme.warning}
                   >
                     <>
@@ -163,12 +173,10 @@ function Index() {
                       <span className="ml-1 hidden md:flex">Delete</span>
                     </>
                   </Button>
-                  <Button theme={ButtonTheme.secondary}>
-                    <>
-                      <Eraser />
-                      <span className="ml-1 hidden md:flex">Remove tag</span>
-                    </>
-                  </Button>
+                  <RemoveTagFromCardsDropdown
+                    cardsIds={selectedCards}
+                    refToSet={removeTagsDropdownRef}
+                  />
                 </>
               )}
               {isDeletingSelectedCards && (
@@ -205,9 +213,9 @@ function Index() {
                 }
                 else {
                   const newValues = [];
-                  for (const cardId of selectedCards) {
-                    if (cardId !== cardId) {
-                      newValues.push(cardId);
+                  for (const otherCardId of selectedCards) {
+                    if (otherCardId !== cardId) {
+                      newValues.push(otherCardId);
                     }
                   }
                   setSelectedCards(new Set(newValues));
@@ -233,7 +241,10 @@ function TagPreview(props: {
 
   return (
     <div className="flex border border-gray-300 shadow rounded p-2 gap-2">
-      <label className="flex gap-2 cursor-pointer" style={{ color: hueColorConfigToColorString(tag.color) }}>
+      <label
+        className="flex gap-2 cursor-pointer"
+        style={{ color: hueColorConfigToColorString(tag.color) }}
+      >
         <input
           type="checkbox"
           onChange={() => {
@@ -244,6 +255,75 @@ function TagPreview(props: {
         />
         {tag.title}
       </label>
+    </div>
+  );
+}
+
+function RemoveTagFromCardsDropdown(props: {
+  refToSet: RefObject<DropdownImperativeControls | null>
+  cardsIds: Set<string>
+}) {
+  return (
+    <Dropdown
+      ref={props.refToSet}
+      buildButton={buttonProps => (
+        <Button theme={ButtonTheme.secondary} onClick={buttonProps.toggleOpened}>
+          <>
+            <Eraser />
+            <span className="ml-1 hidden md:flex">Remove tag</span>
+          </>
+        </Button>
+      )}
+      buildContent={(contentProps) => {
+        return (
+          <RemoveTagDropdownContent cardIds={props.cardsIds} closeDropdown={contentProps.close} />
+        );
+      }}
+    />
+  );
+}
+
+function RemoveTagDropdownContent(props: {
+  closeDropdown: () => void
+  cardIds: Set<string>
+}) {
+  const { cardIds } = props;
+  const cardsStoreState = useCardsStore();
+  const tagsStoreState = useTagsStore();
+
+  const tagsOfCards = useMemo(() => {
+    const set = new Set<string>();
+    for (const cardId of cardIds) {
+      const card = cardsStoreState.cards[cardId];
+      for (const tagId of card.tags) {
+        set.add(tagId);
+      }
+    }
+    return Array.from(set);
+  }, [cardIds, cardsStoreState.cards]);
+
+  return (
+    <div className="flex flex-col gap-2 p-2 shadow-xl/30 bg-white rounded border border-gray-200 max-h-60 overflow-y-auto">
+      {tagsOfCards.map((tagId) => {
+        const tag = tagsStoreState.tags[tagId];
+        return (
+          <Button
+            theme={ButtonTheme.secondary}
+            key={tag.id}
+            onClick={() => {
+              props.closeDropdown();
+
+              props.cardIds.forEach((cardId) => {
+                cardsStoreState.updateCard(cardId, {
+                  tags: cardsStoreState.cards[cardId].tags.filter(tagId => tagId !== tag.id),
+                });
+              });
+            }}
+          >
+            {tag.title}
+          </Button>
+        );
+      })}
     </div>
   );
 }

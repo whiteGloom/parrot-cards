@@ -11,7 +11,12 @@ import clsx from 'clsx';
 export interface DropdownProps {
   ref: Ref<HTMLDivElement>
   buildContent: (props: { close: () => void }) => ReactNode
-  buildButton: (props: { open: () => void, close: () => void, isOpened: boolean }) => ReactNode
+  buildButton: (props: {
+    open: () => void
+    close: () => void
+    isOpened: boolean
+    toggleOpened: () => void
+  }) => ReactNode
   contentWrapperClassName?: string
   buttonWrapperClassName?: string
   className?: string
@@ -21,6 +26,7 @@ export interface DropdownProps {
 export interface DropdownImperativeControls {
   setIsOpened: (isOpened: boolean) => void
   isOpened: boolean
+  toggleOpened: () => void
 }
 
 export const Dropdown = forwardRef<DropdownImperativeControls, DropdownProps>(
@@ -34,6 +40,7 @@ export const Dropdown = forwardRef<DropdownImperativeControls, DropdownProps>(
 
     useImperativeHandle(ref, () => ({
       setIsOpened: setIsOpenedWrapped,
+      toggleOpened: () => setIsOpenedWrapped(!isOpened),
       isOpened,
     }), [isOpened, setIsOpenedWrapped]);
 
@@ -41,15 +48,18 @@ export const Dropdown = forwardRef<DropdownImperativeControls, DropdownProps>(
       <div className={clsx(['relative', props.className])}>
         <div className={clsx(props.buttonWrapperClassName)}>
           {props.buildButton({
-            open: () => setIsOpened(true),
-            close: () => setIsOpened(false),
+            open: () => setIsOpenedWrapped(true),
+            close: () => setIsOpenedWrapped(false),
+            toggleOpened: () => {
+              setIsOpenedWrapped(!isOpened);
+            },
             isOpened,
           })}
         </div>
         {isOpened && (
           <div className={clsx('flex flex-col absolute', props.contentWrapperClassName)}>
             {props.buildContent({
-              close: () => setIsOpened(false),
+              close: () => setIsOpenedWrapped(false),
             })}
           </div>
         )}
