@@ -1,11 +1,13 @@
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
-import { Button, ButtonTheme } from '../widgets/button';
+import { Button, ButtonTheme } from '../widgets/buttons';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
 import { ArrowLeft, RotateCw } from 'lucide-react';
 import { LoadingIndicator } from '../widgets/loading-indicator';
 import { parseAndImportSavedFile } from '../features/persistence/savedFileImporter.ts';
 import { type FileToLoadRecords, useGoogleDriveStore } from '../stores/googleDrive.ts';
+import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
+import { TagsStoreContext } from '../stores/tagsStore.ts';
+import { OneClickImportButton } from '../widgets/buttons/one-click-import.tsx';
 
 export const Route = createFileRoute('/import-from-google-drive')({
   component: ImportFromGoogleDrive,
@@ -96,7 +98,7 @@ function ImportFromGoogleDrive() {
       className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300"
     >
       <div
-        className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
+        className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded md:min-w-3xl min-w-full"
       >
         <div className="flex gap-4 items-center">
           <Button
@@ -104,7 +106,7 @@ function ImportFromGoogleDrive() {
             theme={ButtonTheme.secondary}
             onClick={() => {
               navigate({
-                to: '..',
+                to: '/import',
               }).catch(null);
             }}
           >
@@ -116,7 +118,8 @@ function ImportFromGoogleDrive() {
           <Button isLoading={isLoadingFiles} onClick={startLoadingFunc}>
             <RotateCw size={16} />
           </Button>
-          <p className="self-center text-gray-800">Existing files with data:</p>
+          <p className="grow text-center text-gray-800">Existing files with data:</p>
+          <OneClickImportButton iconSize={16} />
         </div>
         {isLoadingFiles
           && <div className="border border-gray-200 bg-white rounded p-2 flex flex-col gap-3"><p>Loading files...</p></div>}
@@ -161,6 +164,13 @@ function ImportFromGoogleDrive() {
           {' '}
           cards
         </p>
+        <Button
+          onClick={() => {
+            navigate({ to: '/' }).catch(null);
+          }}
+        >
+          Go home
+        </Button>
       </div>
     </div>
   );
@@ -170,7 +180,8 @@ function FileCard(props: { file: File }) {
   const [isImported, setIsImported] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
-  const cardsStore = useContext(CardsStoreContext);
+  const cardsStore = useContext(CardsStoreContext)!;
+  const tagsStore = useContext(TagsStoreContext)!;
   const googleDriveStore = useGoogleDriveStore();
 
   const { file } = props;
@@ -202,7 +213,11 @@ function FileCard(props: { file: File }) {
             return;
           }
 
-          await parseAndImportSavedFile(cardsStore!, response.body);
+          await parseAndImportSavedFile({
+            cardsStore: cardsStore,
+            tagsStore: tagsStore,
+            fileContent: response.body,
+          });
           setIsImported(true);
         }
         catch (err) {
@@ -215,8 +230,8 @@ function FileCard(props: { file: File }) {
       }}
       contentBuilder={(params) => {
         return (
-          <>
-            <div className="flex">
+          <div className="flex grow flex-col items-start">
+            <div className="flex w-full justify-between">
               <p title={file.id} className="font-medium grow text-start" style={{ color: params.textColor }}>{file.name}</p>
               <input
                 title="Mark the file to add it to one-click import list"
@@ -243,7 +258,7 @@ function FileCard(props: { file: File }) {
             {importError && <p className="text-red-500">{importError}</p>}
             {isImported && <p className="text-green-500">Imported!</p>}
             {isImporting && <LoadingIndicator />}
-          </>
+          </div>
         );
       }}
     />

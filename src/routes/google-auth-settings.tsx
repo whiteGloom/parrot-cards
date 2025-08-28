@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useGoogleOauthStore } from '../stores/googleOauthStore.ts';
 import { Formik } from 'formik';
-import { Button, ButtonTheme } from '../widgets/button';
+import { Button, ButtonTheme } from '../widgets/buttons';
 import { ArrowLeft } from 'lucide-react';
 
 export const Route = createFileRoute('/google-auth-settings')({
@@ -14,15 +14,14 @@ function Index() {
 
   return (
     <div className="h-full flex flex-col items-center justify-center bg-gradient-to-tr from-purple-300 to-blue-300">
-      <div className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded min-w-3xl">
+      <div className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded md:min-w-3xl min-w-full">
         <div className="flex gap-4 items-center">
           <Button
             className="self-start"
             theme={ButtonTheme.secondary}
             onClick={() => {
               navigate({
-                to: '..',
-                from: oauthStore.authorizationData.state === 'authorized' ? '/home' : '/',
+                to: '/import',
               }).catch(null);
             }}
           >

@@ -8,6 +8,7 @@ import {
 } from './stores/googleOauthStore.ts';
 import { CardsStoreContext, createCardsStore } from './stores/cardsStore.ts';
 import { createGoogleDriveStore, GoogleDriveStoreContext } from './stores/googleDrive.ts';
+import { createTagsStore, TagsStoreContext } from './stores/tagsStore.ts';
 
 export type RouterContext = { googleOauthStore: GoogleOauthStore };
 
@@ -29,13 +30,16 @@ declare module '@tanstack/react-router' {
     gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest').then(() => {
       const googleOauthStore = createGoogleOauthStore();
       const googleDriveStore = createGoogleDriveStore();
+      const tagsStore = createTagsStore();
       const cardsStore = createCardsStore();
 
       createRoot(document.getElementById('root')!).render(
         <GoogleOauthStoreContext value={googleOauthStore}>
           <GoogleDriveStoreContext value={googleDriveStore}>
             <CardsStoreContext value={cardsStore}>
-              <RouterProvider router={router} context={{ googleOauthStore }} />
+              <TagsStoreContext value={tagsStore}>
+                <RouterProvider router={router} context={{ googleOauthStore }} />
+              </TagsStoreContext>
             </CardsStoreContext>
           </GoogleDriveStoreContext>
         </GoogleOauthStoreContext>,

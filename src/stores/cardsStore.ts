@@ -1,27 +1,7 @@
 import { createStore, useStore } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { createContext, useContext } from 'react';
-
-export interface CardSide {
-  title: string
-  description: string
-  hints: string[]
-}
-
-export interface Card {
-  id: string
-  knownLanguageSide: CardSide
-  targetLanguageSide: CardSide
-  tags: string[]
-  createdAt: number
-  updatedAt: number
-}
-
-export interface CardDraft {
-  knownLanguageSide: CardSide
-  targetLanguageSide: CardSide
-  tags: string[]
-}
+import type { Card, CardDraft } from '../entities/cards.ts';
 
 export interface CardsStoreFields {
   cards: Record<string, Card>
@@ -32,7 +12,7 @@ export interface CardsStoreActions {
   removeCards: (ids: string[]) => void
   createCard: (card: CardDraft) => Card
   addCards: (cards: Card[]) => void
-  updateCard: (id: string, updatedCard: Partial<Card>) => void
+  updateCard: (id: string, updatedCard: Partial<CardDraft>) => void
 }
 
 export interface CardsStoreState extends CardsStoreFields, CardsStoreActions {

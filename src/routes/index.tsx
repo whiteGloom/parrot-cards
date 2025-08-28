@@ -1,155 +1,249 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useGoogleOauthStore } from '../stores/googleOauthStore.ts';
-import { Button, ButtonTheme } from '../widgets/button';
-import { Repeat, Settings } from 'lucide-react';
-import { useContext, useState } from 'react';
+import { Button, ButtonTheme } from '../widgets/buttons';
+import { CardPreview } from '../widgets/cards/card-preview.tsx';
 import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
-import { useGoogleDriveStore } from '../stores/googleDrive.ts';
-import { parseAndImportSavedFile } from '../features/persistence/savedFileImporter.ts';
+import { Brain, Download, Eraser, Plus, Trash, Upload, X } from 'lucide-react';
+import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
+import type { Tag } from '../entities/tags.ts';
+import { hueColorConfigToColorString } from '../utils/color.ts';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 export const Route = createFileRoute('/')({
-  component: Welcome,
+  component: Index,
 });
 
-function Welcome() {
+function Index() {
   const navigate = useNavigate();
-  const oauthStore = useGoogleOauthStore();
-  const cardsStore = useCardsStore();
-  const googleDriveStore = useGoogleDriveStore();
-  const [isLoadingCards, setLoadingCards] = useState<boolean>(false);
-  const isClientIdSet = !!(oauthStore.oauthSettings?.clientId);
-  const isAutoImportButtonVisible = isClientIdSet && !!googleDriveStore.itemsCount;
+  const cardsStore = useContext(CardsStoreContext);
+  const tagsStore = useContext(TagsStoreContext);
+  const cardsStoreState = useCardsStore();
+  const tagsStoreState = useTagsStore();
+
+  const [tempSelectedTags, setTempSelectedTags] = useState<Set<string>>(new Set<string>());
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set<string>());
+
+  const [selectedCards, setSelectedCards] = useState<Set<string>>(new Set<string>());
+  const [isDeletingSelectedCards, setIsDeletingSelectedCards] = useState(false);
+  const oldSelectedCards = useRef<Set<string>>(selectedCards);
+
+  if (oldSelectedCards.current !== selectedCards) {
+    if (isDeletingSelectedCards) {
+      setIsDeletingSelectedCards(false);
+    }
+
+    oldSelectedCards.current = selectedCards;
+  }
+
+  const filteredCardsIds = useMemo(() => {
+    if (!selectedTags.size) {
+      return cardsStoreState.cardsIds;
+    }
+
+    return cardsStoreState.cardsIds.filter((cardId) => {
+      const card = cardsStoreState.cards[cardId];
+
+      return card.tags.some(tagInCard => selectedTags.has(tagInCard));
+    });
+  }, [selectedTags, cardsStoreState.cardsIds, cardsStoreState.cards]);
+
+  useEffect(() => {
+    cardsStore?.subscribe((state, prevState) => {
+      if (state.cardsIds !== prevState.cardsIds) {
+        setSelectedCards(new Set(Array.from(selectedCards).filter(cardId => state.cardsIds.includes(cardId))));
+      }
+    });
+
+    tagsStore?.subscribe((state, prevState) => {
+      if (state.tagsIds !== prevState.tagsIds) {
+        setSelectedTags(new Set(Array.from(selectedTags).filter(tagId => state.tagsIds.includes(tagId))));
+      }
+    });
+  }, [cardsStore, selectedCards, selectedTags, tagsStore]);
 
   return (
-    <div className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300">
-      <div
-        className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
-      >
-        <h1 className="text-2xl text-purple-800">Welcome to Parrot Cards!</h1>
-        <div className="border border-gray-200 bg-white rounded p-3 flex flex-col gap-3">
-          <p className="self-center text-gray-800">Import data from</p>
-          <div className="flex row gap-2">
+    <div
+      className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300 p-3"
+    >
+      <div className="flex flex-col gap-4 md:min-w-3xl min-w-full">
+        <div
+          className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
+        >
+          <h1 className="text-2xl text-purple-800">Parrot Cards</h1>
+          <div className="flex gap-2">
             <Button
-              theme={ButtonTheme.primary}
-              className="grow"
-              onClick={async () => {
-                setLoadingCards(true);
-                try {
-                  if (!isClientIdSet) {
-                    navigate({ to: '/google-auth-settings' }).catch(null);
-                    return;
-                  }
-
-                  await oauthStore.authorize();
-
-                  navigate({ to: '/import-from-google-drive' }).catch(null);
-                }
-                catch (error) {
-                  console.error('Error during authorization:', error);
-                }
-                finally {
-                  setLoadingCards(false);
-                }
-              }}
-              isLoading={isLoadingCards}
+              hint="Create new cards"
             >
-              Google Drive
+              <Plus />
+              <span className="ml-1 hidden md:flex">Create new cards</span>
             </Button>
-            {isAutoImportButtonVisible && <AutoImportButton />}
+            <div className="grow" />
             <Button
-              className="self-start"
-              theme={ButtonTheme.secondary}
-              hint="Open settings for Google OAuth"
               onClick={() => {
-                navigate({ to: '/google-auth-settings' }).catch(null);
+                navigate({ to: '/import' }).catch(null);
               }}
+              hint="Import cards"
+              theme={ButtonTheme.secondary}
             >
-              <Settings />
+              <>
+                <Download />
+                <span className="ml-1 hidden md:flex">Import</span>
+              </>
+            </Button>
+            <Button
+              onClick={() => {
+                navigate({ to: '/' }).catch(null);
+              }}
+              hint="Export cards"
+              theme={ButtonTheme.primary}
+            >
+              <>
+                <Upload />
+                <span className="ml-1 hidden md:flex">Export</span>
+              </>
             </Button>
           </div>
-          <Button
-            theme={ButtonTheme.secondary}
+        </div>
+        <div
+          className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
+        >
+          <h2 className="text-xl text-purple-800">Loaded tags:</h2>
+          <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
+            {tagsStoreState.tagsIds.map(tagId => (
+              <TagPreview
+                tag={tagsStoreState.tags[tagId]}
+                key={tagId}
+                isSelected={tempSelectedTags.has(tagId)}
+                onSelectedChange={(isSelected) => {
+                  if (isSelected) {
+                    setTempSelectedTags(new Set([...tempSelectedTags, tagId]));
+                  }
+                  else {
+                    const newValues = [];
+                    for (const otherTagId of tempSelectedTags) {
+                      if (otherTagId !== tagId) {
+                        newValues.push(otherTagId);
+                      }
+                    }
+                    setTempSelectedTags(new Set(newValues));
+                  }
+                }}
+              />
+            ))}
+            {!tagsStoreState.tagsIds.length && (
+              <p className="text-gray-600">No tags loaded</p>
+            )}
+          </div>
+          <Button onClick={() => {
+            setSelectedTags(new Set(tempSelectedTags));
+          }}
           >
-            Local File
+            Apply filter
           </Button>
         </div>
-        <hr className="border-gray-200" />
-        <p className="text-gray-800">
-          Loaded:
-          {' '}
-          {cardsStore.cardsIds.length}
-          {' '}
-          cards
-        </p>
-        <Button
-          onClick={() => {
-            navigate({ to: '/home' }).catch(null);
-          }}
+        <div
+          className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
         >
-          Continue
-        </Button>
+          <h2 className="text-xl text-purple-800">Result:</h2>
+          {!!selectedCards.size && (
+            <div className="flex items-center gap-2">
+              {!isDeletingSelectedCards && (
+                <>
+                  <Button theme={ButtonTheme.primary}>
+                    <>
+                      <Brain />
+                      <span className="ml-1 hidden md:flex">Revise</span>
+                    </>
+                  </Button>
+                  <Button
+                    onClick={() => { setIsDeletingSelectedCards(true); }}
+                    theme={ButtonTheme.warning}
+                  >
+                    <>
+                      <Trash />
+                      <span className="ml-1 hidden md:flex">Delete</span>
+                    </>
+                  </Button>
+                  <Button theme={ButtonTheme.secondary}>
+                    <>
+                      <Eraser />
+                      <span className="ml-1 hidden md:flex">Remove tag</span>
+                    </>
+                  </Button>
+                </>
+              )}
+              {isDeletingSelectedCards && (
+                <>
+                  <Button
+                    theme={ButtonTheme.primary}
+                    onClick={() => {
+                      setIsDeletingSelectedCards(false);
+                    }}
+                  >
+                    <X />
+                  </Button>
+                  <Button
+                    theme={ButtonTheme.warning}
+                    onClick={() => {
+                      cardsStoreState.removeCards(Array.from(selectedCards));
+                    }}
+                  >
+                    <Trash />
+                  </Button>
+                  <p>Delete selected cards?</p>
+                </>
+              )}
+            </div>
+          )}
+          {filteredCardsIds.map(cardId => (
+            <CardPreview
+              card={cardsStoreState.cards[cardId]}
+              key={cardId}
+              isSelected={selectedCards.has(cardId)}
+              onSelectedChange={(isSelected) => {
+                if (isSelected) {
+                  setSelectedCards(new Set([...selectedCards, cardId]));
+                }
+                else {
+                  const newValues = [];
+                  for (const cardId of selectedCards) {
+                    if (cardId !== cardId) {
+                      newValues.push(cardId);
+                    }
+                  }
+                  setSelectedCards(new Set(newValues));
+                }
+              }}
+            />
+          ))}
+          {!filteredCardsIds.length && (
+            <p className="text-gray-600">No cards loaded</p>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-function AutoImportButton() {
-  const cardsStore = useContext(CardsStoreContext);
-  const googleDriveStore = useGoogleDriveStore();
-  const oauthStore = useGoogleOauthStore();
-
-  const [isImported, setIsImported] = useState(false);
-  const [isImporting, setIsImporting] = useState(false);
-  const [importError, setImportError] = useState<string | null>(null);
-
-  async function callback() {
-    if (isImporting || isImported) return;
-
-    setIsImporting(true);
-    setImportError(null);
-
-    let response;
-    try {
-      await oauthStore.authorize();
-
-      for (const fileId in googleDriveStore.fileToLoadRecords) {
-        const file = googleDriveStore.fileToLoadRecords[fileId];
-
-        response = await gapi.client.drive.files.get({
-          fileId: file.fileId,
-          alt: 'media',
-        });
-
-        if (response.status !== 200) {
-          setImportError(`Error fetching file, status: ${response.status}`);
-          setIsImporting(false);
-          return;
-        }
-
-        await parseAndImportSavedFile(cardsStore!, response.body);
-      }
-
-      setIsImported(true);
-    }
-    catch (err) {
-      setIsImporting(false);
-      setImportError(`Error fetching file ${err}`);
-      return;
-    }
-
-    setIsImporting(false);
-  }
+function TagPreview(props: {
+  tag: Tag
+  isSelected: boolean
+  onSelectedChange?: (isSelected: boolean) => void
+}) {
+  const { tag } = props;
 
   return (
-    <Button
-      className="self-start"
-      theme={importError ? ButtonTheme.warning : ButtonTheme.primary}
-      hint={importError || `One-click import (${googleDriveStore.itemsCount} files)`}
-      isLoading={isImporting}
-      disabled={isImported}
-      onClick={callback}
-    >
-      <Repeat />
-    </Button>
+    <div className="flex border border-gray-300 shadow rounded p-2 gap-2">
+      <label className="flex gap-2 cursor-pointer" style={{ color: hueColorConfigToColorString(tag.color) }}>
+        <input
+          type="checkbox"
+          onChange={() => {
+            props.onSelectedChange?.(!props.isSelected);
+          }}
+          className="cursor-pointer"
+          checked={props.isSelected}
+        />
+        {tag.title}
+      </label>
+    </div>
   );
 }
