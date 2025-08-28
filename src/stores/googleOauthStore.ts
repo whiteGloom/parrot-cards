@@ -197,10 +197,9 @@ export function createGoogleOauthStore() {
             if (state.oauthSettings?.keepMeLoggedIn) {
               googleOauthStore.getState().prolongateToken();
             }
-            else {
-              googleOauthStore.getState().expireToken();
-              maybeClearTokenExpirationWaiter();
-            }
+
+            googleOauthStore.getState().expireToken();
+            maybeClearTokenExpirationWaiter();
           }, expiresIn - 1000 * 60);
         }
       }
