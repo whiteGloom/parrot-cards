@@ -38,7 +38,7 @@ export function CardPreview(props: { card: Card, isSelected: boolean, onSelected
                 <Button
                   theme={ButtonTheme.warning}
                   onClick={() => { setIsDeleting(true); }}
-                  hint="Delete the card permanently"
+                  hint="Delete the card"
                 >
                   <Trash />
                 </Button>
@@ -46,7 +46,7 @@ export function CardPreview(props: { card: Card, isSelected: boolean, onSelected
             )}
             {isDeleting && (
               <>
-                <p>Are you sure?</p>
+                <p className="text-red-600">Delete the card?</p>
                 <Button
                   theme={ButtonTheme.warning}
                   onClick={() => {

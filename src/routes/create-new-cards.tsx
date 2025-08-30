@@ -3,13 +3,12 @@ import { Button, ButtonTheme } from '../widgets/buttons';
 import { ArrowLeft } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
-import type { Tag } from '../entities/tags.ts';
-import { hueColorConfigToColorString } from '../utils/color.ts';
 import { Formik } from 'formik';
 import { inlineFor } from '../utils/inline-for.ts';
 import { useCardsStore } from '../stores/cardsStore.ts';
 import { InputWrapped } from '../widgets/input/input-wrapped.tsx';
 import { InputWrapper } from '../widgets/input/intput-wrapper.tsx';
+import { TagPreview } from '../widgets/tags/selectable-tag.tsx';
 
 export const Route = createFileRoute('/create-new-cards')({
   component: RouteComponent,
@@ -229,7 +228,7 @@ function RouteComponent() {
                 {tagsStoreState.tagsIds.map((tagId) => {
                   return (
                     <TagPreview
-                      tag={tagsStoreState.tags[tagId]}
+                      tagId={tagId}
                       key={tagId}
                       isSelected={selectedTags.has(tagId)}
                       onSelectedChange={(isSelected) => {
@@ -295,34 +294,6 @@ function RouteComponent() {
           </div>
         </div>
       </div>
-    </div>
-  )
-  ;
-}
-
-function TagPreview(props: {
-  tag: Tag
-  isSelected: boolean
-  onSelectedChange?: (isSelected: boolean) => void
-}) {
-  const { tag } = props;
-
-  return (
-    <div className="flex border border-gray-300 shadow rounded p-2 gap-2">
-      <label
-        className="flex gap-2 cursor-pointer"
-        style={{ color: hueColorConfigToColorString(tag.color) }}
-      >
-        <input
-          type="checkbox"
-          onChange={() => {
-            props.onSelectedChange?.(!props.isSelected);
-          }}
-          className="cursor-pointer"
-          checked={props.isSelected}
-        />
-        {tag.title}
-      </label>
     </div>
   );
 }

@@ -14,10 +14,9 @@ import {
   X,
 } from 'lucide-react';
 import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
-import type { Tag } from '../entities/tags.ts';
-import { hueColorConfigToColorString } from '../utils/color.ts';
 import { type RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Dropdown, type DropdownImperativeControls } from '../widgets/dropdowns';
+import { TagPreview } from '../widgets/tags/selectable-tag.tsx';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -130,7 +129,7 @@ function Index() {
           <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
             {tagsStoreState.tagsIds.map(tagId => (
               <TagPreview
-                tag={tagsStoreState.tags[tagId]}
+                tagId={tagId}
                 key={tagId}
                 isSelected={tempSelectedTags.has(tagId)}
                 onSelectedChange={(isSelected) => {
@@ -259,33 +258,6 @@ function Index() {
           )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function TagPreview(props: {
-  tag: Tag
-  isSelected: boolean
-  onSelectedChange?: (isSelected: boolean) => void
-}) {
-  const { tag } = props;
-
-  return (
-    <div className="flex border border-gray-300 shadow rounded p-2 gap-2">
-      <label
-        className="flex gap-2 cursor-pointer"
-        style={{ color: hueColorConfigToColorString(tag.color) }}
-      >
-        <input
-          type="checkbox"
-          onChange={() => {
-            props.onSelectedChange?.(!props.isSelected);
-          }}
-          className="cursor-pointer"
-          checked={props.isSelected}
-        />
-        {tag.title}
-      </label>
     </div>
   );
 }
