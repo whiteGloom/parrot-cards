@@ -89,6 +89,9 @@ function Index() {
           <div className="flex gap-2">
             <Button
               hint="Create new cards"
+              onClick={() => {
+                navigate({ to: '/create-new-cards' }).catch(null);
+              }}
             >
               <Plus />
               <span className="ml-1 hidden md:flex">Create new cards</span>
@@ -162,7 +165,7 @@ function Index() {
           className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
         >
           <h2 className="text-xl text-purple-800">Result:</h2>
-          {!isDeletingSelectedCards && (
+          {!isDeletingSelectedCards && !!filteredCardsIds.length && (
             <div className="flex items-center gap-2">
               <Button
                 hint="Select all cards"
