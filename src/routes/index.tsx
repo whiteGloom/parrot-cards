@@ -234,7 +234,7 @@ function Index() {
           )}
           {filteredCardsIds.map(cardId => (
             <CardPreview
-              card={cardsStoreState.cards[cardId]}
+              cardId={cardId}
               key={cardId}
               isSelected={selectedCards.has(cardId)}
               onSelectedChange={(isSelected) => {

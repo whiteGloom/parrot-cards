@@ -1,17 +1,20 @@
 import { Edit, Trash, X } from 'lucide-react';
 import { Button, ButtonTheme } from '../buttons';
-import type { Card } from '../../entities/cards.ts';
 import { useTagsStore } from '../../stores/tagsStore.ts';
 import { hueColorConfigToColorString } from '../../utils/color.ts';
 import { useState } from 'react';
 import { useCardsStore } from '../../stores/cardsStore.ts';
+import { useNavigate } from '@tanstack/react-router';
 
-export function CardPreview(props: { card: Card, isSelected: boolean, onSelectedChange?: (isSelected: boolean) => void }) {
+export function CardPreview(props: { cardId: string, isSelected: boolean, onSelectedChange?: (isSelected: boolean) => void }) {
+  const navigate = useNavigate();
+
   const [isDeleting, setIsDeleting] = useState(false);
   const tagsStore = useTagsStore();
   const cardsStore = useCardsStore();
 
-  const { card } = props;
+  const { cardId } = props;
+  const card = cardsStore.cards[cardId];
 
   return (
     <div className="flex items-start border border-gray-200 rounded bg-white shadow p-2 gap-2">
@@ -32,7 +35,11 @@ export function CardPreview(props: { card: Card, isSelected: boolean, onSelected
           <div className="flex items-center gap-2">
             {!isDeleting && (
               <>
-                <Button theme={ButtonTheme.secondary} hint="Edit the card">
+                <Button
+                  theme={ButtonTheme.secondary}
+                  onClick={() => { navigate({ to: '/edit-card/' + card.id }).catch(null); }}
+                  hint="Edit the card"
+                >
                   <Edit />
                 </Button>
                 <Button
