@@ -2,6 +2,7 @@ import { createStore, useStore } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { createContext, useContext } from 'react';
 import type { Tag, TagDraft } from '../entities/tags.ts';
+import { uid } from 'uid';
 
 export interface TagsStoreFields {
   tags: Record<string, Tag>
@@ -26,7 +27,7 @@ export function createTagsStore() {
         tagsIds: [],
         createTag: (tag: TagDraft) => {
           const newTag: Tag = {
-            id: crypto.randomUUID(),
+            id: uid(16),
             title: tag.title,
             createdAt: Date.now(),
             updatedAt: Date.now(),

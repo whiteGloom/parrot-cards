@@ -57,7 +57,7 @@ export const Dropdown = forwardRef<DropdownImperativeControls, DropdownProps>(
           })}
         </div>
         {isOpened && (
-          <div className={clsx('flex flex-col absolute', props.contentWrapperClassName)}>
+          <div className={clsx('flex flex-col absolute z-10', props.contentWrapperClassName)}>
             {props.buildContent({
               close: () => setIsOpenedWrapped(false),
             })}

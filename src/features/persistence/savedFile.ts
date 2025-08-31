@@ -25,3 +25,17 @@ export async function parseAndImportSavedFile(params: { cardsStore: CardsStore, 
   cardsStore.getState().addCards(fileData.content.cards);
   tagsStore.getState().addTags(fileData.content.tags);
 }
+
+export async function prepareForExport(params: { cardsStore: CardsStore, tagsStore: TagsStore }) {
+  const { cardsStore, tagsStore } = params;
+
+  const fileData: FileVersion_1 = {
+    version: 1,
+    content: {
+      cards: cardsStore.getState().cardsIds.map(id => cardsStore.getState().cards[id]),
+      tags: tagsStore.getState().tagsIds.map(id => tagsStore.getState().tags[id]),
+    },
+  };
+
+  return JSON.stringify(fileData);
+}

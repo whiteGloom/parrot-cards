@@ -3,7 +3,7 @@ import { CardsStoreContext } from '../../stores/cardsStore.ts';
 import { useGoogleDriveStore } from '../../stores/googleDrive.ts';
 import { useGoogleOauthStore } from '../../stores/googleOauthStore.ts';
 import { TagsStoreContext } from '../../stores/tagsStore.ts';
-import { parseAndImportSavedFile } from '../../features/persistence/savedFileImporter.ts';
+import { parseAndImportSavedFile } from '../../features/persistence/savedFile.ts';
 import { Button, ButtonTheme } from './index.tsx';
 import { Repeat } from 'lucide-react';
 

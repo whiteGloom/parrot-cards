@@ -2,6 +2,7 @@ import { createStore, useStore } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { createContext, useContext } from 'react';
 import type { Card, CardDraft } from '../entities/cards.ts';
+import { uid } from 'uid';
 
 export interface CardsStoreFields {
   cards: Record<string, Card>
@@ -26,7 +27,7 @@ export function createCardsStore() {
         cardsIds: [],
         createCard: (card: CardDraft) => {
           const newCard: Card = {
-            id: crypto.randomUUID(),
+            id: uid(16),
             knownLanguageSide: card.knownLanguageSide,
             targetLanguageSide: card.targetLanguageSide,
             tags: card.tags,

@@ -40,7 +40,7 @@ export interface OauthSettings {
   keepMeLoggedIn: boolean
 }
 
-export interface GoogleOauthStoreState {
+export interface GoogleOauthStoreFields {
   oauthSettings?: OauthSettings
   oauthClient?: ReturnType<typeof window.google.accounts.oauth2.initTokenClient>
   authorizationData: AuthorizationInfo
@@ -53,7 +53,7 @@ export interface GoogleOauthStoreActions {
   prolongateToken: () => void
 }
 
-export interface GoogleOauthStoreContent extends GoogleOauthStoreState, GoogleOauthStoreActions {
+export interface GoogleOauthStoreState extends GoogleOauthStoreFields, GoogleOauthStoreActions {
 }
 
 const defaultOauthSettings: Readonly<OauthSettings> = Object.freeze({
@@ -80,8 +80,8 @@ function loadSavedSettings() {
 }
 
 export function createGoogleOauthStore() {
-  const googleOauthStore = createStore<GoogleOauthStoreContent>()(
-    immer((set, getState): GoogleOauthStoreContent => {
+  const googleOauthStore = createStore<GoogleOauthStoreState>()(
+    immer((set, getState): GoogleOauthStoreState => {
       function createTokenClient(clientId: string) {
         return window.google.accounts.oauth2.initTokenClient({
           client_id: clientId,

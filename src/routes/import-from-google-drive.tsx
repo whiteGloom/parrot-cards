@@ -3,11 +3,12 @@ import { Button, ButtonTheme } from '../widgets/buttons';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, RotateCw } from 'lucide-react';
 import { LoadingIndicator } from '../widgets/loading-indicator';
-import { parseAndImportSavedFile } from '../features/persistence/savedFileImporter.ts';
+import { parseAndImportSavedFile } from '../features/persistence/savedFile.ts';
 import { type FileToLoadRecords, useGoogleDriveStore } from '../stores/googleDrive.ts';
 import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
 import { TagsStoreContext } from '../stores/tagsStore.ts';
 import { OneClickImportButton } from '../widgets/buttons/one-click-import.tsx';
+import { loadGoogleDriveFolderId } from '../utils/loadGoogleDriveFolderId.ts';
 
 export const Route = createFileRoute('/import-from-google-drive')({
   component: ImportFromGoogleDrive,
@@ -36,26 +37,7 @@ function ImportFromGoogleDrive() {
   const startLoadingFunc = async () => {
     setLoadingFiles(true);
 
-    let parentFolderId: string | undefined;
-    const existingParentFolder = await gapi.client.drive.files.list({
-      q: 'mimeType = \'application/vnd.google-apps.folder\' and trashed = false and \'root\' in parents and name = \'Parrot Cards\'',
-      fields: 'files(id, name, mimeType, parents)',
-      pageSize: 1,
-    });
-
-    if (!existingParentFolder.result.files?.length) {
-      const newFolder = await gapi.client.drive.files.create({
-        resource: {
-          name: 'Parrot Cards',
-          mimeType: 'application/vnd.google-apps.folder',
-        },
-        fields: 'id, name, mimeType, parents',
-      });
-      parentFolderId = newFolder.result.id;
-    }
-    else {
-      parentFolderId = existingParentFolder.result.files[0].id;
-    }
+    const parentFolderId = await loadGoogleDriveFolderId();
 
     const response = await gapi.client.drive.files.list({
       q: `trashed = false and '${parentFolderId}' in parents`,

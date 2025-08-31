@@ -10,13 +10,13 @@ import {
   SquareCheck,
   TagIcon,
   Trash,
-  Upload,
   X,
 } from 'lucide-react';
 import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
 import { type RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Dropdown, type DropdownImperativeControls } from '../widgets/dropdowns';
 import { TagPreview } from '../widgets/tags/selectable-tag.tsx';
+import { ExportDropdown } from '../widgets/dropdowns/export.tsx';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -108,18 +108,7 @@ function Index() {
                 <span className="ml-1 hidden md:flex">Import</span>
               </>
             </Button>
-            <Button
-              onClick={() => {
-                navigate({ to: '/' }).catch(null);
-              }}
-              hint="Export cards"
-              theme={ButtonTheme.primary}
-            >
-              <>
-                <Upload />
-                <span className="ml-1 hidden md:flex">Export</span>
-              </>
-            </Button>
+            <ExportDropdown />
           </div>
         </div>
         <div
