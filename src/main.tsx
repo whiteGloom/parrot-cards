@@ -9,13 +9,26 @@ import {
 import { type CardsStore, CardsStoreContext, createCardsStore } from './stores/cardsStore.ts';
 import { createGoogleDriveStore, GoogleDriveStoreContext } from './stores/googleDrive.ts';
 import { createTagsStore, TagsStoreContext } from './stores/tagsStore.ts';
+import {
+  createExplicitRevisesStore,
+  type ExplicitRevisesStore,
+  ExplicitRevisesStoreContext,
+} from './stores/explicitRevises.ts';
 
-export type RouterContext = { googleOauthStore: GoogleOauthStore, cardsStore: CardsStore };
+export type RouterContext = {
+  googleOauthStore: GoogleOauthStore
+  cardsStore: CardsStore
+  explicitRevisesStore: ExplicitRevisesStore
+};
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: { googleOauthStore: undefined!, cardsStore: undefined! },
+  context: {
+    googleOauthStore: undefined!,
+    cardsStore: undefined!,
+    explicitRevisesStore: undefined!,
+  },
 });
 
 // Register the router instance for type safety
@@ -32,13 +45,19 @@ declare module '@tanstack/react-router' {
       const googleDriveStore = createGoogleDriveStore();
       const tagsStore = createTagsStore();
       const cardsStore = createCardsStore();
+      const explicitRevisesStore = createExplicitRevisesStore();
 
       createRoot(document.getElementById('root')!).render(
         <GoogleOauthStoreContext value={googleOauthStore}>
           <GoogleDriveStoreContext value={googleDriveStore}>
             <CardsStoreContext value={cardsStore}>
               <TagsStoreContext value={tagsStore}>
-                <RouterProvider router={router} context={{ googleOauthStore, cardsStore }} />
+                <ExplicitRevisesStoreContext value={explicitRevisesStore}>
+                  <RouterProvider
+                    router={router}
+                    context={{ googleOauthStore, cardsStore, explicitRevisesStore }}
+                  />
+                </ExplicitRevisesStoreContext>
               </TagsStoreContext>
             </CardsStoreContext>
           </GoogleDriveStoreContext>

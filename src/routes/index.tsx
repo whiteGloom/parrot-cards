@@ -3,7 +3,7 @@ import { Button, ButtonTheme } from '../widgets/buttons';
 import { CardPreview } from '../widgets/cards/card-preview.tsx';
 import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
 import {
-  Brain,
+  Brain, BrainCircuit,
   Download,
   Eraser,
   Plus, Square,
@@ -17,6 +17,7 @@ import { type RefObject, useContext, useEffect, useMemo, useRef, useState } from
 import { Dropdown, type DropdownImperativeControls } from '../widgets/dropdowns';
 import { TagPreview } from '../widgets/tags/selectable-tag.tsx';
 import { ExportDropdown } from '../widgets/dropdowns/export.tsx';
+import { useExplicitRevisesStore } from '../stores/explicitRevises.ts';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -28,6 +29,7 @@ function Index() {
   const tagsStore = useContext(TagsStoreContext);
   const cardsStoreState = useCardsStore();
   const tagsStoreState = useTagsStore();
+  const explicitRevisesStoreState = useExplicitRevisesStore();
 
   const removeTagsDropdownRef = useRef<DropdownImperativeControls | null>(null);
 
@@ -169,12 +171,45 @@ function Index() {
               >
                 {selectedCards.size == filteredCardsIds.length ? <SquareCheck /> : <Square />}
               </Button>
+              <Button
+                theme={ButtonTheme.primary}
+                onClick={() => {
+                  navigate({
+                    to: '/revise',
+                    search: {
+                      tags: Array.from(selectedTags),
+                    },
+                  }).catch(null);
+                }}
+                hint="Revise found cards"
+              >
+                <>
+                  <Brain />
+                  <span className="ml-1 hidden md:flex">Revise</span>
+                </>
+              </Button>
               {!!selectedCards.size && (
                 <>
-                  <Button theme={ButtonTheme.primary}>
+                  <Button
+                    theme={ButtonTheme.primary}
+                    onClick={() => {
+                      const cardsToRevise = Array.from(selectedCards);
+                      const existingReviseId = explicitRevisesStoreState.findExistingRevise(cardsToRevise);
+
+                      const reviseId = existingReviseId || explicitRevisesStoreState.addRevise(cardsToRevise);
+
+                      navigate({
+                        to: '/revise',
+                        search: {
+                          explicitReviseId: reviseId,
+                        },
+                      }).catch(null);
+                    }}
+                    hint="Revise selected (selection is not stored between sessions)"
+                  >
                     <>
-                      <Brain />
-                      <span className="ml-1 hidden md:flex">Revise</span>
+                      <BrainCircuit />
+                      <span className="ml-1 hidden md:flex">Revise selected</span>
                     </>
                   </Button>
                   <Button

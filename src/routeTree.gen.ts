@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReviseRouteImport } from './routes/revise'
 import { Route as ImportFromGoogleDriveRouteImport } from './routes/import-from-google-drive'
 import { Route as ImportRouteImport } from './routes/import'
 import { Route as GoogleAuthSettingsRouteImport } from './routes/google-auth-settings'
@@ -16,6 +17,11 @@ import { Route as CreateNewCardsRouteImport } from './routes/create-new-cards'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EditCardIdRouteImport } from './routes/edit-card.$id'
 
+const ReviseRoute = ReviseRouteImport.update({
+  id: '/revise',
+  path: '/revise',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ImportFromGoogleDriveRoute = ImportFromGoogleDriveRouteImport.update({
   id: '/import-from-google-drive',
   path: '/import-from-google-drive',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/google-auth-settings': typeof GoogleAuthSettingsRoute
   '/import': typeof ImportRoute
   '/import-from-google-drive': typeof ImportFromGoogleDriveRoute
+  '/revise': typeof ReviseRoute
   '/edit-card/$id': typeof EditCardIdRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/google-auth-settings': typeof GoogleAuthSettingsRoute
   '/import': typeof ImportRoute
   '/import-from-google-drive': typeof ImportFromGoogleDriveRoute
+  '/revise': typeof ReviseRoute
   '/edit-card/$id': typeof EditCardIdRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/google-auth-settings': typeof GoogleAuthSettingsRoute
   '/import': typeof ImportRoute
   '/import-from-google-drive': typeof ImportFromGoogleDriveRoute
+  '/revise': typeof ReviseRoute
   '/edit-card/$id': typeof EditCardIdRoute
 }
 export interface FileRouteTypes {
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/google-auth-settings'
     | '/import'
     | '/import-from-google-drive'
+    | '/revise'
     | '/edit-card/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/google-auth-settings'
     | '/import'
     | '/import-from-google-drive'
+    | '/revise'
     | '/edit-card/$id'
   id:
     | '__root__'
@@ -96,6 +107,7 @@ export interface FileRouteTypes {
     | '/google-auth-settings'
     | '/import'
     | '/import-from-google-drive'
+    | '/revise'
     | '/edit-card/$id'
   fileRoutesById: FileRoutesById
 }
@@ -105,11 +117,19 @@ export interface RootRouteChildren {
   GoogleAuthSettingsRoute: typeof GoogleAuthSettingsRoute
   ImportRoute: typeof ImportRoute
   ImportFromGoogleDriveRoute: typeof ImportFromGoogleDriveRoute
+  ReviseRoute: typeof ReviseRoute
   EditCardIdRoute: typeof EditCardIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/revise': {
+      id: '/revise'
+      path: '/revise'
+      fullPath: '/revise'
+      preLoaderRoute: typeof ReviseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/import-from-google-drive': {
       id: '/import-from-google-drive'
       path: '/import-from-google-drive'
@@ -161,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   GoogleAuthSettingsRoute: GoogleAuthSettingsRoute,
   ImportRoute: ImportRoute,
   ImportFromGoogleDriveRoute: ImportFromGoogleDriveRoute,
+  ReviseRoute: ReviseRoute,
   EditCardIdRoute: EditCardIdRoute,
 }
 export const routeTree = rootRouteImport

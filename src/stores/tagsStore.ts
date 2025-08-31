@@ -27,7 +27,7 @@ export function createTagsStore() {
         tagsIds: [],
         createTag: (tag: TagDraft) => {
           const newTag: Tag = {
-            id: uid(16),
+            id: uid(),
             title: tag.title,
             createdAt: Date.now(),
             updatedAt: Date.now(),
