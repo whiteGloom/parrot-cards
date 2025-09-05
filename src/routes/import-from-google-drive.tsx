@@ -9,6 +9,7 @@ import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
 import { TagsStoreContext } from '../stores/tagsStore.ts';
 import { OneClickImportButton } from '../widgets/buttons/one-click-import.tsx';
 import { loadGoogleDriveFolderId } from '../utils/loadGoogleDriveFolderId.ts';
+import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
 
 export const Route = createFileRoute('/import-from-google-drive')({
   component: ImportFromGoogleDrive,
@@ -76,85 +77,79 @@ function ImportFromGoogleDrive() {
   }, [startLoadingFuncForMount]);
 
   return (
-    <div
-      className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300"
-    >
-      <div
-        className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded md:min-w-3xl min-w-full"
-      >
-        <div className="flex gap-4 items-center">
-          <Button
-            className="self-start"
-            theme={ButtonTheme.secondary}
-            onClick={() => {
-              navigate({
-                to: '/import',
-              }).catch(null);
-            }}
-          >
-            <ArrowLeft />
-          </Button>
-          <h1 className="text-2xl text-purple-800">Import from Google Drive</h1>
-        </div>
-        <div className="flex row gap-2">
-          <Button isLoading={isLoadingFiles} onClick={startLoadingFunc}>
-            <RotateCw size={16} />
-          </Button>
-          <p className="grow text-center text-gray-800">Existing files with data:</p>
-          <OneClickImportButton iconSize={16} />
-        </div>
-        {isLoadingFiles
-          && <div className="border border-gray-200 bg-white rounded p-2 flex flex-col gap-3"><p>Loading files...</p></div>}
-        {!isLoadingFiles && files.length === 0
-          && <div className="border border-gray-200 bg-white rounded p-2 flex flex-col gap-3"><p className="text-gray-600">No files found in &quot;Parrot Cards&quot; folder</p></div>}
-        {!isLoadingFiles && files.length > 0 && (
-          <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
-            {files.map(file => (
-              <FileCard file={file} key={file.id} />
-            ))}
-          </div>
-        )}
-        {!!missingFiles.length && (
-          <>
-            <p className="text-red-800">Some of one-click import files are missing!</p>
-            <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
-              {missingFiles.map(file => (
-                <Button
-                  key={file.fileId}
-                  theme={ButtonTheme.warning}
-                  hint="Remove from one-click import list"
-                  onClick={() => {
-                    setMissingFiles(missingFiles.filter(f => f.fileId !== file.fileId));
-                    googleDriveStore.removeFileToLoad(file.fileId);
-                  }}
-                >
-                  {file.fileName}
-                  {' '}
-                  (ID:
-                  {file.fileId}
-                  )
-                </Button>
-              ))}
-            </div>
-          </>
-        )}
-        <hr className="border-gray-200" />
-        <p className="text-gray-800">
-          Loaded:
-          {' '}
-          {cardsStore.cardsIds.length}
-          {' '}
-          cards
-        </p>
+    <PageContentWrapper contentWrapperClassName="bg-gray-50 p-4 rounded">
+      <div className="flex gap-4 items-center">
         <Button
+          className="self-start"
+          theme={ButtonTheme.secondary}
           onClick={() => {
-            navigate({ to: '/' }).catch(null);
+            navigate({
+              to: '/import',
+            }).catch(null);
           }}
         >
-          Go home
+          <ArrowLeft />
         </Button>
+        <h1 className="text-2xl text-purple-800">Import from Google Drive</h1>
       </div>
-    </div>
+      <div className="flex row gap-2">
+        <Button isLoading={isLoadingFiles} onClick={startLoadingFunc}>
+          <RotateCw size={16} />
+        </Button>
+        <p className="grow text-center text-gray-800">Existing files with data:</p>
+        <OneClickImportButton iconSize={16} />
+      </div>
+      {isLoadingFiles
+        && <div className="border border-gray-200 bg-white rounded p-2 flex flex-col gap-3"><p>Loading files...</p></div>}
+      {!isLoadingFiles && files.length === 0
+        && <div className="border border-gray-200 bg-white rounded p-2 flex flex-col gap-3"><p className="text-gray-600">No files found in &quot;Parrot Cards&quot; folder</p></div>}
+      {!isLoadingFiles && files.length > 0 && (
+        <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
+          {files.map(file => (
+            <FileCard file={file} key={file.id} />
+          ))}
+        </div>
+      )}
+      {!!missingFiles.length && (
+        <>
+          <p className="text-red-800">Some of one-click import files are missing!</p>
+          <div className="flex flex-col gap-2 max-h-64 overflow-y-auto">
+            {missingFiles.map(file => (
+              <Button
+                key={file.fileId}
+                theme={ButtonTheme.warning}
+                hint="Remove from one-click import list"
+                onClick={() => {
+                  setMissingFiles(missingFiles.filter(f => f.fileId !== file.fileId));
+                  googleDriveStore.removeFileToLoad(file.fileId);
+                }}
+              >
+                {file.fileName}
+                {' '}
+                (ID:
+                {file.fileId}
+                )
+              </Button>
+            ))}
+          </div>
+        </>
+      )}
+      <hr className="border-gray-200" />
+      <p className="text-gray-800">
+        Loaded:
+        {' '}
+        {cardsStore.cardsIds.length}
+        {' '}
+        cards
+      </p>
+      <Button
+        onClick={() => {
+          navigate({ to: '/' }).catch(null);
+        }}
+      >
+        Go home
+      </Button>
+    </PageContentWrapper>
   );
 }
 

@@ -5,19 +5,20 @@ import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
 import {
   Brain, BrainCircuit,
   Download,
-  Eraser,
   Plus, Square,
   SquareCheck,
-  TagIcon,
   Trash,
   X,
 } from 'lucide-react';
 import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
-import { type RefObject, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Dropdown, type DropdownImperativeControls } from '../widgets/dropdowns';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { type DropdownImperativeControls } from '../widgets/dropdowns';
 import { TagPreview } from '../widgets/tags/selectable-tag.tsx';
 import { ExportDropdown } from '../widgets/dropdowns/export.tsx';
 import { useExplicitRevisesStore } from '../stores/explicitRevises.ts';
+import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
+import { AddTagToCardsDropdown } from '../widgets/dropdowns/add-tag-to-cards.tsx';
+import { RemoveTagFromCardsDropdown } from '../widgets/dropdowns/remove-tag-from-cards.tsx';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -79,10 +80,8 @@ function Index() {
   }, [cardsStore, selectedCards, selectedTags, tagsStore]);
 
   return (
-    <div
-      className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300 p-3"
-    >
-      <div className="flex flex-col gap-4 md:min-w-3xl min-w-full">
+    <PageContentWrapper>
+      <>
         <div
           className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
         >
@@ -281,162 +280,7 @@ function Index() {
             <p className="text-gray-600">No cards loaded</p>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function RemoveTagFromCardsDropdown(props: {
-  refToSet: RefObject<DropdownImperativeControls | null>
-  cardsIds: Set<string>
-}) {
-  return (
-    <Dropdown
-      ref={props.refToSet}
-      buildButton={buttonProps => (
-        <Button theme={ButtonTheme.secondary} onClick={buttonProps.toggleOpened}>
-          <>
-            <Eraser />
-            <span className="ml-1 hidden md:flex">Remove tag</span>
-          </>
-        </Button>
-      )}
-      buildContent={(contentProps) => {
-        return (
-          <RemoveTagDropdownContent cardsIds={props.cardsIds} closeDropdown={contentProps.close} />
-        );
-      }}
-    />
-  );
-}
-
-function RemoveTagDropdownContent(props: {
-  closeDropdown: () => void
-  cardsIds: Set<string>
-}) {
-  const { cardsIds } = props;
-  const cardsStoreState = useCardsStore();
-  const tagsStoreState = useTagsStore();
-
-  const tagsOfCards = useMemo(() => {
-    const set = new Set<string>();
-    for (const cardId of cardsIds) {
-      const card = cardsStoreState.cards[cardId];
-      for (const tagId of card.tags) {
-        set.add(tagId);
-      }
-    }
-
-    return Array.from(set);
-  }, [cardsIds, cardsStoreState.cards]);
-
-  return (
-    <div className="flex flex-col gap-2 p-2 shadow-xl/30 bg-white rounded border border-gray-200 max-h-60 overflow-y-auto">
-      {tagsOfCards.map((tagId) => {
-        const tag = tagsStoreState.tags[tagId];
-        return (
-          <Button
-            theme={ButtonTheme.secondary}
-            key={tag.id}
-            onClick={() => {
-              props.closeDropdown();
-
-              props.cardsIds.forEach((cardId) => {
-                cardsStoreState.updateCard(cardId, {
-                  tags: cardsStoreState.cards[cardId].tags.filter(tagId => tagId !== tag.id),
-                });
-              });
-            }}
-          >
-            {tag.title}
-          </Button>
-        );
-      })}
-    </div>
-  );
-}
-
-function AddTagToCardsDropdown(props: {
-  refToSet: RefObject<DropdownImperativeControls | null>
-  cardsIds: Set<string>
-}) {
-  return (
-    <Dropdown
-      ref={props.refToSet}
-      buildButton={buttonProps => (
-        <Button theme={ButtonTheme.secondary} onClick={buttonProps.toggleOpened}>
-          <>
-            <TagIcon />
-            <span className="ml-1 hidden md:flex">Add tag</span>
-          </>
-        </Button>
-      )}
-      buildContent={(contentProps) => {
-        return (
-          <AddTagToCardsDropdownContent cardsIds={props.cardsIds} closeDropdown={contentProps.close} />
-        );
-      }}
-    />
-  );
-}
-
-function AddTagToCardsDropdownContent(props: {
-  closeDropdown: () => void
-  cardsIds: Set<string>
-}) {
-  const { cardsIds } = props;
-  const cardsStoreState = useCardsStore();
-  const tagsStoreState = useTagsStore();
-
-  const missingTagsOfCards = useMemo(() => {
-    const cardsCount = cardsIds.size;
-    const tagsToAdd = new Set<string>();
-    const seenTags = new Map<string, number>();
-
-    for (const cardId of cardsIds) {
-      const card = cardsStoreState.cards[cardId];
-      for (const tagId of card.tags) {
-        seenTags.set(tagId, (seenTags.get(tagId) || 0) + 1);
-      }
-    }
-
-    for (const tagId of tagsStoreState.tagsIds) {
-      if (seenTags.get(tagId) !== cardsCount) {
-        tagsToAdd.add(tagId);
-      }
-    }
-
-    return Array.from(tagsToAdd);
-  }, [cardsIds, cardsStoreState.cards, tagsStoreState.tagsIds]);
-
-  return (
-    <div className="flex flex-col gap-2 p-2 shadow-xl/30 bg-white rounded border border-gray-200 max-h-60 overflow-y-auto">
-      {missingTagsOfCards.map((tagId) => {
-        const tag = tagsStoreState.tags[tagId];
-        return (
-          <Button
-            theme={ButtonTheme.secondary}
-            key={tag.id}
-            onClick={() => {
-              props.closeDropdown();
-
-              props.cardsIds.forEach((cardId) => {
-                const card = cardsStoreState.cards[cardId];
-
-                if (card.tags.includes(tag.id)) {
-                  return;
-                }
-
-                cardsStoreState.updateCard(cardId, {
-                  tags: [...cardsStoreState.cards[cardId].tags, tag.id],
-                });
-              });
-            }}
-          >
-            {tag.title}
-          </Button>
-        );
-      })}
-    </div>
+      </>
+    </PageContentWrapper>
   );
 }

@@ -3,6 +3,7 @@ import { useGoogleOauthStore } from '../stores/googleOauthStore.ts';
 import { Formik } from 'formik';
 import { Button, ButtonTheme } from '../widgets/buttons';
 import { ArrowLeft } from 'lucide-react';
+import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
 
 export const Route = createFileRoute('/google-auth-settings')({
   component: Index,
@@ -13,8 +14,8 @@ function Index() {
   const navigate = useNavigate();
 
   return (
-    <div className="h-full flex flex-col items-center justify-center bg-gradient-to-tr from-purple-300 to-blue-300">
-      <div className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded md:min-w-3xl min-w-full">
+    <PageContentWrapper>
+      <>
         <div className="flex gap-4 items-center">
           <Button
             className="self-start"
@@ -104,7 +105,7 @@ function Index() {
               </Button>
             )
           : <p className="mt-4 text-red-500">Google App's Client ID isn't set</p>}
-      </div>
-    </div>
+      </>
+    </PageContentWrapper>
   );
 }

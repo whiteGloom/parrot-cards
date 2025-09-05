@@ -1,8 +1,9 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { useExplicitRevisesStore } from '../stores/explicitRevises.ts';
 import { useMemo, useState } from 'react';
 import { useCardsStore } from '../stores/cardsStore.ts';
 import { Button, ButtonTheme } from '../widgets/buttons';
+import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
 
 export type ReviseSearchParams = {
   tags?: string[]
@@ -25,6 +26,8 @@ export const Route = createFileRoute('/revise')({
 });
 
 function Revise() {
+  const navigate = useNavigate();
+
   const explicitRevisesStoreState = useExplicitRevisesStore();
   const cardsStoreState = useCardsStore();
 
@@ -54,156 +57,205 @@ function Revise() {
   ]);
 
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
-  const [visibleCardSide, setVisibleCardSide] = useState<'target' | 'known'>('target');
+  const [defaultVisibleCardSide, setDefaultVisibleCardSide] = useState<'target' | 'known'>('target');
   const [isCardFlipped, setIsCardFlipped] = useState(false);
-  const [rememberedCards, setRememberedCards] = useState<Set<string>>(new Set());
+  const [rememberedCardsSet, setRememberedCardsSet] = useState<Set<string>>(new Set());
 
   if (!filteredCardsIds.length) {
     return (
-      <div
-        className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300 p-3"
-      >
-        <div className="flex flex-col gap-4 md:min-w-3xl min-w-full">
-          <div
-            className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
-          >
-            <p className="text-center text-2xl">
-              No cards found
-            </p>
-          </div>
+      <PageContentWrapper>
+        <div
+          className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
+        >
+          <p className="text-center text-3xl">
+            Revise cards
+          </p>
+          <p className="text-center text-2xl text-red-600">
+            No cards found!
+          </p>
         </div>
-      </div>
+        <Button
+          theme={ButtonTheme.primary}
+          onClick={() => {
+            navigate({ to: '/' }).catch(null);
+          }}
+        >
+          Go Home
+        </Button>
+      </PageContentWrapper>
     );
   }
 
   if (currentCardIndex < 0) {
     return (
-      <div
-        className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300 p-3"
-      >
-        <div className="flex flex-col gap-4 md:min-w-3xl min-w-full">
-          <div
-            className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
+      <PageContentWrapper>
+        <div
+          className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
+        >
+          <p className="text-center text-3xl">
+            Revise cards
+          </p>
+          <p className="text-xl">Settings</p>
+          <p>Visible card side:</p>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="revise-mode"
+              id="revise-mode-1"
+              checked={defaultVisibleCardSide === 'target'}
+              value="target"
+              onChange={() => { setDefaultVisibleCardSide('target'); }}
+            />
+            Target language
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="revise-mode"
+              id="revise-mode-1"
+              checked={defaultVisibleCardSide === 'known'}
+              value="known"
+              onChange={() => { setDefaultVisibleCardSide('known'); }}
+            />
+            Known language
+          </label>
+          <Button
+            onClick={() => {
+              setCurrentCardIndex(currentCardIndex + 1);
+            }}
           >
-            <p className="text-center text-2xl">
-              Revise cards
-            </p>
-            <p className="text-xl">Settings</p>
-            <p>Visible card side:</p>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="revise-mode"
-                id="revise-mode-1"
-                checked={visibleCardSide === 'target'}
-                value="target"
-                onChange={() => { setVisibleCardSide('target'); }}
-              />
-              Target language
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="revise-mode"
-                id="revise-mode-1"
-                checked={visibleCardSide === 'known'}
-                value="known"
-                onChange={() => { setVisibleCardSide('known'); }}
-              />
-              Known language
-            </label>
-            <Button
-              onClick={() => {
-                setCurrentCardIndex(currentCardIndex + 1);
-              }}
-            >
-              Start
-            </Button>
-          </div>
+            Start
+          </Button>
         </div>
-      </div>
+      </PageContentWrapper>
     );
   }
 
   if (currentCardIndex === filteredCardsIds.length) {
+    const rememberedCards = Array.from(rememberedCardsSet);
+    const forgottenCards = Array.from(filteredCardsIds.filter(cardId => !rememberedCardsSet.has(cardId)));
     return (
-      <div
-        className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300 p-3"
-      >
-        <div className="flex flex-col gap-4 md:min-w-3xl min-w-full">
-          <div
-            className="flex flex-col bg-gray-50 p-4 gap-2 justify-center border border-gray-200 rounded"
-          >
-            <p className="text-center text-2xl">
-              Remembered cards:
-            </p>
-            {Array.from(rememberedCards).map(cardId => (
-              <p key={cardId}>
-                {cardsStoreState.cards[cardId].knownLanguageSide.title}
-                {' — '}
-                {cardsStoreState.cards[cardId].targetLanguageSide.title}
-
-              </p>
-            ))}
-            <p className="text-center text-2xl">
-              Forgotten cards:
-            </p>
-            {Array.from(filteredCardsIds.filter(cardId => !rememberedCards.has(cardId))).map(cardId => (
-              <p key={cardId}>
-                {cardsStoreState.cards[cardId].knownLanguageSide.title}
-                {' — '}
-                {cardsStoreState.cards[cardId].targetLanguageSide.title}
-              </p>
-            ))}
+      <PageContentWrapper>
+        <div
+          className="flex flex-col bg-gray-50 p-4 gap-2 justify-center border border-gray-200 rounded"
+        >
+          <p className="text-center text-3xl">
+            Revise results
+          </p>
+          <div className="flex gap-3">
+            <Button
+              className="grow"
+              onClick={() => {
+                setCurrentCardIndex(-1);
+                setDefaultVisibleCardSide('target');
+                setIsCardFlipped(false);
+                setRememberedCardsSet(new Set());
+              }}
+            >
+              Restart
+            </Button>
+            <Button
+              className="grow"
+              theme={ButtonTheme.secondary}
+              onClick={() => {
+                navigate({ to: '/' }).catch(null);
+              }}
+            >
+              Go Home
+            </Button>
           </div>
+          {!!rememberedCards.length && (
+            <>
+              <p className="text-center text-2xl">
+                {'Remembered cards: '}
+                {rememberedCards.length}
+              </p>
+              <details>
+                <summary>Show cards</summary>
+                {rememberedCards.map(cardId => (
+                  <p key={cardId}>
+                    {cardsStoreState.cards[cardId].knownLanguageSide.title}
+                    {' — '}
+                    {cardsStoreState.cards[cardId].targetLanguageSide.title}
+
+                  </p>
+                ))}
+              </details>
+            </>
+          )}
+          {!!forgottenCards.length && (
+            <>
+              <p className="text-center text-2xl">
+                {'Forgotten cards: '}
+                {forgottenCards.length}
+              </p>
+              <details>
+                <summary>Show cards</summary>
+                {forgottenCards.map(cardId => (
+                  <p key={cardId}>
+                    {cardsStoreState.cards[cardId].knownLanguageSide.title}
+                    {' — '}
+                    {cardsStoreState.cards[cardId].targetLanguageSide.title}
+                  </p>
+                ))}
+              </details>
+            </>
+          )}
         </div>
-      </div>
+      </PageContentWrapper>
     );
   }
 
   const cardId = filteredCardsIds[currentCardIndex];
 
   return (
-    <div
-      className="flex flex-col min-h-full justify-center items-center bg-gradient-to-tr from-purple-300 to-blue-300 p-3"
-    >
-      <div className="flex flex-col gap-4 md:min-w-3xl min-w-full">
-        <div
-          className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
-        >
-          <Card
-            key={cardId}
-            cardId={cardId}
-            defaultSide={visibleCardSide}
-            onFlip={() => {
-              setIsCardFlipped(true);
-            }}
-          />
-          {isCardFlipped && (
-            <>
-              <Button
-                onClick={() => {
-                  setCurrentCardIndex(currentCardIndex + 1);
-                  setRememberedCards(new Set([...rememberedCards, cardId]));
-                  setIsCardFlipped(false);
-                }}
-              >
-                I remember it
-              </Button>
-              <Button
-                theme={ButtonTheme.warning}
-                onClick={() => {
-                  setCurrentCardIndex(currentCardIndex + 1);
-                  setIsCardFlipped(false);
-                }}
-              >
-                I do not remember it
-              </Button>
-            </>
-          )}
-        </div>
+    <PageContentWrapper>
+      <div
+        className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
+      >
+        <p className="text-center text-3xl">
+          Revise cards
+        </p>
+        <p className="text-center">
+          {'Card '}
+          {currentCardIndex + 1}
+          {' of '}
+          {filteredCardsIds.length}
+        </p>
+        <Card
+          key={cardId}
+          cardId={cardId}
+          defaultSide={defaultVisibleCardSide}
+          onFlip={() => {
+            setIsCardFlipped(true);
+          }}
+        />
+        {isCardFlipped && (
+          <div className="flex gap-2">
+            <Button
+              className="grow"
+              theme={ButtonTheme.warning}
+              onClick={() => {
+                setCurrentCardIndex(currentCardIndex + 1);
+                setIsCardFlipped(false);
+              }}
+            >
+              I do not remember it
+            </Button>
+            <Button
+              className="grow"
+              onClick={() => {
+                setCurrentCardIndex(currentCardIndex + 1);
+                setRememberedCardsSet(new Set([...rememberedCardsSet, cardId]));
+                setIsCardFlipped(false);
+              }}
+            >
+              I remember it
+            </Button>
+          </div>
+        )}
       </div>
-    </div>
+    </PageContentWrapper>
   );
 }
 
@@ -234,6 +286,7 @@ function Card(props: { cardId: string, defaultSide?: 'target' | 'known', onFlip?
       }}
       className="flex flex-col gap-2 p-4 border border-gray-200 rounded shadow-md cursor-pointer"
     >
+      <p className="text-center uppercase text-sm text-gray-600">{currentSide == 'known' ? 'Known language' : 'Target language'}</p>
       <p className="text-center text-2xl">{currentSideData.title}</p>
       {currentSideData.description && <p className="text-center">{currentSideData.description}</p>}
       {currentSideData.hints.map(hint => (
