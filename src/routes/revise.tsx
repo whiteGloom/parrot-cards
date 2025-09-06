@@ -4,8 +4,11 @@ import { useMemo, useRef, useState } from 'react';
 import { useCardsStore } from '../stores/cardsStore.ts';
 import { Button, ButtonTheme } from '../widgets/buttons';
 import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Square, SquareCheck } from 'lucide-react';
 import clsx from 'clsx';
+import { CardPreview } from '../widgets/cards/card-preview.tsx';
+import { AddTagToCardsDropdown } from '../widgets/dropdowns/add-tag-to-cards.tsx';
+import { RemoveTagFromCardsDropdown } from '../widgets/dropdowns/remove-tag-from-cards.tsx';
 
 export type ReviseSearchParams = {
   tags?: string[]
@@ -61,6 +64,8 @@ function Revise() {
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [defaultVisibleCardSide, setDefaultVisibleCardSide] = useState<'target' | 'known'>('target');
   const [rememberedCardsSet, setRememberedCardsSet] = useState<Set<string>>(new Set());
+  const [selectedRememberedCards, setSelectedRememberedCards] = useState<Set<string>>(new Set<string>());
+  const [selectedForgottenCards, setSelectedForgottenCards] = useState<Set<string>>(new Set<string>());
 
   if (!filteredCardsIds.length) {
     return (
@@ -105,7 +110,9 @@ function Revise() {
               id="revise-mode-1"
               checked={defaultVisibleCardSide === 'target'}
               value="target"
-              onChange={() => { setDefaultVisibleCardSide('target'); }}
+              onChange={() => {
+                setDefaultVisibleCardSide('target');
+              }}
             />
             Target language
           </label>
@@ -116,7 +123,9 @@ function Revise() {
               id="revise-mode-1"
               checked={defaultVisibleCardSide === 'known'}
               value="known"
-              onChange={() => { setDefaultVisibleCardSide('known'); }}
+              onChange={() => {
+                setDefaultVisibleCardSide('known');
+              }}
             />
             Known language
           </label>
@@ -135,6 +144,7 @@ function Revise() {
   if (currentCardIndex === filteredCardsIds.length) {
     const rememberedCards = Array.from(rememberedCardsSet);
     const forgottenCards = Array.from(filteredCardsIds.filter(cardId => !rememberedCardsSet.has(cardId)));
+
     return (
       <PageContentWrapper>
         <div
@@ -170,15 +180,50 @@ function Revise() {
                 {'Remembered cards: '}
                 {rememberedCards.length}
               </p>
+              <div className="flex gap-2">
+                <Button
+                  className="self-start"
+                  theme={ButtonTheme.secondary}
+                  onClick={() => {
+                    if (selectedRememberedCards.size == rememberedCards.length) {
+                      setSelectedRememberedCards(new Set());
+                    }
+                    else {
+                      setSelectedRememberedCards(new Set(rememberedCards));
+                    }
+                  }}
+                >
+                  {selectedRememberedCards.size == rememberedCards.length ? <SquareCheck /> : <Square />}
+                </Button>
+                {!!selectedRememberedCards.size && (
+                  <>
+                    <AddTagToCardsDropdown cardsIds={selectedRememberedCards} />
+                    <RemoveTagFromCardsDropdown cardsIds={selectedRememberedCards} />
+                  </>
+                )}
+              </div>
               <details>
                 <summary>Show cards</summary>
                 {rememberedCards.map(cardId => (
-                  <p key={cardId}>
-                    {cardsStoreState.cards[cardId].knownLanguageSide.title}
-                    {' — '}
-                    {cardsStoreState.cards[cardId].targetLanguageSide.title}
-
-                  </p>
+                  <CardPreview
+                    cardId={cardId}
+                    isSelected={selectedRememberedCards.has(cardId)}
+                    onSelectedChange={(isSelected) => {
+                      if (isSelected) {
+                        setSelectedRememberedCards(new Set([...selectedRememberedCards, cardId]));
+                      }
+                      else {
+                        const newValues = [];
+                        for (const otherCardId of selectedRememberedCards) {
+                          if (otherCardId !== cardId) {
+                            newValues.push(otherCardId);
+                          }
+                        }
+                        setSelectedRememberedCards(new Set(newValues));
+                      }
+                    }}
+                    isEditable={false}
+                  />
                 ))}
               </details>
             </>
@@ -189,15 +234,53 @@ function Revise() {
                 {'Forgotten cards: '}
                 {forgottenCards.length}
               </p>
+              <div className="flex gap-2">
+                <Button
+                  className="self-start"
+                  theme={ButtonTheme.secondary}
+                  onClick={() => {
+                    if (selectedForgottenCards.size == forgottenCards.length) {
+                      setSelectedForgottenCards(new Set());
+                    }
+                    else {
+                      setSelectedForgottenCards(new Set(forgottenCards));
+                    }
+                  }}
+                >
+                  {selectedForgottenCards.size == forgottenCards.length ? <SquareCheck /> : <Square />}
+                </Button>
+                {!!selectedForgottenCards.size && (
+                  <>
+                    <AddTagToCardsDropdown cardsIds={selectedForgottenCards} />
+                    <RemoveTagFromCardsDropdown cardsIds={selectedForgottenCards} />
+                  </>
+                )}
+              </div>
               <details>
                 <summary>Show cards</summary>
-                {forgottenCards.map(cardId => (
-                  <p key={cardId}>
-                    {cardsStoreState.cards[cardId].knownLanguageSide.title}
-                    {' — '}
-                    {cardsStoreState.cards[cardId].targetLanguageSide.title}
-                  </p>
-                ))}
+                <div className="flex flex-col gap-2">
+                  {forgottenCards.map(cardId => (
+                    <CardPreview
+                      cardId={cardId}
+                      isSelected={selectedForgottenCards.has(cardId)}
+                      onSelectedChange={(isSelected) => {
+                        if (isSelected) {
+                          setSelectedForgottenCards(new Set([...selectedForgottenCards, cardId]));
+                        }
+                        else {
+                          const newValues = [];
+                          for (const otherCardId of selectedForgottenCards) {
+                            if (otherCardId !== cardId) {
+                              newValues.push(otherCardId);
+                            }
+                          }
+                          setSelectedForgottenCards(new Set(newValues));
+                        }
+                      }}
+                      isEditable={false}
+                    />
+                  ))}
+                </div>
               </details>
             </>
           )}
@@ -314,9 +397,23 @@ function Card(props: {
         !props.isVisible && 'cursor-pointer',
         props.className])}
     >
-      <p className="text-center uppercase text-sm text-gray-600">{props.side == 'known' ? 'Known language' : 'Target language'}</p>
-      <p className={clsx(['text-center text-2xl', !isVisible && 'blur-sm'])}>{isVisible ? cardSideData.title : fakeTitle.current}</p>
-      {cardSideData.description && <p className={clsx(['text-center', !isVisible && 'blur-sm'])}>{isVisible ? cardSideData.description : fakeDescription.current}</p>}
+      <p
+        className="text-center uppercase text-sm text-gray-600"
+      >
+        {props.side == 'known' ? 'Known language' : 'Target language'}
+      </p>
+      <p
+        className={clsx(['text-center text-2xl', !isVisible && 'blur-sm'])}
+      >
+        {isVisible ? cardSideData.title : fakeTitle.current}
+      </p>
+      {cardSideData.description && (
+        <p
+          className={clsx(['text-center', !isVisible && 'blur-sm'])}
+        >
+          {isVisible ? cardSideData.description : fakeDescription.current}
+        </p>
+      )}
       {props.isVisible && !!cardSideData.hints.length && (
         <>
           <p className="text-center text-gray-600">Hints:</p>

@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { type DropdownImperativeControls } from '../widgets/dropdowns';
 import { TagPreview } from '../widgets/tags/selectable-tag.tsx';
 import { ExportDropdown } from '../widgets/dropdowns/export.tsx';
 import { useExplicitRevisesStore } from '../stores/explicitRevises.ts';
@@ -32,8 +31,6 @@ function Index() {
   const tagsStoreState = useTagsStore();
   const explicitRevisesStoreState = useExplicitRevisesStore();
 
-  const removeTagsDropdownRef = useRef<DropdownImperativeControls | null>(null);
-
   const [tempSelectedTags, setTempSelectedTags] = useState<Set<string>>(new Set<string>());
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set<string>());
 
@@ -44,10 +41,6 @@ function Index() {
   if (oldSelectedCards.current !== selectedCards) {
     if (isDeletingSelectedCards) {
       setIsDeletingSelectedCards(false);
-    }
-
-    if (removeTagsDropdownRef.current?.isOpened) {
-      removeTagsDropdownRef.current.setIsOpened(false);
     }
 
     oldSelectedCards.current = selectedCards;
@@ -224,11 +217,9 @@ function Index() {
                   </Button>
                   <RemoveTagFromCardsDropdown
                     cardsIds={selectedCards}
-                    refToSet={removeTagsDropdownRef}
                   />
                   <AddTagToCardsDropdown
                     cardsIds={selectedCards}
-                    refToSet={removeTagsDropdownRef}
                   />
                 </>
               )}

@@ -1,4 +1,4 @@
-import { type RefObject, useMemo } from 'react';
+import { type RefObject, useMemo, useRef } from 'react';
 import { Dropdown, type DropdownImperativeControls } from './index.tsx';
 import { Button, ButtonTheme } from '../buttons';
 import { TagIcon } from 'lucide-react';
@@ -34,6 +34,12 @@ function AddTagToCardsDropdownContent(props: {
   cardsIds: Set<string>
 }) {
   const { cardsIds } = props;
+  const oldCardsIds = useRef(cardsIds);
+
+  if (oldCardsIds.current !== cardsIds) {
+    props.closeDropdown();
+  }
+
   const cardsStoreState = useCardsStore();
   const tagsStoreState = useTagsStore();
 

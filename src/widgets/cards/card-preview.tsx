@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { useCardsStore } from '../../stores/cardsStore.ts';
 import { useNavigate } from '@tanstack/react-router';
 
-export function CardPreview(props: { cardId: string, isSelected: boolean, onSelectedChange?: (isSelected: boolean) => void }) {
+export function CardPreview(props: { cardId: string, isSelected: boolean, onSelectedChange?: (isSelected: boolean) => void, isEditable?: boolean }) {
   const navigate = useNavigate();
 
   const [isDeleting, setIsDeleting] = useState(false);
   const tagsStore = useTagsStore();
   const cardsStore = useCardsStore();
 
-  const { cardId } = props;
+  const { cardId, isEditable = true } = props;
   const card = cardsStore.cards[cardId];
 
   return (
@@ -32,49 +32,55 @@ export function CardPreview(props: { cardId: string, isSelected: boolean, onSele
             <p>{card.knownLanguageSide.title}</p>
           </div>
           <div className="grow" />
-          <div className="flex items-center gap-2">
-            {!isDeleting && (
-              <>
-                <Button
-                  theme={ButtonTheme.secondary}
-                  onClick={() => { navigate({ to: '/edit-card/' + card.id }).catch(null); }}
-                  hint="Edit the card"
-                >
-                  <Edit />
-                </Button>
-                <Button
-                  theme={ButtonTheme.warning}
-                  onClick={() => { setIsDeleting(true); }}
-                  hint="Delete the card"
-                >
-                  <Trash />
-                </Button>
-              </>
-            )}
-            {isDeleting && (
-              <>
-                <p className="text-red-600">Delete the card?</p>
-                <Button
-                  theme={ButtonTheme.warning}
-                  onClick={() => {
-                    cardsStore.removeCards([card.id]);
-                  }}
-                  hint="Cancel deleting"
-                >
-                  <Trash />
-                </Button>
-                <Button
-                  theme={ButtonTheme.primary}
-                  onClick={() => {
-                    setIsDeleting(false);
-                  }}
-                  hint="Cancel deleting"
-                >
-                  <X />
-                </Button>
-              </>
-            )}
-          </div>
+          {isEditable && (
+            <div className="flex items-center gap-2">
+              {!isDeleting && (
+                <>
+                  <Button
+                    theme={ButtonTheme.secondary}
+                    onClick={() => {
+                      navigate({ to: '/edit-card/' + card.id }).catch(null);
+                    }}
+                    hint="Edit the card"
+                  >
+                    <Edit />
+                  </Button>
+                  <Button
+                    theme={ButtonTheme.warning}
+                    onClick={() => {
+                      setIsDeleting(true);
+                    }}
+                    hint="Delete the card"
+                  >
+                    <Trash />
+                  </Button>
+                </>
+              )}
+              {isDeleting && (
+                <>
+                  <p className="text-red-600">Delete the card?</p>
+                  <Button
+                    theme={ButtonTheme.warning}
+                    onClick={() => {
+                      cardsStore.removeCards([card.id]);
+                    }}
+                    hint="Cancel deleting"
+                  >
+                    <Trash />
+                  </Button>
+                  <Button
+                    theme={ButtonTheme.primary}
+                    onClick={() => {
+                      setIsDeleting(false);
+                    }}
+                    hint="Cancel deleting"
+                  >
+                    <X />
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
         </div>
         <p className="flex gap-2">
           {card.tags.map((tagId) => {
