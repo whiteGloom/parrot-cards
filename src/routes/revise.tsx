@@ -202,29 +202,31 @@ function Revise() {
                   </>
                 )}
               </div>
-              <details>
+              <details className="p-2 border border-gray-200 rounded">
                 <summary>Show cards</summary>
-                {rememberedCards.map(cardId => (
-                  <CardPreview
-                    cardId={cardId}
-                    isSelected={selectedRememberedCards.has(cardId)}
-                    onSelectedChange={(isSelected) => {
-                      if (isSelected) {
-                        setSelectedRememberedCards(new Set([...selectedRememberedCards, cardId]));
-                      }
-                      else {
-                        const newValues = [];
-                        for (const otherCardId of selectedRememberedCards) {
-                          if (otherCardId !== cardId) {
-                            newValues.push(otherCardId);
-                          }
+                <div className="flex flex-col gap-2">
+                  {rememberedCards.map(cardId => (
+                    <CardPreview
+                      cardId={cardId}
+                      isSelected={selectedRememberedCards.has(cardId)}
+                      onSelectedChange={(isSelected) => {
+                        if (isSelected) {
+                          setSelectedRememberedCards(new Set([...selectedRememberedCards, cardId]));
                         }
-                        setSelectedRememberedCards(new Set(newValues));
-                      }
-                    }}
-                    isEditable={false}
-                  />
-                ))}
+                        else {
+                          const newValues = [];
+                          for (const otherCardId of selectedRememberedCards) {
+                            if (otherCardId !== cardId) {
+                              newValues.push(otherCardId);
+                            }
+                          }
+                          setSelectedRememberedCards(new Set(newValues));
+                        }
+                      }}
+                      isEditable={false}
+                    />
+                  ))}
+                </div>
               </details>
             </>
           )}
@@ -256,7 +258,7 @@ function Revise() {
                   </>
                 )}
               </div>
-              <details>
+              <details className="p-2 border border-gray-200 rounded">
                 <summary>Show cards</summary>
                 <div className="flex flex-col gap-2">
                   {forgottenCards.map(cardId => (
