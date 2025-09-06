@@ -1,6 +1,6 @@
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { useExplicitRevisesStore } from '../stores/explicitRevises.ts';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useCardsStore } from '../stores/cardsStore.ts';
 import { Button, ButtonTheme } from '../widgets/buttons';
 import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
@@ -9,6 +9,11 @@ import clsx from 'clsx';
 import { CardPreview } from '../widgets/cards/card-preview.tsx';
 import { AddTagToCardsDropdown } from '../widgets/dropdowns/add-tag-to-cards.tsx';
 import { RemoveTagFromCardsDropdown } from '../widgets/dropdowns/remove-tag-from-cards.tsx';
+
+type TimeTracking = {
+  startTimestamp?: number
+  summ: number
+};
 
 export type ReviseSearchParams = {
   tags?: string[]
@@ -66,6 +71,9 @@ function Revise() {
   const [rememberedCardsSet, setRememberedCardsSet] = useState<Set<string>>(new Set());
   const [selectedRememberedCards, setSelectedRememberedCards] = useState<Set<string>>(new Set<string>());
   const [selectedForgottenCards, setSelectedForgottenCards] = useState<Set<string>>(new Set<string>());
+  const [timeTracking, setTimeTracking] = useState<TimeTracking>({ summ: 0 });
+
+  const isPaused = !timeTracking.startTimestamp;
 
   if (!filteredCardsIds.length) {
     return (
@@ -131,6 +139,11 @@ function Revise() {
           </label>
           <Button
             onClick={() => {
+              setTimeTracking({
+                summ: 0,
+                startTimestamp: Date.now(),
+              });
+
               setCurrentCardIndex(currentCardIndex + 1);
             }}
           >
@@ -153,10 +166,15 @@ function Revise() {
           <p className="text-center text-3xl">
             Revise results
           </p>
+          <TimeTrackingDisplay timeTracking={timeTracking} className="text-center" />
           <div className="flex gap-3">
             <Button
               className="grow"
               onClick={() => {
+                setTimeTracking({
+                  summ: 0,
+                  startTimestamp: undefined,
+                });
                 setCurrentCardIndex(-1);
                 setDefaultVisibleCardSide('target');
                 setRememberedCardsSet(new Set());
@@ -301,48 +319,94 @@ function Revise() {
         <p className="text-center text-3xl">
           Revise cards
         </p>
-        <p className="text-center">
-          {'Card '}
-          {currentCardIndex + 1}
-          {' of '}
-          {filteredCardsIds.length}
-        </p>
-        <div className="flex gap-2 items-stretch">
-          <Card
-            key={`${cardId}-1`}
-            cardId={cardId}
-            side={defaultVisibleCardSide}
-            isVisible={true}
-            className="grow basis-0 shrink-0"
-          />
-          <ArrowRight className="self-center" />
-          <Card
-            key={`${cardId}-2`}
-            cardId={cardId}
-            side={defaultVisibleCardSide === 'known' ? 'target' : 'known'}
-            isVisible={false}
-            className="grow basis-0 shrink-0"
-          />
+        <div className="flex  justify-between items-center">
+          <p>
+            {'Card '}
+            {currentCardIndex + 1}
+            {' of '}
+            {filteredCardsIds.length}
+          </p>
+          <div className="flex items-center gap-2">
+            <TimeTrackingDisplay timeTracking={timeTracking} />
+            <Button onClick={() => {
+              if (timeTracking.startTimestamp) {
+                setTimeTracking({
+                  summ: timeTracking.summ + (Date.now() - (timeTracking.startTimestamp ?? 0)),
+                  startTimestamp: undefined,
+                });
+              }
+              else {
+                setTimeTracking({
+                  summ: timeTracking.summ,
+                  startTimestamp: Date.now(),
+                });
+              }
+            }}
+            >
+              {timeTracking.startTimestamp ? 'Pause' : 'Resume'}
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button
-            className="grow basis-0"
-            theme={ButtonTheme.warning}
-            onClick={() => {
-              setCurrentCardIndex(currentCardIndex + 1);
-            }}
-          >
-            I do not remember it
-          </Button>
-          <Button
-            className="grow basis-0"
-            onClick={() => {
-              setCurrentCardIndex(currentCardIndex + 1);
-              setRememberedCardsSet(new Set([...rememberedCardsSet, cardId]));
-            }}
-          >
-            I remember it
-          </Button>
+        <div className="flex flex-col gap-4 relative">
+          <div className="flex gap-2 items-stretch">
+            <Card
+              key={`${cardId}-1`}
+              cardId={cardId}
+              side={defaultVisibleCardSide}
+              isVisible={true}
+              className="grow basis-0 shrink-0"
+            />
+            <ArrowRight className="self-center" />
+            <Card
+              key={`${cardId}-2`}
+              cardId={cardId}
+              side={defaultVisibleCardSide === 'known' ? 'target' : 'known'}
+              isVisible={false}
+              disabled={isPaused}
+              className="grow basis-0 shrink-0"
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button
+              className="grow basis-0"
+              theme={ButtonTheme.warning}
+              disabled={isPaused}
+              onClick={() => {
+                if (currentCardIndex === filteredCardsIds.length - 1) {
+                  setTimeTracking({
+                    summ: timeTracking.summ + (Date.now() - (timeTracking.startTimestamp ?? 0)),
+                    startTimestamp: undefined,
+                  });
+                }
+                setCurrentCardIndex(currentCardIndex + 1);
+              }}
+            >
+              I do not remember it
+            </Button>
+            <Button
+              className="grow basis-0"
+              disabled={isPaused}
+              onClick={() => {
+                if (currentCardIndex === filteredCardsIds.length - 1) {
+                  setTimeTracking({
+                    summ: timeTracking.summ + (Date.now() - (timeTracking.startTimestamp ?? 0)),
+                    startTimestamp: undefined,
+                  });
+                }
+                setCurrentCardIndex(currentCardIndex + 1);
+                setRememberedCardsSet(new Set([...rememberedCardsSet, cardId]));
+              }}
+            >
+              I remember it
+            </Button>
+          </div>
+          {isPaused && (
+            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center backdrop-blur-md">
+              <p className="text-center text-2xl text-gray-600">
+                Paused
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </PageContentWrapper>
@@ -368,6 +432,7 @@ function Card(props: {
   isVisible: boolean
   onReveal?: () => void
   className?: string
+  disabled?: boolean
 }) {
   const cardsStoreState = useCardsStore();
   const card = cardsStoreState.cards[props.cardId];
@@ -389,14 +454,14 @@ function Card(props: {
   return (
     <div
       onClick={() => {
-        if (!isVisible) {
+        if (!isVisible && !props.disabled) {
           setIsVisible(true);
           props.onReveal?.();
         }
       }}
       className={clsx([
         'flex flex-col gap-2 p-4 border border-gray-200 rounded shadow-md',
-        !props.isVisible && 'cursor-pointer',
+        !props.isVisible && !isVisible && 'cursor-pointer',
         props.className])}
     >
       <p
@@ -420,7 +485,7 @@ function Card(props: {
         <>
           <p className="text-center text-gray-600">Hints:</p>
           {cardSideData.hints.map(hint => (
-            <Hint key={hint} text={hint} isVisibleByDefault={false} />
+            <Hint key={hint} text={hint} isVisibleByDefault={false} disabled={props.disabled} />
           ))}
         </>
       )}
@@ -428,7 +493,7 @@ function Card(props: {
   );
 }
 
-function Hint(props: { text: string, isVisibleByDefault: boolean }) {
+function Hint(props: { text: string, isVisibleByDefault: boolean, disabled?: boolean }) {
   const [isHintVisible, setIsHintVisible] = useState(props.isVisibleByDefault);
   const fakeTitle = useRef(generateFakeTitle());
 
@@ -436,6 +501,10 @@ function Hint(props: { text: string, isVisibleByDefault: boolean }) {
     <p
       className={clsx(['p-1 border border-gray-200 rounded  text-center overflow-hidden', !isHintVisible && 'cursor-pointer'])}
       onClick={(event) => {
+        if (props.disabled) {
+          return;
+        }
+
         event.stopPropagation();
         setIsHintVisible(true);
       }}
@@ -447,5 +516,43 @@ function Hint(props: { text: string, isVisibleByDefault: boolean }) {
         {isHintVisible ? props.text : fakeTitle.current}
       </span>
     </p>
+  );
+}
+
+function TimeTrackingDisplay(props: { timeTracking: TimeTracking, className?: string }) {
+  const textRef = useRef<HTMLParagraphElement | null>(null);
+  const timeTracking = props.timeTracking;
+
+  useEffect(() => {
+    let intervalId: number | undefined;
+
+    function formatTime(milliseconds: number) {
+      const totalSeconds = Math.floor(milliseconds / 1000);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      const pad = (num: number) => String(num).padStart(2, '0');
+
+      return `Time: ${pad(minutes)}:${pad(seconds)}`;
+    }
+
+    if (timeTracking.startTimestamp) {
+      intervalId = setInterval(() => {
+        const milliseconds = Date.now() - timeTracking.startTimestamp! + timeTracking.summ;
+        textRef.current!.innerText = formatTime(milliseconds);
+      }, 250);
+    }
+    else if (timeTracking.summ) {
+      const milliseconds = timeTracking.summ;
+      textRef.current!.innerText = formatTime(milliseconds);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [timeTracking]);
+
+  return (
+    <p className={props.className || ''} ref={textRef}></p>
   );
 }
