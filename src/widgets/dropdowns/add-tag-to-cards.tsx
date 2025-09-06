@@ -1,9 +1,10 @@
-import { type RefObject, useMemo, useRef } from 'react';
+import { type RefObject, useMemo, useRef, useState } from 'react';
 import { Dropdown, type DropdownImperativeControls } from './index.tsx';
 import { Button, ButtonTheme } from '../buttons';
 import { TagIcon } from 'lucide-react';
 import { useCardsStore } from '../../stores/cardsStore.ts';
 import { useTagsStore } from '../../stores/tagsStore.ts';
+import { InputWrapped } from '../input/input-wrapped.tsx';
 
 export function AddTagToCardsDropdown(props: {
   cardsIds: Set<string>
@@ -36,9 +37,7 @@ function AddTagToCardsDropdownContent(props: {
   const { cardsIds } = props;
   const oldCardsIds = useRef(cardsIds);
 
-  if (oldCardsIds.current !== cardsIds) {
-    props.closeDropdown();
-  }
+  const [newTagTitle, setNewTagTitle] = useState('');
 
   const cardsStoreState = useCardsStore();
   const tagsStoreState = useTagsStore();
@@ -64,6 +63,26 @@ function AddTagToCardsDropdownContent(props: {
     return Array.from(tagsToAdd);
   }, [cardsIds, cardsStoreState.cards, tagsStoreState.tagsIds]);
 
+  function onTagSelected(tagId: string) {
+    props.closeDropdown();
+
+    props.cardsIds.forEach((cardId) => {
+      const card = cardsStoreState.cards[cardId];
+
+      if (card.tags.includes(tagId)) {
+        return;
+      }
+
+      cardsStoreState.updateCard(cardId, {
+        tags: [...cardsStoreState.cards[cardId].tags, tagId],
+      });
+    });
+  }
+
+  if (oldCardsIds.current !== cardsIds) {
+    props.closeDropdown();
+  }
+
   return (
     <div className="flex flex-col gap-2 p-2 shadow-xl/30 bg-white rounded border border-gray-200 max-h-60 overflow-y-auto">
       {missingTagsOfCards.map((tagId) => {
@@ -73,25 +92,43 @@ function AddTagToCardsDropdownContent(props: {
             theme={ButtonTheme.secondary}
             key={tag.id}
             onClick={() => {
-              props.closeDropdown();
-
-              props.cardsIds.forEach((cardId) => {
-                const card = cardsStoreState.cards[cardId];
-
-                if (card.tags.includes(tag.id)) {
-                  return;
-                }
-
-                cardsStoreState.updateCard(cardId, {
-                  tags: [...cardsStoreState.cards[cardId].tags, tag.id],
-                });
-              });
+              onTagSelected(tagId);
             }}
           >
             {tag.title}
           </Button>
         );
       })}
+      <InputWrapped
+        label="New tag"
+        name="newTagTitle"
+        isRequired={true}
+        value={newTagTitle}
+        onChange={(value) => {
+          setNewTagTitle(value.target.value);
+        }}
+      />
+      <Button
+        theme={ButtonTheme.primary}
+        disabled={!newTagTitle.trim()}
+        onClick={() => {
+          const tagTitle = newTagTitle.trim();
+
+          if (!tagTitle) {
+            return;
+          }
+
+          setNewTagTitle('');
+
+          const tag = tagsStoreState.maybeCreateTag({
+            title: tagTitle,
+          });
+
+          onTagSelected(tag.id);
+        }}
+      >
+        Create new card
+      </Button>
     </div>
   );
 }

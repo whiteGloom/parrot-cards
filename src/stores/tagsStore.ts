@@ -12,6 +12,7 @@ export interface TagsStoreFields {
 export interface TagsStoreActions {
   removeTags: (ids: string[]) => void
   createTag: (tag: TagDraft) => Tag
+  maybeCreateTag: (tag: TagDraft) => Tag
   addTags: (tag: Tag[]) => void
   updateTag: (id: string, updatedTag: Partial<TagDraft>) => void
 }
@@ -21,7 +22,7 @@ export interface TagsStoreState extends TagsStoreFields, TagsStoreActions {
 
 export function createTagsStore() {
   return createStore<TagsStoreState>()(
-    immer((set): TagsStoreState => {
+    immer((set, getState): TagsStoreState => {
       return {
         tags: {},
         tagsIds: [],
@@ -40,6 +41,24 @@ export function createTagsStore() {
           });
 
           return newTag;
+        },
+        maybeCreateTag: (tag: TagDraft) => {
+          const state = getState();
+          const tagTitle = tag.title;
+
+          const existingTagWithSameName = state.tagsIds.find((tagId) => {
+            const tag = state.tags[tagId];
+            return tag.title === tagTitle;
+          });
+
+          if (existingTagWithSameName) {
+            return state.tags[existingTagWithSameName];
+          }
+          else {
+            return state.createTag({
+              title: tagTitle,
+            });
+          }
         },
         removeTags: (ids: string[]) => {
           set((state) => {

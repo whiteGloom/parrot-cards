@@ -267,23 +267,11 @@ function RouteComponent() {
 
                 setNewTagTitle('');
 
-                let tagId: string;
-
-                const existingTagWithSameName = tagsStoreState.tagsIds.find((tagId) => {
-                  const tag = tagsStoreState.tags[tagId];
-                  return tag.title === tagTitle;
+                const tag = tagsStoreState.maybeCreateTag({
+                  title: tagTitle,
                 });
 
-                if (existingTagWithSameName) {
-                  tagId = existingTagWithSameName;
-                }
-                else {
-                  tagId = tagsStoreState.createTag({
-                    title: tagTitle,
-                  }).id;
-                }
-
-                setSelectedTags(new Set([...selectedTags, tagId]));
+                setSelectedTags(new Set([...selectedTags, tag.id]));
               }}
             >
               Create new card
