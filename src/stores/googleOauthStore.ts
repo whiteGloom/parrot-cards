@@ -92,6 +92,7 @@ export function createGoogleOauthStore() {
             }
 
             if (response.error) {
+              console.error('Failed to receive access token', response);
               set({
                 authorizationData: {
                   state: 'error', errorInfo: { error: response.error! },

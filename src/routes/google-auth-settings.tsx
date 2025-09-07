@@ -93,12 +93,13 @@ function Index() {
         {oauthStore.oauthSettings?.clientId
           ? (
               <Button
-                theme={ButtonTheme.primary}
+                theme={oauthStore.authorizationData?.state === 'error' ? ButtonTheme.warning : ButtonTheme.primary}
                 type="submit"
                 isLoading={oauthStore.authorizationData.state === 'inProgress'}
                 onClick={async () => {
                   oauthStore.authorize().catch(null);
                 }}
+                hint={oauthStore.authorizationData.state === 'error' ? `Error: ${oauthStore.authorizationData.errorInfo.error}` : undefined}
                 disabled={oauthStore.authorizationData.state === 'inProgress' || oauthStore.authorizationData.state === 'authorized'}
               >
                 {oauthStore.authorizationData.state === 'authorized' ? 'You are authorized' : 'Login'}
