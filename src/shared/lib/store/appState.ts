@@ -1,1 +1,0 @@
-export type {RootState as AppState} from '../../../app/providers/store';
