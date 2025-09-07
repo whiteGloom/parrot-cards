@@ -29,6 +29,7 @@ const router = createRouter({
     cardsStore: undefined!,
     explicitRevisesStore: undefined!,
   },
+  basepath: '/parrot-cards/',
 });
 
 // Register the router instance for type safety
