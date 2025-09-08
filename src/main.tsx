@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { routeTree } from './routeTree.gen';
-import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { createHashHistory, createRouter, RouterProvider } from '@tanstack/react-router';
 import {
   createGoogleOauthStore, type GoogleOauthStore,
   GoogleOauthStoreContext,
@@ -24,12 +24,12 @@ export type RouterContext = {
 // Create a new router instance
 const router = createRouter({
   routeTree,
+  history: createHashHistory(),
   context: {
     googleOauthStore: undefined!,
     cardsStore: undefined!,
     explicitRevisesStore: undefined!,
   },
-  basepath: '/parrot-cards/',
 });
 
 // Register the router instance for type safety
