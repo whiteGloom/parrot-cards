@@ -1,4 +1,4 @@
-import{c as t}from"./page-content-wrapper-DPvODrPk.js";import{j as a}from"./index-BtJs-EZI.js";/**
+import{c as t}from"./page-content-wrapper-Dy17aZap.js";import{j as a}from"./index-CfiYgMeU.js";/**
  * @license lucide-react v0.539.0 - ISC
  *
  * This source code is licensed under the ISC license.
