@@ -1,6 +1,0 @@
-import{r as t,C as S,T as x,c as C,d as y,j as l}from"./index-BkuIcFiu.js";import{p as k}from"./savedFile-jR1MUH5I.js";import{c as v,B as E,a as u}from"./createLucideIcon-7xPxo-aF.js";/**
- * @license lucide-react v0.539.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */const w=[["path",{d:"m17 2 4 4-4 4",key:"nntrym"}],["path",{d:"M3 11v-1a4 4 0 0 1 4-4h14",key:"84bu3i"}],["path",{d:"m7 22-4-4 4-4",key:"1wqhfi"}],["path",{d:"M21 13v1a4 4 0 0 1-4 4H3",key:"1rx37r"}]],T=v("repeat",w);function L(f){const d=t.useContext(S),m=t.useContext(x),e=C(),p=y(),[i,h]=t.useState(!1),[n,o]=t.useState(!1),[c,s]=t.useState(null);async function g(){if(n||i)return;o(!0),s(null);let r;try{await p.authorize();for(const a in e.fileToLoadRecords){const I=e.fileToLoadRecords[a];if(r=await gapi.client.drive.files.get({fileId:I.fileId,alt:"media"}),r.status!==200){s(`Error fetching file, status: ${r.status}`),o(!1);return}await k({cardsStore:d,tagsStore:m,fileContent:r.body})}h(!0)}catch(a){o(!1),s(`Error fetching file ${a}`);return}o(!1)}return l.jsx(E,{className:"self-start",theme:c?u.warning:u.primary,hint:c||`One-click import (${e.itemsCount} files)`,isLoading:n,disabled:i||!e.itemsCount,onClick:g,children:l.jsx(T,{size:f.iconSize||24})})}export{L as O};
