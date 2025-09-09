@@ -37,7 +37,7 @@ export function ImportDataDropdown() {
           </>
         </Button>
       )}
-      contentWrapperClassName="right-0 min-w-sm"
+      contentWrapperClassName="right-[-3rem] min-w-xxs"
       buildContent={({ close }) => (
         <div className="flex flex-col gap-2 p-2 shadow-xl/30 bg-white rounded border border-gray-200 max-h-60 overflow-y-auto">
           <div className="flex row gap-2">

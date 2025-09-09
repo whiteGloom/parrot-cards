@@ -85,7 +85,7 @@ function ImportFromGoogleDrive() {
             theme={ButtonTheme.secondary}
             onClick={() => {
               navigate({
-                to: '/import',
+                to: '/',
               }).catch(null);
             }}
           >
