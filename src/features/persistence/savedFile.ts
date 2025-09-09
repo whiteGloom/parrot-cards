@@ -1,6 +1,6 @@
 import { type FileVersion_1, FileVersion_1_zod } from './versions/1.ts';
-import { type CardsStore } from '../../stores/cardsStore.ts';
-import type { TagsStore } from '../../stores/tagsStore.ts';
+import { type CardsStore } from '../../stores/cards-store.ts';
+import type { TagsStore } from '../../stores/tags-store.ts';
 
 type VersionContainer = {
   version: number

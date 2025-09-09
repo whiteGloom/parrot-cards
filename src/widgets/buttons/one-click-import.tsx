@@ -1,13 +1,13 @@
 import { useContext, useState } from 'react';
-import { CardsStoreContext } from '../../stores/cardsStore.ts';
-import { useGoogleDriveStore } from '../../stores/googleDrive.ts';
-import { useGoogleOauthStore } from '../../stores/googleOauthStore.ts';
-import { TagsStoreContext } from '../../stores/tagsStore.ts';
+import { CardsStoreContext } from '../../stores/cards-store.ts';
+import { useGoogleDriveStore } from '../../stores/google-drive.ts';
+import { useGoogleOauthStore } from '../../stores/google-oauth-store.ts';
+import { TagsStoreContext } from '../../stores/tags-store.ts';
 import { parseAndImportSavedFile } from '../../features/persistence/savedFile.ts';
 import { Button, ButtonTheme } from './index.tsx';
 import { Repeat } from 'lucide-react';
 
-export function OneClickImportButton(props: { iconSize?: number }) {
+export function OneClickImportButton(props: { iconSize?: number, onClick?: () => void }) {
   const cardsStore = useContext(CardsStoreContext)!;
   const tagsStore = useContext(TagsStoreContext)!;
   const googleDriveStore = useGoogleDriveStore();
@@ -19,6 +19,8 @@ export function OneClickImportButton(props: { iconSize?: number }) {
 
   async function callback() {
     if (isImporting || isImported) return;
+
+    props.onClick?.();
 
     setIsImporting(true);
     setImportError(null);

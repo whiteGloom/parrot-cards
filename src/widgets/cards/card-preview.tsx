@@ -1,9 +1,9 @@
 import { Edit, Trash, X } from 'lucide-react';
 import { Button, ButtonTheme } from '../buttons';
-import { useTagsStore } from '../../stores/tagsStore.ts';
+import { useTagsStore } from '../../stores/tags-store.ts';
 import { hueColorConfigToColorString } from '../../utils/color.ts';
 import { useState } from 'react';
-import { useCardsStore } from '../../stores/cardsStore.ts';
+import { useCardsStore } from '../../stores/cards-store.ts';
 import { useNavigate } from '@tanstack/react-router';
 
 export function CardPreview(props: { cardId: string, isSelected: boolean, onSelectedChange?: (isSelected: boolean) => void, isEditable?: boolean }) {

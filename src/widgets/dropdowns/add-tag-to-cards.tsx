@@ -2,8 +2,8 @@ import { type RefObject, useMemo, useRef, useState } from 'react';
 import { Dropdown, type DropdownImperativeControls } from './index.tsx';
 import { Button, ButtonTheme } from '../buttons';
 import { TagIcon } from 'lucide-react';
-import { useCardsStore } from '../../stores/cardsStore.ts';
-import { useTagsStore } from '../../stores/tagsStore.ts';
+import { useCardsStore } from '../../stores/cards-store.ts';
+import { useTagsStore } from '../../stores/tags-store.ts';
 import { InputWrapped } from '../input/input-wrapped.tsx';
 
 export function AddTagToCardsDropdown(props: {
@@ -127,7 +127,7 @@ function AddTagToCardsDropdownContent(props: {
           onTagSelected(tag.id);
         }}
       >
-        Create new card
+        Create new tag
       </Button>
     </div>
   );

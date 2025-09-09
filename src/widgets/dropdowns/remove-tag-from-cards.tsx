@@ -2,8 +2,8 @@ import { type RefObject, useMemo, useRef } from 'react';
 import { Dropdown, type DropdownImperativeControls } from './index.tsx';
 import { Button, ButtonTheme } from '../buttons';
 import { Eraser } from 'lucide-react';
-import { useCardsStore } from '../../stores/cardsStore.ts';
-import { useTagsStore } from '../../stores/tagsStore.ts';
+import { useCardsStore } from '../../stores/cards-store.ts';
+import { useTagsStore } from '../../stores/tags-store.ts';
 
 export function RemoveTagFromCardsDropdown(props: {
   cardsIds: Set<string>

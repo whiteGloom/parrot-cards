@@ -1,23 +1,25 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Button, ButtonTheme } from '../widgets/buttons';
 import { CardPreview } from '../widgets/cards/card-preview.tsx';
-import { CardsStoreContext, useCardsStore } from '../stores/cardsStore.ts';
+import { CardsStoreContext, useCardsStore } from '../stores/cards-store.ts';
 import {
   Brain, BrainCircuit,
-  Download,
   Plus, Square,
   SquareCheck,
   Trash,
   X,
 } from 'lucide-react';
-import { TagsStoreContext, useTagsStore } from '../stores/tagsStore.ts';
+import { TagsStoreContext, useTagsStore } from '../stores/tags-store.ts';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { TagPreview } from '../widgets/tags/selectable-tag.tsx';
 import { ExportDropdown } from '../widgets/dropdowns/export.tsx';
-import { useExplicitRevisesStore } from '../stores/explicitRevises.ts';
+import { useExplicitRevisesStore } from '../stores/explicit-revises.ts';
 import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
 import { AddTagToCardsDropdown } from '../widgets/dropdowns/add-tag-to-cards.tsx';
 import { RemoveTagFromCardsDropdown } from '../widgets/dropdowns/remove-tag-from-cards.tsx';
+import { Dropdown } from '../widgets/dropdowns';
+import { InputWrapped } from '../widgets/input/input-wrapped.tsx';
+import { ImportDataDropdown } from '../widgets/dropdowns/import-data.tsx';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -30,6 +32,7 @@ function Index() {
   const cardsStoreState = useCardsStore();
   const tagsStoreState = useTagsStore();
   const explicitRevisesStoreState = useExplicitRevisesStore();
+  const [newTagTitle, setNewTagTitle] = useState('');
 
   const [tempSelectedTags, setTempSelectedTags] = useState<Set<string>>(new Set<string>());
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set<string>());
@@ -90,25 +93,58 @@ function Index() {
               <span className="ml-1 hidden md:flex">Create new cards</span>
             </Button>
             <div className="grow" />
-            <Button
-              onClick={() => {
-                navigate({ to: '/import' }).catch(null);
-              }}
-              hint="Import cards"
-              theme={ButtonTheme.secondary}
-            >
-              <>
-                <Download />
-                <span className="ml-1 hidden md:flex">Import</span>
-              </>
-            </Button>
+            <ImportDataDropdown />
             <ExportDropdown />
           </div>
         </div>
         <div
           className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
         >
-          <h2 className="text-xl text-purple-800">Loaded tags:</h2>
+          <div className="flex justify-between items-center gap-2">
+            <h2 className="text-xl text-purple-800">Loaded tags:</h2>
+            <Dropdown
+              contentWrapperClassName="right-0"
+              buildContent={(props) => {
+                return (
+                  <div className="flex flex-col gap-2 p-2 shadow-xl/30 bg-white rounded border border-gray-200 max-h-60 overflow-y-auto">
+                    <InputWrapped
+                      label="New tag"
+                      name="newTagTitle"
+                      isRequired={true}
+                      value={newTagTitle}
+                      onChange={(value) => {
+                        setNewTagTitle(value.target.value);
+                      }}
+                    />
+                    <Button
+                      theme={ButtonTheme.primary}
+                      disabled={!newTagTitle.trim()}
+                      onClick={() => {
+                        const tagTitle = newTagTitle.trim();
+
+                        if (!tagTitle) {
+                          return;
+                        }
+
+                        setNewTagTitle('');
+
+                        tagsStoreState.maybeCreateTag({
+                          title: tagTitle,
+                        });
+
+                        props.close();
+                      }}
+                    >
+                      Create new tag
+                    </Button>
+                  </div>
+                );
+              }}
+              buildButton={(props) => {
+                return <Button onClick={props.toggleOpened}><Plus /></Button>;
+              }}
+            />
+          </div>
           <div className="flex flex-col gap-2 overflow-y-auto max-h-60">
             {tagsStoreState.tagsIds.map(tagId => (
               <TagPreview

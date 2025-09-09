@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
-import { useExplicitRevisesStore } from '../stores/explicitRevises.ts';
+import { useExplicitRevisesStore } from '../stores/explicit-revises.ts';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useCardsStore } from '../stores/cardsStore.ts';
+import { useCardsStore } from '../stores/cards-store.ts';
 import { Button, ButtonTheme } from '../widgets/buttons';
 import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
 import { ArrowRight, Square, SquareCheck } from 'lucide-react';

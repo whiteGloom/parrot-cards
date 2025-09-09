@@ -3,6 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { createContext, useContext } from 'react';
 import type { Card, CardDraft } from '../entities/cards.ts';
 import { uid } from 'uid';
+import type { UnsavedChangesStore } from './unsaved-changes.tsx';
 
 export interface CardsStoreFields {
   cards: Record<string, Card>
@@ -19,7 +20,7 @@ export interface CardsStoreActions {
 export interface CardsStoreState extends CardsStoreFields, CardsStoreActions {
 }
 
-export function createCardsStore() {
+export function createCardsStore(deps: { unsavedChangesStore: UnsavedChangesStore }) {
   return createStore<CardsStoreState>()(
     immer((set): CardsStoreState => {
       return {
@@ -39,6 +40,8 @@ export function createCardsStore() {
             state.cards[newCard.id] = newCard;
             state.cardsIds.push(newCard.id);
           });
+
+          deps.unsavedChangesStore.getState().markAsUnsaved();
 
           return newCard;
         },
@@ -82,6 +85,8 @@ export function createCardsStore() {
               };
             }
           });
+
+          deps.unsavedChangesStore.getState().markAsUnsaved();
         },
       };
     }),

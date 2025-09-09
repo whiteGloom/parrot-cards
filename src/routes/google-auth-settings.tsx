@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useGoogleOauthStore } from '../stores/googleOauthStore.ts';
+import { useGoogleOauthStore } from '../stores/google-oauth-store.ts';
 import { Formik } from 'formik';
 import { Button, ButtonTheme } from '../widgets/buttons';
 import { ArrowLeft } from 'lucide-react';

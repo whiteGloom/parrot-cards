@@ -1,4 +1,4 @@
-import { useTagsStore } from '../../stores/tagsStore.ts';
+import { useTagsStore } from '../../stores/tags-store.ts';
 import { hueColorConfigToColorString } from '../../utils/color.ts';
 import { Button, ButtonTheme } from '../buttons';
 import { Check, Edit, Trash, X } from 'lucide-react';

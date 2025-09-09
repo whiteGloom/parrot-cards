@@ -1,17 +1,19 @@
-import { TagsStoreContext } from '../../stores/tagsStore.ts';
+import { TagsStoreContext } from '../../stores/tags-store.ts';
 import { useContext, useState } from 'react';
-import { useGoogleOauthStore } from '../../stores/googleOauthStore.ts';
-import { CardsStoreContext } from '../../stores/cardsStore.ts';
+import { useGoogleOauthStore } from '../../stores/google-oauth-store.ts';
+import { CardsStoreContext } from '../../stores/cards-store.ts';
 import { useNavigate } from '@tanstack/react-router';
 import { Dropdown } from './index.tsx';
 import { InputWrapped } from '../input/input-wrapped.tsx';
 import { Button, ButtonTheme } from '../buttons';
-import { loadGoogleDriveFolderId } from '../../utils/loadGoogleDriveFolderId.ts';
+import { loadGoogleDriveFolderId } from '../../utils/load-google-drive-folder-id.ts';
 import { prepareForExport } from '../../features/persistence/savedFile.ts';
 import { Upload } from 'lucide-react';
+import { useUnsavedChangesStore } from '../../stores/unsaved-changes.tsx';
 
 export function ExportDropdown() {
   const googleOauthStoreState = useGoogleOauthStore();
+  const unsavedChangesStoreState = useUnsavedChangesStore();
   const cardsStore = useContext(CardsStoreContext)!;
   const tagsStore = useContext(TagsStoreContext)!;
   const navigate = useNavigate();
@@ -85,9 +87,8 @@ export function ExportDropdown() {
                     pageSize: 1,
                   })).result.files?.[0];
 
-                  let response: Awaited<ReturnType<typeof gapi.client.request>>;
                   if (existingFile) {
-                    response = await gapi.client.request({
+                    await gapi.client.request({
                       path: `/upload/drive/v3/files/${existingFile.id}`,
                       method: 'PATCH',
                       params: { uploadType: 'multipart' },
@@ -101,7 +102,7 @@ export function ExportDropdown() {
                     });
                   }
                   else {
-                    response = await gapi.client.request({
+                    await gapi.client.request({
                       path: '/upload/drive/v3/files',
                       method: 'POST',
                       params: { uploadType: 'multipart' },
@@ -116,9 +117,8 @@ export function ExportDropdown() {
                     });
                   }
 
-                  console.log('wgl response', response);
-
                   setIsExportingToGoogle(false);
+                  unsavedChangesStoreState.markAsSaved();
                 }
                 catch (err) {
                   setExportingToGoogleError(`${err}`);
@@ -143,6 +143,7 @@ export function ExportDropdown() {
                 link.target = '_blank';
                 link.click();
                 URL.revokeObjectURL(link.download);
+                unsavedChangesStoreState.markAsSaved();
               }}
             >
               Local file

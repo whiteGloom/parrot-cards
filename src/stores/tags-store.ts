@@ -3,6 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { createContext, useContext } from 'react';
 import type { Tag, TagDraft } from '../entities/tags.ts';
 import { uid } from 'uid';
+import type { UnsavedChangesStore } from './unsaved-changes.tsx';
 
 export interface TagsStoreFields {
   tags: Record<string, Tag>
@@ -20,7 +21,7 @@ export interface TagsStoreActions {
 export interface TagsStoreState extends TagsStoreFields, TagsStoreActions {
 }
 
-export function createTagsStore() {
+export function createTagsStore(deps: { unsavedChangesStore: UnsavedChangesStore }) {
   return createStore<TagsStoreState>()(
     immer((set, getState): TagsStoreState => {
       return {
@@ -39,6 +40,8 @@ export function createTagsStore() {
             state.tags[newTag.id] = newTag;
             state.tagsIds.push(newTag.id);
           });
+
+          deps.unsavedChangesStore.getState().markAsUnsaved();
 
           return newTag;
         },
@@ -100,6 +103,8 @@ export function createTagsStore() {
               };
             }
           });
+
+          deps.unsavedChangesStore.getState().markAsUnsaved();
         },
       };
     }),
