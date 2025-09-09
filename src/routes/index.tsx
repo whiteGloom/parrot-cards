@@ -112,6 +112,7 @@ function Index() {
                       name="newTagTitle"
                       isRequired={true}
                       value={newTagTitle}
+                      autofocus={true}
                       onChange={(value) => {
                         setNewTagTitle(value.target.value);
                       }}

@@ -16,7 +16,10 @@ export function PageContentWrapper(props: PropsWithChildren<{ contentWrapperClas
             props.contentWrapperClassName,
           ])}
         >
-          <p title="Some changes are unsaved" className="self-end">
+          <p
+            title={unsavedChangesStoreState.hasUnsavedChanges ? 'Some changes are unsaved' : 'All changes are saved'}
+            className="self-end"
+          >
             {unsavedChangesStoreState.hasUnsavedChanges
               ? <XCircle className=" text-red-600 fill-white" />
               : <CircleCheck className="text-green-600 fill-white" />}

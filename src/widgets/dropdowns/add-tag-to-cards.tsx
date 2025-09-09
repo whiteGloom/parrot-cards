@@ -99,11 +99,15 @@ function AddTagToCardsDropdownContent(props: {
           </Button>
         );
       })}
+      {missingTagsOfCards.length === 0 && (
+        <p className="text-gray-500">No tags to add found</p>
+      )}
       <InputWrapped
         label="New tag"
         name="newTagTitle"
         isRequired={true}
         value={newTagTitle}
+        autofocus={true}
         onChange={(value) => {
           setNewTagTitle(value.target.value);
         }}

@@ -77,6 +77,9 @@ function RemoveTagDropdownContent(props: {
           </Button>
         );
       })}
+      {tagsOfCards.length === 0 && (
+        <p className="text-gray-500">No tags to remove found</p>
+      )}
     </div>
   );
 }
