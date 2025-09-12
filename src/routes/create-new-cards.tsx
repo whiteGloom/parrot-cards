@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Button, ButtonTheme } from '../widgets/buttons';
 import { ArrowLeft } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { TagsStoreContext, useTagsStore } from '../stores/tags-store.ts';
 import { Formik } from 'formik';
 import { inlineFor } from '../utils/inline-for.ts';
@@ -23,6 +23,7 @@ function RouteComponent() {
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set<string>());
   const [newTagTitle, setNewTagTitle] = useState('');
   const [hintsCount, setHintsCount] = useState<[number, number]>([1, 1]);
+  const firstInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     tagsStore?.subscribe((state, prevState) => {
@@ -81,6 +82,7 @@ function RouteComponent() {
 
             setSelectedTags(new Set());
             helpers.resetForm();
+            firstInputRef.current?.focus();
           }}
           validate={(values) => {
             const errors: Partial<{
@@ -127,6 +129,7 @@ function RouteComponent() {
                     onChange={handleChange}
                     error={errors.targetLanguage?.title}
                     autofocus={true}
+                    inputRef={firstInputRef}
                   />
                   <InputWrapper
                     label="Description"

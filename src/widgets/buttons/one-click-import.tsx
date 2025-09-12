@@ -12,6 +12,7 @@ export function OneClickImportButton(props: { iconSize?: number, onClick?: () =>
   const tagsStore = useContext(TagsStoreContext)!;
   const googleDriveStore = useGoogleDriveStore();
   const oauthStore = useGoogleOauthStore();
+  const googleOauthStore = useGoogleOauthStore();
 
   const [isImported, setIsImported] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
@@ -25,17 +26,14 @@ export function OneClickImportButton(props: { iconSize?: number, onClick?: () =>
     setIsImporting(true);
     setImportError(null);
 
-    let response;
     try {
       await oauthStore.authorize();
 
       for (const fileId in googleDriveStore.fileToLoadRecords) {
-        const file = googleDriveStore.fileToLoadRecords[fileId];
-
-        response = await gapi.client.drive.files.get({
-          fileId: file.fileId,
-          alt: 'media',
-        });
+        const response = await fetch(
+          `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+          { headers: { Authorization: `Bearer ${googleOauthStore.authorizationData.state === 'authorized' && googleOauthStore.authorizationData.tokenInfo.accessToken}` } },
+        );
 
         if (response.status !== 200) {
           setImportError(`Error fetching file, status: ${response.status}`);
@@ -46,7 +44,7 @@ export function OneClickImportButton(props: { iconSize?: number, onClick?: () =>
         await parseAndImportSavedFile({
           cardsStore: cardsStore,
           tagsStore: tagsStore,
-          fileContent: response.body,
+          fileContent: await response.text(),
         });
       }
 

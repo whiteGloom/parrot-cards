@@ -60,6 +60,8 @@ export function createCardsStore(deps: { unsavedChangesStore: UnsavedChangesStor
 
             state.cardsIds = newIds;
           });
+
+          deps.unsavedChangesStore.getState().markAsUnsaved();
         },
         addCards: (cards: Card[]) => {
           set((state) => {

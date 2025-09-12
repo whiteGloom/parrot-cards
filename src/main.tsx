@@ -15,6 +15,7 @@ import {
   ExplicitRevisesStoreContext,
 } from './stores/explicit-revises.ts';
 import { createUnsavedChangesStore, UnsavedChangesStoreContext } from './stores/unsaved-changes.tsx';
+import { createExportSettingsStore, ExportSettingsStoreContext } from './stores/export-settings.tsx';
 
 export type RouterContext = {
   googleOauthStore: GoogleOauthStore
@@ -49,6 +50,7 @@ declare module '@tanstack/react-router' {
       const tagsStore = createTagsStore({ unsavedChangesStore });
       const cardsStore = createCardsStore({ unsavedChangesStore });
       const explicitRevisesStore = createExplicitRevisesStore();
+      const exportSettingsStore = createExportSettingsStore();
 
       window.addEventListener('beforeunload', function (event) {
         if (unsavedChangesStore.getState().hasUnsavedChanges) {
@@ -57,22 +59,24 @@ declare module '@tanstack/react-router' {
       });
 
       createRoot(document.getElementById('root')!).render(
-        <GoogleOauthStoreContext value={googleOauthStore}>
-          <GoogleDriveStoreContext value={googleDriveStore}>
-            <UnsavedChangesStoreContext value={unsavedChangesStore}>
-              <CardsStoreContext value={cardsStore}>
-                <TagsStoreContext value={tagsStore}>
-                  <ExplicitRevisesStoreContext value={explicitRevisesStore}>
-                    <RouterProvider
-                      router={router}
-                      context={{ googleOauthStore, cardsStore, explicitRevisesStore }}
-                    />
-                  </ExplicitRevisesStoreContext>
-                </TagsStoreContext>
-              </CardsStoreContext>
-            </UnsavedChangesStoreContext>
-          </GoogleDriveStoreContext>
-        </GoogleOauthStoreContext>,
+        <ExportSettingsStoreContext value={exportSettingsStore}>
+          <GoogleOauthStoreContext value={googleOauthStore}>
+            <GoogleDriveStoreContext value={googleDriveStore}>
+              <UnsavedChangesStoreContext value={unsavedChangesStore}>
+                <CardsStoreContext value={cardsStore}>
+                  <TagsStoreContext value={tagsStore}>
+                    <ExplicitRevisesStoreContext value={explicitRevisesStore}>
+                      <RouterProvider
+                        router={router}
+                        context={{ googleOauthStore, cardsStore, explicitRevisesStore }}
+                      />
+                    </ExplicitRevisesStoreContext>
+                  </TagsStoreContext>
+                </CardsStoreContext>
+              </UnsavedChangesStoreContext>
+            </GoogleDriveStoreContext>
+          </GoogleOauthStoreContext>
+        </ExportSettingsStoreContext>,
       );
     });
   });

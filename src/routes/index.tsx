@@ -19,7 +19,8 @@ import { AddTagToCardsDropdown } from '../widgets/dropdowns/add-tag-to-cards.tsx
 import { RemoveTagFromCardsDropdown } from '../widgets/dropdowns/remove-tag-from-cards.tsx';
 import { Dropdown } from '../widgets/dropdowns';
 import { InputWrapped } from '../widgets/input/input-wrapped.tsx';
-import { ImportDataDropdown } from '../widgets/dropdowns/import-data.tsx';
+import { ImportDataDropdown } from '../widgets/dropdowns/import.tsx';
+import { inlineFor } from '../utils/inline-for.ts';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -75,6 +76,10 @@ function Index() {
     });
   }, [cardsStore, selectedCards, selectedTags, tagsStore]);
 
+  const [showAllCards, setShowAllCards] = useState(false);
+
+  const cardsCountToRender = showAllCards ? filteredCardsIds.length : Math.min(filteredCardsIds.length, 20);
+
   return (
     <PageContentWrapper>
       <>
@@ -101,7 +106,10 @@ function Index() {
           className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
         >
           <div className="flex justify-between items-center gap-2">
-            <h2 className="text-xl text-purple-800">Loaded tags:</h2>
+            <h2 className="text-xl text-purple-800">
+              {'Loaded tags: '}
+              {tagsStoreState.tagsIds.length}
+            </h2>
             <Dropdown
               contentWrapperClassName="right-0"
               buildContent={(props) => {
@@ -183,7 +191,12 @@ function Index() {
         <div
           className="flex flex-col bg-gray-50 p-4 gap-4 justify-center border border-gray-200 rounded"
         >
-          <h2 className="text-xl text-purple-800">Result:</h2>
+          <h2 className="text-xl text-purple-800">
+            {'Result: '}
+            {filteredCardsIds.length}
+            {' cards'}
+            {filteredCardsIds.length > cardsCountToRender ? ` (${cardsCountToRender} shown)` : ''}
+          </h2>
           {!isDeletingSelectedCards && !!filteredCardsIds.length && (
             <div className="flex items-center gap-2">
               <Button
@@ -260,6 +273,16 @@ function Index() {
                   />
                 </>
               )}
+              {filteredCardsIds.length > 20 && (
+                <Button
+                  onClick={() => {
+                    setShowAllCards(!showAllCards);
+                  }}
+                  hint={showAllCards ? 'Show less cards' : 'Show hidden cards'}
+                >
+                  {showAllCards ? 'Show less' : 'Show all'}
+                </Button>
+              )}
             </div>
           )}
           {isDeletingSelectedCards && (
@@ -283,29 +306,39 @@ function Index() {
               <p>Delete selected cards?</p>
             </div>
           )}
-          {filteredCardsIds.map(cardId => (
-            <CardPreview
-              cardId={cardId}
-              key={cardId}
-              isSelected={selectedCards.has(cardId)}
-              onSelectedChange={(isSelected) => {
-                if (isSelected) {
-                  setSelectedCards(new Set([...selectedCards, cardId]));
-                }
-                else {
-                  const newValues = [];
-                  for (const otherCardId of selectedCards) {
-                    if (otherCardId !== cardId) {
-                      newValues.push(otherCardId);
-                    }
+          {inlineFor(cardsCountToRender, (index) => {
+            const cardId = filteredCardsIds[index];
+
+            return (
+              <CardPreview
+                cardId={cardId}
+                key={cardId}
+                isSelected={selectedCards.has(cardId)}
+                onSelectedChange={(isSelected) => {
+                  if (isSelected) {
+                    setSelectedCards(new Set([...selectedCards, cardId]));
                   }
-                  setSelectedCards(new Set(newValues));
-                }
-              }}
-            />
-          ))}
+                  else {
+                    const newValues = [];
+                    for (const otherCardId of selectedCards) {
+                      if (otherCardId !== cardId) {
+                        newValues.push(otherCardId);
+                      }
+                    }
+                    setSelectedCards(new Set(newValues));
+                  }
+                }}
+              />
+            );
+          })}
           {!filteredCardsIds.length && (
             <p className="text-gray-600">No cards loaded</p>
+          )}
+          {!showAllCards && filteredCardsIds.length > 20 && (
+            <>
+              <p className="text-gray-600">Some cards were hidden</p>
+              <Button onClick={() => setShowAllCards(true)}>Show all</Button>
+            </>
           )}
         </div>
       </>

@@ -1,5 +1,5 @@
 import { InputWrapper } from './intput-wrapper.tsx';
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, RefObject } from 'react';
 
 export function InputWrapped(props: {
   name: string
@@ -10,6 +10,7 @@ export function InputWrapped(props: {
   value: string
   error?: string
   autofocus?: boolean
+  inputRef?: RefObject<HTMLInputElement | null>
 }) {
   return (
     <InputWrapper
@@ -22,6 +23,7 @@ export function InputWrapped(props: {
         onChange={(e) => {
           props.onChange(e);
         }}
+        ref={props.inputRef}
         autoFocus={props.autofocus || false}
         name={props.name}
         id={props.name}

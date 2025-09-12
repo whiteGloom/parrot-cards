@@ -78,6 +78,8 @@ export function createTagsStore(deps: { unsavedChangesStore: UnsavedChangesStore
 
             state.tagsIds = newIds;
           });
+
+          deps.unsavedChangesStore.getState().markAsUnsaved();
         },
         addTags: (cards: Tag[]) => {
           set((state) => {

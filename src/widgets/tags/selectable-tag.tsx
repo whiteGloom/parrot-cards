@@ -27,7 +27,7 @@ export function TagPreview(props: {
   const isSaveNewTitleAvailable = !!newTitle.trim().length;
 
   return (
-    <div className="group/button flex items-center border border-gray-300 shadow rounded p-2 gap-2">
+    <div className="group/button flex items-center border border-gray-300 shadow rounded p-2 gap-2 even:bg-violet-50">
       <label
         className="flex grow gap-2 cursor-pointer pt-2 pb-2"
         style={{ color: hueColorConfigToColorString(tag.color) }}

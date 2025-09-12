@@ -10,6 +10,7 @@ import { TagsStoreContext } from '../stores/tags-store.ts';
 import { OneClickImportButton } from '../widgets/buttons/one-click-import.tsx';
 import { loadGoogleDriveFolderId } from '../utils/load-google-drive-folder-id.ts';
 import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
+import { useGoogleOauthStore } from '../stores/google-oauth-store.ts';
 
 export const Route = createFileRoute('/import-from-google-drive')({
   component: ImportFromGoogleDrive,
@@ -162,6 +163,7 @@ function FileCard(props: { file: File }) {
   const cardsStore = useContext(CardsStoreContext)!;
   const tagsStore = useContext(TagsStoreContext)!;
   const googleDriveStore = useGoogleDriveStore();
+  const googleOauthStore = useGoogleOauthStore();
 
   const { file } = props;
 
@@ -179,12 +181,11 @@ function FileCard(props: { file: File }) {
         setIsImporting(true);
         setImportError(null);
 
-        let response;
         try {
-          response = await gapi.client.drive.files.get({
-            fileId: file.id,
-            alt: 'media',
-          });
+          const response = await fetch(
+            `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`,
+            { headers: { Authorization: `Bearer ${googleOauthStore.authorizationData.state === 'authorized' && googleOauthStore.authorizationData.tokenInfo.accessToken}` } },
+          );
 
           if (response.status !== 200) {
             setImportError(`Error fetching file, status: ${response.status}`);
@@ -195,7 +196,7 @@ function FileCard(props: { file: File }) {
           await parseAndImportSavedFile({
             cardsStore: cardsStore,
             tagsStore: tagsStore,
-            fileContent: response.body,
+            fileContent: await response.text(),
           });
           setIsImported(true);
         }

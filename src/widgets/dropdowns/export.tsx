@@ -10,10 +10,13 @@ import { loadGoogleDriveFolderId } from '../../utils/load-google-drive-folder-id
 import { prepareForExport } from '../../features/persistence/savedFile.ts';
 import { Upload } from 'lucide-react';
 import { useUnsavedChangesStore } from '../../stores/unsaved-changes.tsx';
+import { useExportSettingsStore } from '../../stores/export-settings.tsx';
+import { utf8ToBase64 } from '../../utils/base64tools.ts';
 
 export function ExportDropdown() {
   const googleOauthStoreState = useGoogleOauthStore();
   const unsavedChangesStoreState = useUnsavedChangesStore();
+  const exportSettingsStoreState = useExportSettingsStore();
   const cardsStore = useContext(CardsStoreContext)!;
   const tagsStore = useContext(TagsStoreContext)!;
   const navigate = useNavigate();
@@ -21,7 +24,7 @@ export function ExportDropdown() {
   const [isExportingToGoogle, setIsExportingToGoogle] = useState(false);
   const [exportingToGoogleError, setExportingToGoogleError] = useState<string | null>(null);
 
-  const [fileName, setFileName] = useState('test.json');
+  const [fileName, setFileName] = useState(exportSettingsStoreState.filename);
 
   return (
     <Dropdown
@@ -42,6 +45,8 @@ export function ExportDropdown() {
               hint={exportingToGoogleError || 'Export to Google'}
               theme={exportingToGoogleError ? ButtonTheme.warning : ButtonTheme.primary}
               onClick={async () => {
+                exportSettingsStoreState.setFilename(fileName);
+
                 setExportingToGoogleError(null);
 
                 if (!googleOauthStoreState.oauthSettings?.clientId) {
@@ -62,7 +67,7 @@ export function ExportDropdown() {
                     tagsStore,
                   });
 
-                  const fileContentBase64 = btoa(fileContent);
+                  const fileContentBase64 = utf8ToBase64(fileContent);
 
                   const contentType = 'application/json';
                   const boundary = '-------314159265358979323846';
@@ -130,6 +135,8 @@ export function ExportDropdown() {
             </Button>
             <Button
               onClick={async () => {
+                exportSettingsStoreState.setFilename(fileName);
+
                 const file = new Blob([
                   await prepareForExport({
                     cardsStore,

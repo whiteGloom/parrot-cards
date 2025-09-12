@@ -17,7 +17,7 @@ export function CardPreview(props: { cardId: string, isSelected: boolean, onSele
   const card = cardsStore.cards[cardId];
 
   return (
-    <div className="flex items-start border border-gray-200 rounded bg-white shadow p-2 gap-2">
+    <div className="flex items-start border border-gray-200 rounded bg-white shadow p-2 gap-2 even:bg-violet-50">
       <input
         type="checkbox"
         onChange={() => { props.onSelectedChange?.(!props.isSelected); }}
