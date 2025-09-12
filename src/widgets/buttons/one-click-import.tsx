@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { CardsStoreContext } from '../../stores/cards-store.ts';
 import { useGoogleDriveStore } from '../../stores/google-drive.ts';
-import { useGoogleOauthStore } from '../../stores/google-oauth-store.ts';
+import { GoogleOauthStoreContext, useGoogleOauthStore } from '../../stores/google-oauth-store.ts';
 import { TagsStoreContext } from '../../stores/tags-store.ts';
 import { parseAndImportSavedFile } from '../../features/persistence/savedFile.ts';
 import { Button, ButtonTheme } from './index.tsx';
@@ -12,7 +12,7 @@ export function OneClickImportButton(props: { iconSize?: number, onClick?: () =>
   const tagsStore = useContext(TagsStoreContext)!;
   const googleDriveStore = useGoogleDriveStore();
   const oauthStore = useGoogleOauthStore();
-  const googleOauthStore = useGoogleOauthStore();
+  const googleOauthStore = useContext(GoogleOauthStoreContext)!;
 
   const [isImported, setIsImported] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
@@ -29,10 +29,13 @@ export function OneClickImportButton(props: { iconSize?: number, onClick?: () =>
     try {
       await oauthStore.authorize();
 
+      const oauthState = googleOauthStore.getState();
+      const token = oauthState.authorizationData.state === 'authorized' && oauthState.authorizationData.tokenInfo.accessToken;
+
       for (const fileId in googleDriveStore.fileToLoadRecords) {
         const response = await fetch(
           `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-          { headers: { Authorization: `Bearer ${googleOauthStore.authorizationData.state === 'authorized' && googleOauthStore.authorizationData.tokenInfo.accessToken}` } },
+          { headers: { Authorization: `Bearer ${token}` } },
         );
 
         if (response.status !== 200) {
