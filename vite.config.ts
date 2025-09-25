@@ -13,5 +13,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'unsafe-none',
+    },
+  },
   base: '/parrot-cards/',
 });
