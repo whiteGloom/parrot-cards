@@ -56,7 +56,7 @@ export function TagPreview(props: {
         <>
           <Button
             theme={ButtonTheme.secondary}
-            className="hidden group-hover/button:flex"
+            className="hidden group-hover/button:flex touch:flex"
             onClick={() => {
               setIsEditing(true);
             }}
@@ -66,7 +66,7 @@ export function TagPreview(props: {
           </Button>
           <Button
             theme={ButtonTheme.warning}
-            className="hidden group-hover/button:flex"
+            className="hidden group-hover/button:flex touch:flex"
             onClick={() => {
               setIsDeleting(true);
             }}

@@ -1,14 +1,22 @@
-import type { PropsWithChildren } from 'react';
 import * as React from 'react';
+import { type PropsWithChildren, useMemo } from 'react';
 import clsx from 'clsx';
 
 export const ButtonTheme = {
   primary: 'primary',
   secondary: 'secondary',
   warning: 'warning',
+  transparentWarning: 'transparent-warning',
 };
 
 export type ButtonThemeType = typeof ButtonTheme[keyof typeof ButtonTheme];
+
+export const ButtonSize = {
+  extraSmall: 'extra-small',
+  medium: 'medium',
+};
+
+export type ButtonSizeType = typeof ButtonSize[keyof typeof ButtonSize];
 
 export interface ContentBuilderParms {
   isHovered: boolean
@@ -19,10 +27,12 @@ export interface ContentBuilderParms {
 
 export interface ButtonProps extends PropsWithChildren {
   theme?: ButtonThemeType
+  size?: ButtonSizeType
   label?: string
   disabled?: boolean
   isLoading?: boolean
   className?: string
+  contentWrapperClassName?: string
   hint?: string
   type?: 'button' | 'submit' | 'reset'
   contentBuilder?: (params: ContentBuilderParms) => React.ReactNode
@@ -30,6 +40,7 @@ export interface ButtonProps extends PropsWithChildren {
 }
 
 export function Button(props: ButtonProps) {
+  const size = props.size || ButtonSize.medium;
   const { theme = ButtonTheme.primary } = props;
   const [isHovered, setIsHovered] = React.useState(false);
   const [isPressed, setIsPressed] = React.useState(false);
@@ -42,6 +53,14 @@ export function Button(props: ButtonProps) {
   const onPressEnd = () => {
     setIsPressed(false);
   };
+
+  const textColor: string = useMemo(() => {
+    const colorName = theme === ButtonTheme.transparentWarning
+      ? 'color-red-500'
+      : 'color-gray-800';
+
+    return getComputedStyle(document.documentElement).getPropertyValue('--' + colorName);
+  }, [theme]);
 
   return (
     <button
@@ -58,11 +77,14 @@ export function Button(props: ButtonProps) {
       onClick={props.onClick}
       title={props.hint}
       className={clsx([
-        'flex relative justify-center rounded cursor-pointer disabled:cursor-not-allowed p-2 shadow',
+        'flex relative justify-center rounded cursor-pointer disabled:cursor-not-allowed shadow',
         props.isLoading && 'cursor-wait disabled:cursor-wait',
+        size === ButtonSize.extraSmall && 'p-0.5',
+        size === ButtonSize.medium && 'p-2',
         theme === ButtonTheme.primary && 'bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 disabled:bg-blue-300',
         theme === ButtonTheme.secondary && 'bg-white hover:bg-blue-100 active:bg-blue-200 disable',
         theme === ButtonTheme.warning && 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 disabled:bg-red-300',
+        theme === ButtonTheme.transparentWarning && 'text-white hover:bg-red-600 active:bg-red-700 disabled:bg-red-300',
         props.className,
       ])}
     >
@@ -72,12 +94,14 @@ export function Button(props: ButtonProps) {
           theme === ButtonTheme.secondary && 'border border-gray-200',
         ])}
       />
-      <div className="relative grow flex items-center justify-center">
+      <div
+        className={clsx(['relative grow flex items-center justify-center', props.contentWrapperClassName])}
+      >
         {props.label || props.children || props.contentBuilder?.({
           isHovered,
           isPressed,
           isFocused,
-          textColor: getComputedStyle(document.documentElement).getPropertyValue('--text-gray-800'),
+          textColor,
         }) || 'Button'}
       </div>
     </button>

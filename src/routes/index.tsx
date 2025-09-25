@@ -198,7 +198,7 @@ function Index() {
             {filteredCardsIds.length > cardsCountToRender ? ` (${cardsCountToRender} shown)` : ''}
           </h2>
           {!isDeletingSelectedCards && !!filteredCardsIds.length && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sticky top-[-0.75rem] bg-gray-50 z-20">
               <Button
                 hint="Select all cards"
                 onClick={() => {
@@ -206,7 +206,7 @@ function Index() {
                     setSelectedCards(new Set());
                   }
                   else {
-                    setSelectedCards(new Set(cardsStoreState.cardsIds));
+                    setSelectedCards(new Set(filteredCardsIds));
                   }
                 }}
                 theme={ButtonTheme.secondary}

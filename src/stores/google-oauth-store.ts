@@ -48,7 +48,7 @@ export interface GoogleOauthStoreFields {
 
 export interface GoogleOauthStoreActions {
   setOauthSettings: (settings: OauthSettings) => void
-  authorize: () => Promise<void>
+  authorize: (isForced?: boolean) => Promise<void>
   expireToken: () => void
   prolongateToken: () => void
 }
@@ -131,13 +131,13 @@ export function createGoogleOauthStore() {
             googleOauthStore.getState().oauthClient?.requestAccessToken();
           }
         },
-        authorize() {
+        authorize(isForced: boolean = false) {
           return new Promise<void>((resolve, reject) => {
-            if (getState().authorizationData.state === 'authorized') {
+            if (getState().authorizationData.state === 'authorized' && !isForced) {
               return resolve();
             }
 
-            if (getState().authorizationData.state !== 'inProgress') {
+            if (getState().authorizationData.state !== 'inProgress' || isForced) {
               googleOauthStore.getState().oauthClient?.requestAccessToken();
 
               set({

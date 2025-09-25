@@ -222,10 +222,10 @@ function RouteComponent() {
           className="bg-white border border-gray-200 rounded relative"
         >
           <div
-            className="md:absolute top-0 left-0 md:w-full md:h-full md:overflow-y-auto flex flex-col p-3 gap-3"
+            className="max-h-120 md:max-h-full md:absolute top-0 left-0 md:w-full md:h-full flex flex-col p-3 gap-3"
           >
             <h2 className="text-xl text-purple-800">Tags</h2>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 overflow-y-auto grow">
               {tagsStoreState.tagsIds.map((tagId) => {
                 return (
                   <TagPreview
@@ -277,7 +277,7 @@ function RouteComponent() {
                 setSelectedTags(new Set([...selectedTags, tag.id]));
               }}
             >
-              Create new card
+              Create new tag
             </Button>
           </div>
         </div>

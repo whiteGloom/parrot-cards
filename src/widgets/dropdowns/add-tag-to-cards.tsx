@@ -1,26 +1,37 @@
 import { type RefObject, useMemo, useRef, useState } from 'react';
 import { Dropdown, type DropdownImperativeControls } from './index.tsx';
-import { Button, ButtonTheme } from '../buttons';
+import { Button, ButtonSize, ButtonTheme } from '../buttons';
 import { TagIcon } from 'lucide-react';
 import { useCardsStore } from '../../stores/cards-store.ts';
 import { useTagsStore } from '../../stores/tags-store.ts';
 import { InputWrapped } from '../input/input-wrapped.tsx';
 
 export function AddTagToCardsDropdown(props: {
+  smallButton?: boolean
   cardsIds: Set<string>
   refToSet?: RefObject<DropdownImperativeControls | null>
 }) {
   return (
     <Dropdown
       ref={props.refToSet}
-      buildButton={buttonProps => (
-        <Button theme={ButtonTheme.secondary} onClick={buttonProps.toggleOpened}>
-          <>
-            <TagIcon />
-            <span className="ml-1 hidden md:flex">Add tag</span>
-          </>
-        </Button>
-      )}
+      buildButton={(buttonProps) => {
+        if (props.smallButton) {
+          return (
+            <Button size={ButtonSize.extraSmall} onClick={buttonProps.toggleOpened}>
+              <TagIcon size={16} />
+            </Button>
+          );
+        }
+
+        return (
+          <Button theme={ButtonTheme.secondary} onClick={buttonProps.toggleOpened}>
+            <>
+              <TagIcon />
+              <span className="ml-1 hidden md:flex">Add tag</span>
+            </>
+          </Button>
+        );
+      }}
       buildContent={(contentProps) => {
         return (
           <AddTagToCardsDropdownContent cardsIds={props.cardsIds} closeDropdown={contentProps.close} />

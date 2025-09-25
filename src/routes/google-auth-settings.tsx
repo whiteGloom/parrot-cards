@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useGoogleOauthStore } from '../stores/google-oauth-store.ts';
 import { Formik } from 'formik';
 import { Button, ButtonTheme } from '../widgets/buttons';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, HandFist } from 'lucide-react';
 import { PageContentWrapper } from '../widgets/wrappers/page-content-wrapper.tsx';
 
 export const Route = createFileRoute('/google-auth-settings')({
@@ -12,6 +12,8 @@ export const Route = createFileRoute('/google-auth-settings')({
 function Index() {
   const oauthStore = useGoogleOauthStore();
   const navigate = useNavigate();
+  const authState = oauthStore.authorizationData.state;
+  const isForceAuthButtonVisible = ['inProgress', 'authorized'].includes(authState);
 
   return (
     <PageContentWrapper>
@@ -92,18 +94,34 @@ function Index() {
         </Formik>
         {oauthStore.oauthSettings?.clientId
           ? (
-              <Button
-                theme={oauthStore.authorizationData?.state === 'error' ? ButtonTheme.warning : ButtonTheme.primary}
-                type="submit"
-                isLoading={oauthStore.authorizationData.state === 'inProgress'}
-                onClick={async () => {
-                  oauthStore.authorize().catch(null);
-                }}
-                hint={oauthStore.authorizationData.state === 'error' ? `Error: ${oauthStore.authorizationData.errorInfo.error}` : undefined}
-                disabled={oauthStore.authorizationData.state === 'inProgress' || oauthStore.authorizationData.state === 'authorized'}
-              >
-                {oauthStore.authorizationData.state === 'authorized' ? 'You are authorized' : 'Login'}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  theme={authState === 'error' ? ButtonTheme.warning : ButtonTheme.primary}
+                  type="submit"
+                  isLoading={authState === 'inProgress'}
+                  onClick={async () => {
+                    oauthStore.authorize().catch(null);
+                  }}
+                  hint={authState === 'error' ? `Error: ${oauthStore.authorizationData.errorInfo.error}` : undefined}
+                  disabled={authState === 'inProgress' || authState === 'authorized'}
+                  className="grow"
+                >
+                  {authState === 'authorized' ? 'You are authorized' : authState === 'inProgress' ? 'In progress' : 'Login'}
+                </Button>
+                {isForceAuthButtonVisible && (
+                  <Button
+                    theme={ButtonTheme.secondary}
+                    onClick={() => {
+                      oauthStore.authorize(true).catch(null);
+                    }}
+                    hint="Force authorization"
+                    className="self-end"
+                    contentBuilder={(params) => {
+                      return <HandFist stroke={params.textColor} />;
+                    }}
+                  />
+                )}
+              </div>
             )
           : <p className="mt-4 text-red-500">Google App's Client ID isn't set</p>}
       </>
