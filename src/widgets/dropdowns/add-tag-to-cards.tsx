@@ -74,6 +74,17 @@ function AddTagToCardsDropdownContent(props: {
     return Array.from(tagsToAdd);
   }, [cardsIds, cardsStoreState.cards, tagsStoreState.tagsIds]);
 
+  const filteredTags = useMemo(() => {
+    if (!newTagTitle) {
+      return missingTagsOfCards;
+    }
+
+    return missingTagsOfCards.filter((tagId) => {
+      const tag = tagsStoreState.tags[tagId];
+      return tag.title.toLowerCase().includes(newTagTitle.toLowerCase());
+    });
+  }, [missingTagsOfCards, newTagTitle, tagsStoreState.tags]);
+
   function onTagSelected(tagId: string) {
     props.closeDropdown();
 
@@ -96,7 +107,7 @@ function AddTagToCardsDropdownContent(props: {
 
   return (
     <div className="flex flex-col gap-2 p-2 shadow-xl/30 bg-white rounded border border-gray-200 max-h-60 overflow-y-auto">
-      {missingTagsOfCards.map((tagId) => {
+      {filteredTags.map((tagId) => {
         const tag = tagsStoreState.tags[tagId];
         return (
           <Button
@@ -110,7 +121,7 @@ function AddTagToCardsDropdownContent(props: {
           </Button>
         );
       })}
-      {missingTagsOfCards.length === 0 && (
+      {filteredTags.length === 0 && (
         <p className="text-gray-500">No tags to add found</p>
       )}
       <InputWrapped

@@ -38,7 +38,7 @@ export function createCardsStore(deps: { unsavedChangesStore: UnsavedChangesStor
 
           set((state) => {
             state.cards[newCard.id] = newCard;
-            state.cardsIds.push(newCard.id);
+            state.cardsIds.unshift(newCard.id);
           });
 
           deps.unsavedChangesStore.getState().markAsUnsaved();
@@ -73,7 +73,7 @@ export function createCardsStore(deps: { unsavedChangesStore: UnsavedChangesStor
             }
 
             state.cardsIds.sort((a, b) => {
-              return state.cards[a].updatedAt - state.cards[b].updatedAt;
+              return state.cards[b].updatedAt - state.cards[a].updatedAt;
             });
           });
         },

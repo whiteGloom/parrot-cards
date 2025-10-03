@@ -2,7 +2,7 @@ import {
   forwardRef,
   type ReactNode,
   type Ref,
-  useCallback,
+  useCallback, useEffect,
   useImperativeHandle,
   useState,
 } from 'react';
@@ -37,6 +37,20 @@ export const Dropdown = forwardRef<DropdownImperativeControls, DropdownProps>(
       setIsOpened(newIsOpened);
       props.onOpenChange?.(newIsOpened);
     }, [props]);
+
+    useEffect(() => {
+      function handler(event: KeyboardEvent) {
+        if (event.key == 'Escape' && isOpened) {
+          setIsOpenedWrapped(false);
+        }
+      }
+
+      document.body.addEventListener('keydown', handler);
+
+      return () => {
+        document.body.removeEventListener('keydown', handler);
+      };
+    }, [isOpened, setIsOpenedWrapped]);
 
     useImperativeHandle(ref, () => ({
       setIsOpened: setIsOpenedWrapped,
