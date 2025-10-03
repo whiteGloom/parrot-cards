@@ -29,7 +29,7 @@ export function CardPreview(props: { cardId: string, isSelected: boolean, onSele
           <InputWrapped
             label="Target language"
             name="targetLanguage"
-            value={newKnownTitle}
+            value={newTargetTitle}
             onChange={(e) => {
               setNewTargetTitle(e.target.value);
             }}
@@ -38,7 +38,7 @@ export function CardPreview(props: { cardId: string, isSelected: boolean, onSele
           <InputWrapped
             label="Known language"
             name="knowLanguage"
-            value={newTargetTitle}
+            value={newKnownTitle}
             onChange={(e) => {
               setNewKnownTitle(e.target.value);
             }}
@@ -59,13 +59,13 @@ export function CardPreview(props: { cardId: string, isSelected: boolean, onSele
               }
 
               cardsStore.updateCard(cardId, {
-                knownLanguageSide: {
-                  ...card.knownLanguageSide,
-                  title: trimmedKnownTitle,
-                },
                 targetLanguageSide: {
                   ...card.targetLanguageSide,
                   title: trimmedTargetTitle,
+                },
+                knownLanguageSide: {
+                  ...card.knownLanguageSide,
+                  title: trimmedKnownTitle,
                 },
               });
 
