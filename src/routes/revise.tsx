@@ -66,6 +66,24 @@ function Revise() {
     searchParams.tags,
   ]);
 
+  const [randomSeed, setRandomSeed] = useState(-1);
+
+  const orderedCards = useMemo(() => {
+    const cards = [...filteredCardsIds];
+
+    if (randomSeed === -1) {
+      return cards;
+    }
+
+    // Shuffle cards using random seed
+    for (let i = cards.length - 1; i > 0; i--) {
+      const j = Math.floor(randomSeed * (i + 1));
+      [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+
+    return cards;
+  }, [filteredCardsIds, randomSeed]);
+
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [defaultVisibleCardSide, setDefaultVisibleCardSide] = useState<'target' | 'known'>('target');
   const [rememberedCardsSet, setRememberedCardsSet] = useState<Set<string>>(new Set());
@@ -75,7 +93,7 @@ function Revise() {
 
   const isPaused = !timeTracking.startTimestamp;
 
-  if (!filteredCardsIds.length) {
+  if (!orderedCards.length) {
     return (
       <PageContentWrapper>
         <div
@@ -138,6 +156,14 @@ function Revise() {
             Known language
           </label>
           <Button
+            theme={ButtonTheme.secondary}
+            onClick={() => {
+              setRandomSeed(Math.random());
+            }}
+          >
+            Shuffle
+          </Button>
+          <Button
             onClick={() => {
               setTimeTracking({
                 summ: 0,
@@ -154,9 +180,9 @@ function Revise() {
     );
   }
 
-  if (currentCardIndex === filteredCardsIds.length) {
+  if (currentCardIndex === orderedCards.length) {
     const rememberedCards = Array.from(rememberedCardsSet);
-    const forgottenCards = Array.from(filteredCardsIds.filter(cardId => !rememberedCardsSet.has(cardId)));
+    const forgottenCards = Array.from(orderedCards.filter(cardId => !rememberedCardsSet.has(cardId)));
 
     return (
       <PageContentWrapper>
@@ -309,7 +335,7 @@ function Revise() {
     );
   }
 
-  const cardId = filteredCardsIds[currentCardIndex];
+  const cardId = orderedCards[currentCardIndex];
 
   return (
     <PageContentWrapper>
@@ -324,7 +350,7 @@ function Revise() {
             {'Card '}
             {currentCardIndex + 1}
             {' of '}
-            {filteredCardsIds.length}
+            {orderedCards.length}
           </p>
           <div className="flex items-center gap-2">
             <TimeTrackingDisplay timeTracking={timeTracking} />
@@ -372,7 +398,7 @@ function Revise() {
               theme={ButtonTheme.warning}
               disabled={isPaused}
               onClick={() => {
-                if (currentCardIndex === filteredCardsIds.length - 1) {
+                if (currentCardIndex === orderedCards.length - 1) {
                   setTimeTracking({
                     summ: timeTracking.summ + (Date.now() - (timeTracking.startTimestamp ?? 0)),
                     startTimestamp: undefined,
@@ -387,7 +413,7 @@ function Revise() {
               className="grow basis-0"
               disabled={isPaused}
               onClick={() => {
-                if (currentCardIndex === filteredCardsIds.length - 1) {
+                if (currentCardIndex === orderedCards.length - 1) {
                   setTimeTracking({
                     summ: timeTracking.summ + (Date.now() - (timeTracking.startTimestamp ?? 0)),
                     startTimestamp: undefined,
